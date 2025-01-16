@@ -53,16 +53,17 @@
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-native": "^5.0.0",
     "globals": "^15.14.0",
+    "husky": "^8.0.0",
     "jest": "^29.2.1",
     "jest-expo": "~52.0.3",
     "prettier": "3.4.2",
     "react-test-renderer": "18.3.1",
     "typescript": "^5.3.3",
-    "typescript-eslint": "^8.20.0",
-    "husky": "^8.0.0"
+    "typescript-eslint": "^8.20.0"
   },
   "private": true,
   "lint-staged": {
-    "lib/**/*.{tsx,html,css}": "prettier --write"
+    "lib/**/*.{tsx,html,css}": "prettier --write",
+    "lib/**/*.{tsx,ts}": "eslint"
   }
 }
