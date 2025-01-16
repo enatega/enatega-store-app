@@ -35,7 +35,6 @@ export function Collapsible({
     </ThemedView>
   );
 }
-
 const styles = StyleSheet.create({
   heading: {
     flexDirection: "row",
