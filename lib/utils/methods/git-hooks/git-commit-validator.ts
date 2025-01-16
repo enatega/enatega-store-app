@@ -8,7 +8,7 @@ const pattern =
 if (!pattern.test(commitMsg)) {
   console.error("Invalid commit type or format.");
   console.error(
-    "Format should be: branch - subject (must be from the predefined keywords) - description - version"
+    "Format should be: branch - subject (must be from [build|fix|refactor|revert|pull|style|test|translation|security|changeset|config]) - description - version"
   );
   process.exit(1);
 }
