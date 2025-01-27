@@ -16,7 +16,9 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@apollo/client": "^3.12.7",
     "@expo/vector-icons": "^14.0.2",
+    "@react-native-async-storage/async-storage": "^2.1.0",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/drawer": "^7.1.1",
     "@react-navigation/native": "^7.0.14",
@@ -31,7 +33,9 @@
     "expo-status-bar": "~2.0.1",
     "expo-symbols": "~0.2.1",
     "expo-system-ui": "~4.0.7",
+    "expo-updates": "^0.26.13",
     "expo-web-browser": "~14.0.2",
+    "graphql": "^16.10.0",
     "lint-staged": "^15.3.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
