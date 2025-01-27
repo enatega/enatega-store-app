@@ -1,16 +1,12 @@
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 export default function HomeScreen() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 10,
-      }}
-    >
-      <Text>Settings here</Text>
+    <View className="flex-1 justify-center items-center bg-black">
+      <TouchableOpacity className="bg-teal-500 p-3 rounded-lg">
+        <Text className="text-white text-3xl font-bold">Settingssss</Text>
+      </TouchableOpacity>
+
     </View>
   );
 }

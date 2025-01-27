@@ -1,5 +1,6 @@
 import { ORDER_STATUS_ENUM } from '../../enums'
 import { IRestaurantProfile, IReview } from '../../interfaces'
+import { IOrder } from '../../interfaces/order.interface'
 function calculateDistance(
   latS: number,
   lonS: number,
@@ -22,7 +23,7 @@ function calculateDistance(
 function toRad(Value: number) {
   return (Value * Math.PI) / 180
 }
-const calulateRemainingTime = (order: any) => {
+const calulateRemainingTime = (order: IOrder) => {
   const expectedTime =
     (
       [ORDER_STATUS_ENUM.ACCEPTED, ORDER_STATUS_ENUM.ASSIGNED].includes(
@@ -113,7 +114,7 @@ const isOpen = (restaurant: IRestaurantProfile) => {
 }
 
 // Function to sort restaurants based on their open status
-const sortRestaurantsByOpenStatus = (restaurants) => {
+const sortRestaurantsByOpenStatus = (restaurants:IRestaurantProfile[]) => {
   return [...restaurants].sort((a, b) => {
     const isOpenA = isOpen(a) ? 1 : 0 // 1 if open, 0 if closed
     const isOpenB = isOpen(b) ? 1 : 0 // 1 if open, 0 if closed

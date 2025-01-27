@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 
@@ -10,7 +10,11 @@ const GETCONFIGURATION = gql`
 
 const ConfigurationContext = React.createContext({})
 
-export const ConfigurationProvider = (props) => {
+export const ConfigurationProvider = ({
+  children,
+}: {
+  children: ReactNode
+}) => {
   const { loading, data, error } = useQuery(GETCONFIGURATION)
 
   const configuration =
@@ -31,7 +35,7 @@ export const ConfigurationProvider = (props) => {
 
   return (
     <ConfigurationContext.Provider value={configuration}>
-      {props?.children}
+      {children}
     </ConfigurationContext.Provider>
   )
 }

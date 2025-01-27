@@ -1,3 +1,5 @@
+import { TPolygonPoints } from "../types/restaurant";
+
 export interface IRestaurantProfile {
     _id: string;
     orderId: number;
@@ -39,4 +41,8 @@ export interface IRestaurantProfile {
     shopType: string;
     cuisines: string[];
     __typename: string;
+  }
+
+  export interface IRestaurantLocation {
+    coordinates: TPolygonPoints;
   }
