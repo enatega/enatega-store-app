@@ -22,6 +22,7 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../lib/assets/fonts/SpaceMono-Regular.ttf"),
+    Inter: require("../lib/assets/fonts/Inter.ttf"),
   });
 
   useEffect(() => {
@@ -34,9 +35,13 @@ export default function RootLayout() {
     return null;
   }
 
+
+
+
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
+        <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
