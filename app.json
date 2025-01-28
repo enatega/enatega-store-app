@@ -2,6 +2,7 @@
   "expo": {
     "name": "mobile-architecture",
     "slug": "mobile-architecture",
+    "projectId": "9144a7fc-b205-464a-8fb6-64eb66fc8743",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./lib/assets/images/icon.png",
@@ -15,6 +16,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./lib/assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9144a7fc-b205-464a-8fb6-64eb66fc8743"
       }
     },
     "web": {

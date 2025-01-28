@@ -101,7 +101,7 @@ const useLogin = () => {
       }
 
       // Perform mutation with the obtained data
-      login({
+    await  login({
         variables: {
           username: username.toLowerCase(),
           password: password,

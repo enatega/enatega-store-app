@@ -161,6 +161,7 @@ const setupApollo = () => {
     cache,
     resolvers: {},
   });
+  
 
   return client;
 };
