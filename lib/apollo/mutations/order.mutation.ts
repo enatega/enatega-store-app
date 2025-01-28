@@ -1,3 +1,19 @@
+import { gql } from "@apollo/client";
+
+export const ASSIGN_ORDER = gql`
+  mutation AssignOrder($id: String!) {
+    assignOrder(id: $id) {
+      _id
+      orderStatus
+      rider {
+        _id
+        name
+        username
+      }
+    }
+  }
+`;
+
 export const cancelOrder = `#graphql
           mutation($abortOrderId: String!){
             abortOrder(id: $abortOrderId) {
@@ -6,46 +22,44 @@ export const cancelOrder = `#graphql
             }
           }`;
 
-export const reviewOrder = `#graphql 
-mutation ReviewOrder(
-    $order:String!,
-    $rating:Int!,
-    $description:String,
-  ){
-    reviewOrder(reviewInput:{
-      order:$order,
-      rating:$rating,
-      description:$description,
-    }){
+export const reviewOrder = gql`
+  mutation ReviewOrder($order: String!, $rating: Int!, $description: String) {
+    reviewOrder(
+      reviewInput: { order: $order, rating: $rating, description: $description }
+    ) {
       _id
       orderId
-      restaurant{
+      restaurant {
         _id
         name
         image
         address
-        location{coordinates}
+        location {
+          coordinates
+        }
       }
-      deliveryAddress{
-        location{coordinates}
+      deliveryAddress {
+        location {
+          coordinates
+        }
         deliveryAddress
         id
       }
-      items{
+      items {
         _id
         title
         food
         description
         quantity
-        variation{
+        variation {
           _id
           title
           price
           discounted
         }
-        addons{
+        addons {
           _id
-          options{
+          options {
             _id
             title
             description
@@ -57,16 +71,16 @@ mutation ReviewOrder(
           quantityMaximum
         }
       }
-      user{
+      user {
         _id
         name
         phone
       }
-      rider{
+      rider {
         _id
         name
       }
-      review{
+      review {
         _id
       }
       paymentMethod
@@ -88,7 +102,8 @@ mutation ReviewOrder(
       cancelledAt
       assignedAt
     }
-  }`;
+  }
+`;
 
 export const placeOrder = `#graphql 
   mutation PlaceOrder($restaurant:String!,$orderInput:[OrderInput!]!,$paymentMethod:String!,$couponCode:String,$tipping:Float!, $taxationAmount: Float!,$address:AddressInput!, $orderDate: String!,$isPickedUp: Boolean!, $deliveryCharges: Float!, $instructions: String){

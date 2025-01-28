@@ -19,6 +19,8 @@ import { ApolloProvider } from "@apollo/client";
 import setupApollo from "@/lib/apollo";
 import FlashMessage from "react-native-flash-message";
 import { AuthProvider } from "@/lib/context/global/auth.context";
+import { LocationProvider } from "@/lib/context/global/location.context";
+import { UserProvider } from "@/lib/context/global/user.context";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -48,19 +50,24 @@ export default function RootLayout() {
       <ApolloProvider client={client}>
         <ConfigurationProvider>
           <AuthProvider client={client}>
-            <>
-              <Stack>
-                <Stack.Screen name="login" options={{ headerShown: false }} />
-                <Stack.Screen
-                  name="(tabs)"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen name="+not-found" />
-              </Stack>
+            <LocationProvider>
 
-              <StatusBar style="auto" />
-              <FlashMessage position="bottom" />
-            </>
+              <UserProvider>
+                <>
+                  <Stack>
+                    <Stack.Screen name="login" options={{ headerShown: false }} />
+                    <Stack.Screen
+                      name="(tabs)"
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen name="+not-found" />
+                  </Stack>
+
+                  <StatusBar style="auto" />
+                  <FlashMessage position="bottom" />
+                </>
+              </UserProvider>
+            </LocationProvider>
           </AuthProvider>
         </ConfigurationProvider>
       </ApolloProvider>

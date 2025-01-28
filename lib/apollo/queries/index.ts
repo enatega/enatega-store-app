@@ -15,3 +15,4 @@ export * from "./user.query";
 export * from "./vendor.query";
 export * from "./version.query";
 export * from "./zone.query";
+export * from "./rider.query";

@@ -6,7 +6,7 @@ import { ICoodinates, ILocationContextProps, ILocationProviderProps } from '@/li
 const LocationContext = React.createContext<ILocationContextProps>({} as ILocationContextProps)
 
 export const LocationProvider = ({ children }: ILocationProviderProps) => {
-    const locationListener = useRef(null)
+    const locationListener = useRef<Location.LocationSubscription>()
     const [locationPermission, setLocationPermission] = useState(false)
     const [location, setLocation] = useState<ICoodinates>({} as ICoodinates)
 
@@ -16,7 +16,9 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
             setLocationPermission(true)
         }
         const currentLocation = await Location.getCurrentPositionAsync({})
-        setLocation(currentLocation?.coords)
+        if (currentLocation) {
+            setLocation(currentLocation.coords as unknown as ICoodinates)
+        }
     }
 
 
@@ -28,7 +30,8 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
     useEffect(() => {
         if (!locationPermission) return
         const trackRiderLocation = async () => {
-            locationListener?.current = await Location.watchPositionAsync(
+            if (!locationPermission) return
+            locationListener.current = await Location.watchPositionAsync(
                 { accuracy: Location.LocationAccuracy.BestForNavigation, timeInterval: 10000 },
                 location => {
                     setLocation({
@@ -40,7 +43,9 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
         }
         trackRiderLocation()
         return () => {
-            locationListener.current && locationListener.current.remove()
+            if (locationListener.current) {
+                locationListener.current.remove()
+            }
         }
     }, [locationPermission])
 

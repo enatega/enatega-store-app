@@ -15,6 +15,7 @@ const HomeOrdersScreen: React.FC = () => {
     const [index, setIndex] = useState(0); // State for the active tab index
     const [routes] = useState([
         { key: "new_orders", title: "New Orders" },
+        { key: "processing", title: "Processing" },
         { key: "delivered", title: "Delivered" },
     ]);
 
@@ -52,6 +53,7 @@ const HomeOrdersScreen: React.FC = () => {
 
     const renderScene = SceneMap({
         new_orders: OrderTab,
+        processing: OrderTab,
         delivered: OrderTab,
     });
 
