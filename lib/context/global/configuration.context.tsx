@@ -1,43 +1,79 @@
-import React, { ReactNode } from 'react'
-import { useQuery } from '@apollo/client'
-import gql from 'graphql-tag'
+'use client';
 
-import { getConfiguration } from '../../apollo/queries'
+// Core
+import React, { useCallback, useEffect, useState } from 'react';
 
-const GETCONFIGURATION = gql`
-  ${getConfiguration}
-`
+// Interfaces§
+import {
+  IConfiguration,
+  IConfigurationProviderProps,
+  ILazyQueryResult,
+} from '@/lib/utils/interfaces';
 
-const ConfigurationContext = React.createContext({})
+// API
+import { GET_CONFIGURATION } from '@/lib/api/graphql';
 
-export const ConfigurationProvider = ({
+// Hooks
+import { useLazyQueryQL } from '@/lib/hooks/useLazyQueryQL';
+
+export const ConfigurationContext = React.createContext<
+  IConfiguration | undefined
+>({
+  _id: '',
+  googleApiKey: '',
+  riderAppSentryUrl: '',
+  currency: '',
+  currencySymbol: '',
+});
+
+export const ConfigurationProvider: React.FC<IConfigurationProviderProps> = ({
   children,
-}: {
-  children: ReactNode
 }) => {
-  const { loading, data, error } = useQuery(GETCONFIGURATION)
+  const [configuration, setConfiguration] = useState<
+    IConfiguration | undefined
+  >();
+  // API
 
-  const configuration =
-    loading || error || !data?.configuration ?
-      {
-        currency: '',
-        currencySymbol: '',
-        deliveryRate: 10,
-        costType: 'perKM',
-        expoClientID:
-          '139790486043-9jp4uj64spndf1aqh5fcjt6mc2dj8luu.apps.googleusercontent.com',
-        androidClientID:
-          '139790486043-1uis4uui8j0i999pj2efke5ckts1sqic.apps.googleusercontent.com',
-        iOSClientID:
-          '139790486043-60c2ah0hd8v5cecnq8gqdtokhm2q35m1.apps.googleusercontent.com',
-      }
-    : data?.configuration
+  const { fetch, loading, error, data } = useLazyQueryQL(GET_CONFIGURATION, {
+    debounceMs: 300,
+  }) as ILazyQueryResult<
+    { configuration: IConfiguration } | undefined,
+    undefined
+  >;
+
+  // Handlers
+  const onFetchConfiguration = () => {
+    const configuration: IConfiguration | undefined =
+      loading || error || !data
+        ? {
+          _id: '',
+          googleApiKey: '',
+          riderAppSentryUrl: '',
+          currency: '',
+          currencySymbol: '',
+        }
+        : data?.configuration;
+
+    setConfiguration(configuration);
+  };
+
+  const fetchConfiguration = useCallback(() => {
+    fetch();
+  }, [fetch]);
+
+  // Use Effect
+  useEffect(() => {
+    fetchConfiguration();
+  }, []);
+
+  useEffect(() => {
+    onFetchConfiguration();
+  }, [data]);
+
 
   return (
     <ConfigurationContext.Provider value={configuration}>
       {children}
     </ConfigurationContext.Provider>
-  )
-}
-export const ConfigurationConsumer = ConfigurationContext.Consumer
-export default ConfigurationContext
+  );
+};
