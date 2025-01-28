@@ -5,10 +5,14 @@ export const FlashMessageComponent = (props: IFlashMessageComponentProps) => {
     showMessage({
         message: props.message,
         backgroundColor: 'rgba(52, 52, 52, .9)', // Dark semi-transparent background
-        position: 'center', // Center position
+        position: 'top', // Center position
+       
         style: {
             borderRadius: 40,
             minHeight: 50,
+            top:0,
+            zIndex:99999999,
+            
         },
     });
 

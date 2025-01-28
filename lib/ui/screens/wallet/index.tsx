@@ -3,7 +3,7 @@ import WalletMain from '../../screen-components/wallet/view/main'
 
 export default function WalletScreen() {
   return (
-    <View className="w-full items-center p-3">
+    <View className="w-full items-center">
       <WalletMain />
     </View>
   )

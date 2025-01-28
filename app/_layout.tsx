@@ -59,7 +59,7 @@ export default function RootLayout() {
               </Stack>
 
               <StatusBar style="auto" />
-              <FlashMessage position="bottom" />
+              <FlashMessage position="top" />
             </>
           </AuthProvider>
         </ConfigurationProvider>
