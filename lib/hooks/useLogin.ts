@@ -11,6 +11,7 @@ import {
   RIDER_LOGIN,
 } from "../api/graphql/mutation/login";
 import { router } from "expo-router";
+import { FlashMessageComponent } from "../ui/useable-components/flash-message";
 
 const useLogin = () => {
   const [creds, setCreds] = useState({ username: "", password: "" });
@@ -29,10 +30,9 @@ const useLogin = () => {
   // Handlers
   async function onCompleted({ riderLogin, lastOrderCreds }) {
     if (riderLogin) {
-      console.log({ riderLogin });
-      //FlashMessage({ message: t('loginFlashMsg') })
+      FlashMessageComponent({ message: "Logged in" });
       await AsyncStorage.setItem("rider-id", riderLogin.userId);
-      await setTokenAsync(riderLogin.token);
+      // await setTokenAsync(riderLogin.token);
       router.replace("/(drawer)/(tabs)/discovery");
     } else if (
       lastOrderCreds &&
@@ -45,13 +45,13 @@ const useLogin = () => {
       });
     }
   }
-  function onError(error) {
-    console.log("error", JSON.stringify(error));
-    let message = "Check internet connection";
-    try {
-      message = error.message;
-    } catch (error) {}
-    // FlashMessage({ message: message })
+  function onError(err) {
+    FlashMessageComponent({
+      message:
+        err?.graphQLErrors[0]?.message ??
+        err?.networkError?.message ??
+        "Something went wrong",
+    });
   }
 
   const onLogin = async (username: string, password: string) => {
@@ -100,13 +100,19 @@ const useLogin = () => {
         },
       });
     } catch (err) {
-      console.log(err);
+      console.log({ wrong: err });
+
+      FlashMessageComponent({
+        message:
+          err?.graphQLErrors[0]?.message ??
+          err?.networkError?.message ??
+          "Something went wrong",
+      });
     }
   };
 
   return {
     creds,
-    isLoggingIn,
     onLogin,
   };
 };

@@ -14,6 +14,10 @@ import "react-native-reanimated";
 import { useColorScheme } from "@/lib/hooks/useColorScheme";
 
 import '../global.css'
+import { ConfigurationProvider } from "@/lib/context/global/configuration.context";
+import { ApolloProvider } from "@apollo/client";
+import setupApollo from "@/lib/apollo";
+import FlashMessage from "react-native-flash-message";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -25,6 +29,9 @@ export default function RootLayout() {
     Inter: require("../lib/assets/fonts/Inter.ttf"),
   });
 
+  const client = setupApollo()
+
+  // Use Effect
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
@@ -36,17 +43,24 @@ export default function RootLayout() {
   }
 
 
-
-
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="login" options={{ headerShown: false }} />
-        <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
+      <ApolloProvider client={client}>
 
-      <StatusBar style="auto" />
+
+        <ConfigurationProvider>
+
+
+          <Stack>
+            <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+
+          <StatusBar style="auto" />
+          <FlashMessage position="bottom" />
+        </ConfigurationProvider>
+      </ApolloProvider>
     </ThemeProvider>
   );
 }

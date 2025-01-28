@@ -1,12 +1,17 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+import { ReactNode } from "react";
+import { IGlobalProps } from "./global.interface";
+
+export interface IConfigurationContextProps extends IGlobalProps {}
+
 export interface IConfiguration {
-  iOSClientID?: string
-  androidClientID?: string
-  appAmplitudeApiKey?: string
-  googleApiKey?: string
-  expoClientID?: string
-  customerAppSentryUrl?: string
-  termsAndConditions?: string
-  privacyPolicy?: string
-  testOtp?: string
-  googlePlacesApiBaseUrl?: string
+  _id: string;
+  googleApiKey: string;
+  riderAppSentryUrl: string;
+  currency: string;
+  currencySymbol: string;
+}
+
+export interface IConfigurationProviderProps {
+  children: ReactNode;
 }
