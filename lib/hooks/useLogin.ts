@@ -4,7 +4,7 @@ import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
 import { useContext, useState } from "react";
-import { Dimensions } from "react-native";
+
 import { AuthContext } from "../context/global/auth.context";
 import {
   DEFAULT_RIDER_CREDS,
