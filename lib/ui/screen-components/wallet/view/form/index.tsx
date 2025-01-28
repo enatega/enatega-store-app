@@ -3,7 +3,7 @@ import { Text } from 'react-native'
 import { ReactNativeModal } from 'react-native-modal'
 import { View } from 'react-native'
 import { CustomContinueButton } from '@/lib/ui/useable-components'
-import { TextInput } from 'react-native-gesture-handler'
+import { TextInput } from 'react-native'
 import { useState } from 'react'
 
 export default function WithdrawModal({
@@ -12,7 +12,8 @@ export default function WithdrawModal({
   currentTotal,
   handleFormSubmission,
   amountErrMsg,
-  setAmountErrMsg
+  setAmountErrMsg,
+  withdrawRequestLoading,
 }: IWithdrawModalProps) {
   // States
   const [withdrawAmount, setWithdrawAmount] = useState('')
@@ -54,7 +55,7 @@ export default function WithdrawModal({
       <View className="flex flex-col justify-between h-[75%] p-2 items-center w-full">
         <View className="flex flex-row justify-between w-full  border-b-gray-300 border-b">
           <Text className="font-bold text-lg py-2">Available Amount</Text>
-          <Text className="font-bold text-lg">{currentTotal}</Text>
+          <Text className="font-bold text-lg">${currentTotal}</Text>
         </View>
         <View className=" flex flex-col gap-3 w-full">
           <Text className="font-bold text-lg">Enter Amount</Text>
@@ -64,8 +65,7 @@ export default function WithdrawModal({
             maxLength={9999999}
             onFocus={() => setModalMargintTop(200)}
             onBlur={() => setModalMargintTop(480)}
-            focusable={true}
-            autoFocus={true}
+  
             placeholder="$0.00"
             keyboardType="number-pad"
             returnKeyType="done"
@@ -77,7 +77,8 @@ export default function WithdrawModal({
         </View>
         <View>
           <CustomContinueButton
-            title="Confirm Withdraw"
+            title={!withdrawRequestLoading?"Confirm Withdraw":"Please wait..."}
+            disabled={withdrawRequestLoading}
             onPress={() => handleFormSubmission(Number(withdrawAmount))}
           />
         </View>

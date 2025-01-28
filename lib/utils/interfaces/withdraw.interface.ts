@@ -7,4 +7,5 @@ export interface IWithdrawModalProps {
   handleFormSubmission: (val:number)=>Promise<void>
   amountErrMsg?: string
   setAmountErrMsg: Dispatch<SetStateAction<string>>
+  withdrawRequestLoading?: boolean
 }

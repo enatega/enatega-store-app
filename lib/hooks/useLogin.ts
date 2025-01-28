@@ -23,7 +23,7 @@ const useLogin = () => {
   const { setTokenAsync } = useContext(AuthContext);
   console.log();
   // API
-  const [login] = useMutation(RIDER_LOGIN, {
+  const [login, {data:riderLoginData}] = useMutation(RIDER_LOGIN, {
     onCompleted,
     onError,
   });
@@ -101,13 +101,17 @@ const useLogin = () => {
       }
 
       // Perform mutation with the obtained data
-    await  login({
+      const {data} = await login({
         variables: {
           username: username.toLowerCase(),
           password: password,
           notificationToken: notificationToken,
         },
       });
+      console.log({data})
+      if(riderLoginData?.userId){
+       await AsyncStorage.setItem("rider-id", data.userId);
+      }
     } catch (err) {
       console.log({ wrong: err });
 
@@ -119,11 +123,10 @@ const useLogin = () => {
       });
     }
   };
-
   return {
     creds,
     onLogin,
-    isLogging: isLoading,
+    isLogging: isLoading
   };
 };
 export default useLogin;

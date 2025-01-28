@@ -1,3 +1,5 @@
+import { IRiderProfile } from "./user.interface"
+
 export interface IRiderEarningsResponse {
   earnings: {
     data: {
@@ -25,4 +27,8 @@ export interface IRiderTransactionHistoryResponse {
   transactionHistory: {
     data: IRiderTransaction[]
   }
+}
+
+export interface IRiderByIdResponse {
+  rider : IRiderProfile
 }

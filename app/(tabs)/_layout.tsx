@@ -54,7 +54,7 @@ const RootLayout = () => {
         options={{
           title: "Wallet",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="wallet" color={color} />
+            <IconSymbol size={28} name="wallet.pass.fill" color={color} />
           ),
         }}
       />
@@ -63,7 +63,7 @@ const RootLayout = () => {
         options={{
           title: "Earnings",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="currency-exchange" color={color} />
+            <IconSymbol size={28} name="dollarsign.circle" color={color} />
           ),
         }}
       />

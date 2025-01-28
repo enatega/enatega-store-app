@@ -21,9 +21,7 @@ const Order = ({ order, orderAmount }: IOrderComponentProps) => {
             <View style={{ marginTop: 20 }}>
                 {order?.orderStatus === 'ACCEPTED' ||
                     order?.orderStatus === 'PICKED' ? (
-                    <View
-
-                    />
+                    <View/>
                 ) : null}
 
                 <TouchableOpacity

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import {
     requestForegroundPermissionsAsync,
     watchPositionAsync,
@@ -14,6 +14,7 @@ import { useLocationContext } from './location.context'
 import { RIDER_ORDERS, RIDER_PROFILE } from '@/lib/apollo/queries'
 import { UPDATE_LOCATION } from '@/lib/apollo/mutations/rider.mutation'
 import { SUBSCRIPTION_ASSIGNED_RIDER, SUBSCRIPTION_ZONE_ORDERS } from '@/lib/apollo/subscriptions'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 
@@ -23,6 +24,7 @@ const UserContext = React.createContext({})
 
 export const UserProvider = ({ children }: IUserProviderProps) => {
     const locationListener = useRef<LocationSubscription>()
+    const [userId, setUserId] = useState('')
     const { locationPermission } = useLocationContext()
 
     const {
@@ -34,8 +36,11 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         // onCompleted,
         // pollInterval: 10000,
         // onError: error1
+        variables:{
+            id: userId
+        }
     })
-
+console.log({userId})
     const {
         client,
         loading: loadingAssigned,
@@ -70,6 +75,11 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     // function error2(error) {
     //     console.log('error on fetching context 2', JSON.stringify(error))
     // }
+
+    async function getUserId(){
+      const id =  await AsyncStorage.getItem("rider-id")
+      setUserId(id)
+    }
 
     const subscribeNewOrders = () => {
         try {
@@ -165,7 +175,9 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
             }
         }
     }, [locationPermission])
-
+    useEffect(() => {
+        getUserId()
+    },[])
     console.log({ dataAssigned })
 
     return (
@@ -174,6 +186,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
                 loadingProfile,
                 errorProfile,
                 dataProfile,
+                userId,
                 loadingAssigned,
                 errorAssigned,
                 assignedOrders:
