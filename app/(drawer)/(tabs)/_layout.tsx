@@ -19,7 +19,6 @@ const RootLayout = () => {
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
             position: "absolute",
           },
 
@@ -33,6 +32,24 @@ const RootLayout = () => {
           title: "Discovery",
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="house.fill" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="wallet"
+        options={{
+          title: "Wallet",
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="wallet.pass.fill" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="earnings"
+        options={{
+          title: "Earnings",
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="dollarsign.circle" color={color} />
           ),
         }}
       />
