@@ -1,7 +1,10 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "target": "ES2020", // Supports optional chaining
+    "lib": ["ESNext"], // Includes modern JavaScript features
     "jsx": "react-jsx",
+    "module": "commonjs",
     "strict": true,
     "paths": {
       "@/*": ["./*"]

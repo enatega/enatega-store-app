@@ -5,7 +5,7 @@
 
 export const Colors = {
   light: {
-    primary: "#c3e31e",
+    primary: "#90E36D",
     themeBackground: "#FAFAFA",
     iconColor: "#333333",
     tagColor: "#AAC810",
@@ -29,6 +29,7 @@ export const Colors = {
     startColor: "#AAC810",
     white: "#FFF",
     black: "#000",
+    tabNaviatorBackground: "#1F2937",
   },
   dark: {
     primary: "#A5C616", // Slightly darker green to avoid too much brightness

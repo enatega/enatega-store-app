@@ -132,5 +132,5 @@ export default function WalletMain() {
         handleFormSubmission={handleFormSubmission}
       />
     </View>
-  )
+  );
 }

@@ -16,20 +16,34 @@ const RootLayout = () => {
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].primary,
         headerShown: false,
         tabBarButton: HapticTab,
+
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
             position: "absolute",
+
           },
 
-          default: {},
+          default: {
+            position: "absolute",
+
+            backgroundColor: Colors.light.tabNaviatorBackground,
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            borderTopWidth: 0.5, // Optional border at the top
+            elevation: 5, // Shadow for Android
+            shadowColor: "#000", // Shadow for iOS
+            shadowOffset: { width: 0, height: -5 },
+            shadowOpacity: 0.1,
+            shadowRadius: 5,
+          },
         }),
       }}
     >
       <Tabs.Screen
-        name="discovery"
+        name="home"
         options={{
-          title: "Discovery",
+          title: "Home",
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="house.fill" color={color} />
           ),
@@ -40,7 +54,7 @@ const RootLayout = () => {
         options={{
           title: "Wallet",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="wallet.pass.fill" color={color} />
+            <IconSymbol size={28} name="wallet" color={color} />
           ),
         }}
       />
@@ -49,16 +63,16 @@ const RootLayout = () => {
         options={{
           title: "Earnings",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="dollarsign.circle" color={color} />
+            <IconSymbol size={28} name="currency-exchange" color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="profile"
         options={{
-          title: "Explore",
+          title: "Profile",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
+            <IconSymbol size={28} name="person" color={color} />
           ),
         }}
       />

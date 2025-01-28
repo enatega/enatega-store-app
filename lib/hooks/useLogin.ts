@@ -10,9 +10,10 @@ import {
   DEFAULT_RIDER_CREDS,
   RIDER_LOGIN,
 } from "../api/graphql/mutation/login";
-import { router } from "expo-router";
+import { Href, router } from "expo-router";
 import { FlashMessageComponent } from "../ui/useable-components/flash-message";
 import { IRiderLoginCompleteResponse } from "../utils/interfaces/auth.interface";
+import { ROUTES } from "../utils/constants";
 
 const useLogin = () => {
   const [creds, setCreds] = useState({ username: "", password: "" });
@@ -36,10 +37,9 @@ const useLogin = () => {
   }: IRiderLoginCompleteResponse) {
     setIsLoading(false);
     if (riderLogin) {
-      console.log(riderLogin);
       await AsyncStorage.setItem("rider-id", riderLogin.userId);
       await setTokenAsync(riderLogin.token);
-      router.replace("/(drawer)/(tabs)/discovery");
+      router.replace(ROUTES.home as Href);
     } else if (
       lastOrderCreds &&
       lastOrderCreds?.riderUsername &&

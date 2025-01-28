@@ -14,4 +14,4 @@ mutation SendChatMessage($orderId: ID!, $messageInput: ChatMessageInput!) {
       }
     }
   }
-  `
+  `;

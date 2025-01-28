@@ -19,6 +19,7 @@ import { IRestaurantLocation } from "../utils/interfaces";
 import { calculateDistance } from "../utils/methods/custom-functions";
 import { DefinitionNode, FragmentDefinitionNode } from "graphql";
 import { Subscription } from "zen-observable-ts";
+import { RIDER_TOKEN } from "../utils/constants";
 
 const setupApollo = () => {
   const { GRAPHQL_URL, WS_GRAPHQL_URL } = useEnvVars();
@@ -103,7 +104,7 @@ const setupApollo = () => {
   });
 
   const request = async (operation: Operation) => {
-    const token = await AsyncStorage.getItem("token");
+    const token = await AsyncStorage.getItem(RIDER_TOKEN);
 
     operation.setContext({
       headers: {

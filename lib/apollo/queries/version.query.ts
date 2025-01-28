@@ -5,7 +5,7 @@ query {
       riderAppVersion
       restaurantAppVersion
     }
-  }`
+  }`;
 
 export const getVersions = `#graphql
   query GetVersions {
@@ -16,4 +16,4 @@ export const getVersions = `#graphql
       }
     }
   }
-  `
+  `;

@@ -6,4 +6,4 @@ mutation Coupon($coupon:String!){
       discount
       enabled
     }
-  }`
+  }`;

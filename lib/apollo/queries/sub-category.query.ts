@@ -7,4 +7,4 @@ query subCategories{
     parentCategoryId
   }
 }
-`
+`;

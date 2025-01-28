@@ -4,4 +4,4 @@ mutation PushToken($token:String){
       _id
       notificationToken
     }
-  }`
+  }`;

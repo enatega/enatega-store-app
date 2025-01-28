@@ -38,7 +38,7 @@ export const restaurantPreviewFragment = `#graphql
       }
     }
   }
-`
+`;
 export const restaurantList = `#graphql
 query Restaurants($latitude:Float,$longitude:Float,$shopType:String){
   nearByRestaurants(latitude:$latitude,longitude:$longitude,shopType:$shopType){
@@ -130,7 +130,7 @@ query Restaurants($latitude:Float,$longitude:Float,$shopType:String){
     }
   }
 }
-}`
+}`;
 export const restaurantListPreview = `#graphql
 query Restaurants($latitude:Float,$longitude:Float,$shopType:String){
   nearByRestaurantsPreview(latitude:$latitude,longitude:$longitude,shopType:$shopType){
@@ -185,4 +185,4 @@ query Restaurants($latitude:Float,$longitude:Float,$shopType:String){
       }
     }
 }
-}`
+}`;

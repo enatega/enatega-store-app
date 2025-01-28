@@ -9,4 +9,4 @@ query Chat($order: ID!) {
     }
     createdAt
   }
-}`
+}`;

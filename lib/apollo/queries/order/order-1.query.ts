@@ -55,7 +55,7 @@ query Order($id:String!){
       assignedAt
     }
   }
-  `
+  `;
 
 export const myOrders = `#graphql
   query Orders($offset:Int){
@@ -142,4 +142,4 @@ export const myOrders = `#graphql
       instructions
     }
   }
-  `
+  `;

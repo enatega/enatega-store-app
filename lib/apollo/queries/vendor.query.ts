@@ -1,4 +1,4 @@
-import { restaurantPreviewFragment } from "./resturant/resturant-2.query"
+import { restaurantPreviewFragment } from "./resturant/resturant-2.query";
 
 export const topRatedVendorsInfo = `#graphql
 
@@ -8,7 +8,7 @@ export const topRatedVendorsInfo = `#graphql
       ...RestaurantPreviewFields
     }
   }
-`
+`;
 
 export const topRatedVendorsInfoPreview = `#graphql
 query TopRatedVendors($latitude: Float!, $longitude: Float!) {
@@ -32,4 +32,4 @@ query TopRatedVendors($latitude: Float!, $longitude: Float!) {
       title
     }
   }
-}`
+}`;

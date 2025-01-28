@@ -1,5 +1,4 @@
-import { restaurantPreviewFragment } from "../resturant/resturant-2.query"
-
+import { restaurantPreviewFragment } from "../resturant/resturant-2.query";
 
 export const orderFragment = `#graphql
 fragment NewOrder on Order {
@@ -73,7 +72,7 @@ fragment NewOrder on Order {
     deliveredAt
     cancelledAt
     assignedAt
-  }`
+  }`;
 
 export const recentOrderRestaurantsQuery = `#graphql
 
@@ -83,7 +82,7 @@ export const recentOrderRestaurantsQuery = `#graphql
         ...RestaurantPreviewFields
       }
     }
-  `
+  `;
 
 export const recentOrderRestaurantsPreviewQuery = `#graphql
     query GetRecentOrderRestaurants($latitude: Float!, $longitude: Float!) {
@@ -108,4 +107,4 @@ export const recentOrderRestaurantsPreviewQuery = `#graphql
         }
       }
     }
-  `
+  `;

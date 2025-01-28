@@ -9,4 +9,4 @@ query Banners{
     file
     parameters
   }
-}`
+}`;

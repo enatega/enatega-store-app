@@ -7,4 +7,4 @@ query Cuisines{
     image
     shopType
   }
-}`
+}`;
