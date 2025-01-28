@@ -5,20 +5,22 @@ import Constants from "expo-constants";
 import * as Device from "expo-device";
 import { useContext, useState } from "react";
 import { Dimensions } from "react-native";
-import { AuthContext } from "../context/global/auth";
+import { AuthContext } from "../context/global/auth.context";
 import {
   DEFAULT_RIDER_CREDS,
   RIDER_LOGIN,
 } from "../api/graphql/mutation/login";
 import { router } from "expo-router";
 import { FlashMessageComponent } from "../ui/useable-components/flash-message";
+import { IRiderLoginCompleteResponse } from "../utils/interfaces/auth.interface";
 
 const useLogin = () => {
   const [creds, setCreds] = useState({ username: "", password: "" });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Context
   const { setTokenAsync } = useContext(AuthContext);
-
+  console.log();
   // API
   const [login] = useMutation(RIDER_LOGIN, {
     onCompleted,
@@ -28,24 +30,29 @@ const useLogin = () => {
   useQuery(DEFAULT_RIDER_CREDS, { onCompleted, onError });
 
   // Handlers
-  async function onCompleted({ riderLogin, lastOrderCreds }) {
+  async function onCompleted({
+    riderLogin,
+    lastOrderCreds,
+  }: IRiderLoginCompleteResponse) {
+    setIsLoading(false);
     if (riderLogin) {
-      FlashMessageComponent({ message: "Logged in" });
+      console.log(riderLogin);
       await AsyncStorage.setItem("rider-id", riderLogin.userId);
-      // await setTokenAsync(riderLogin.token);
+      await setTokenAsync(riderLogin.token);
       router.replace("/(drawer)/(tabs)/discovery");
     } else if (
       lastOrderCreds &&
-      lastOrderCreds.riderUsername &&
-      lastOrderCreds.riderPassword
+      lastOrderCreds?.riderUsername &&
+      lastOrderCreds?.riderPassword
     ) {
       setCreds({
-        username: lastOrderCreds.riderUsername,
-        password: lastOrderCreds.riderPassword,
+        username: lastOrderCreds?.riderUsername,
+        password: lastOrderCreds?.riderPassword,
       });
     }
   }
   function onError(err) {
+    setIsLoading(false);
     FlashMessageComponent({
       message:
         err?.graphQLErrors[0]?.message ??
@@ -56,6 +63,8 @@ const useLogin = () => {
 
   const onLogin = async (username: string, password: string) => {
     try {
+      setIsLoading(true);
+      // Get notification permissions
       const settings = await Notifications.getPermissionsAsync();
       let notificationPermissions = { ...settings };
 
@@ -114,6 +123,7 @@ const useLogin = () => {
   return {
     creds,
     onLogin,
+    isLogging: isLoading,
   };
 };
 export default useLogin;

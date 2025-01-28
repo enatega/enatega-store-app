@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 export interface IGlobalProps {
   children?: React.ReactNode;
 }
 export interface IGlobalComponentProps extends IGlobalProps {
   className?: string;
 }
+
+export interface IGlobalProviderProps extends IGlobalProps {}
 
 export interface ILazyQueryResult<T, V> {
   data: T | null;

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import { ReactNode } from "react";
-import { IGlobalProps } from "./global.interface";
+import { IGlobalProps, IGlobalProviderProps } from "./global.interface";
 
 export interface IConfigurationContextProps extends IGlobalProps {}
 
@@ -12,6 +11,4 @@ export interface IConfiguration {
   currencySymbol: string;
 }
 
-export interface IConfigurationProviderProps {
-  children: ReactNode;
-}
+export interface IConfigurationProviderProps extends IGlobalProviderProps {}
