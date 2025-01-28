@@ -5,4 +5,4 @@ query Taxes{
     taxationCharges
     enabled
     }
-  }`
+  }`;

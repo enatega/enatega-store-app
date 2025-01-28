@@ -1,6 +1,6 @@
-import { CustomContinueButton } from '@/lib/ui/useable-components'
-import { Text, View } from 'react-native'
-import RecentTransaction from '../recent-transactions'
+import { CustomContinueButton } from "@/lib/ui/useable-components";
+import { Text, View } from "react-native";
+import RecentTransaction from "../recent-transactions";
 
 export default function WalletMain() {
   return (
@@ -14,5 +14,5 @@ export default function WalletMain() {
       </View>
       <RecentTransaction />
     </View>
-  )
+  );
 }

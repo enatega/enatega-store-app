@@ -13,7 +13,7 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/lib/hooks/useColorScheme";
 
-import '../global.css'
+import "../global.css";
 import { ConfigurationProvider } from "@/lib/context/global/configuration.context";
 import { ApolloProvider } from "@apollo/client";
 import setupApollo from "@/lib/apollo";
@@ -30,7 +30,7 @@ export default function RootLayout() {
     Inter: require("../lib/assets/fonts/Inter.ttf"),
   });
 
-  const client = setupApollo()
+  const client = setupApollo();
 
   // Use Effect
   useEffect(() => {
@@ -43,18 +43,18 @@ export default function RootLayout() {
     return null;
   }
 
-
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <ApolloProvider client={client}>
-
-
         <ConfigurationProvider>
           <AuthProvider client={client}>
             <>
               <Stack>
                 <Stack.Screen name="login" options={{ headerShown: false }} />
-                <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="(tabs)"
+                  options={{ headerShown: false }}
+                />
                 <Stack.Screen name="+not-found" />
               </Stack>
 

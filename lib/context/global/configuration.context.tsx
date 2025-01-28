@@ -1,29 +1,29 @@
-'use client';
+"use client";
 
 // Core
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from "react";
 
 // Interfaces§
 import {
   IConfiguration,
   IConfigurationProviderProps,
   ILazyQueryResult,
-} from '@/lib/utils/interfaces';
+} from "@/lib/utils/interfaces";
 
 // API
-import { GET_CONFIGURATION } from '@/lib/api/graphql';
+import { GET_CONFIGURATION } from "@/lib/api/graphql";
 
 // Hooks
-import { useLazyQueryQL } from '@/lib/hooks/useLazyQueryQL';
+import { useLazyQueryQL } from "@/lib/hooks/useLazyQueryQL";
 
 export const ConfigurationContext = React.createContext<
   IConfiguration | undefined
 >({
-  _id: '',
-  googleApiKey: '',
-  riderAppSentryUrl: '',
-  currency: '',
-  currencySymbol: '',
+  _id: "",
+  googleApiKey: "",
+  riderAppSentryUrl: "",
+  currency: "",
+  currencySymbol: "",
 });
 
 export const ConfigurationProvider: React.FC<IConfigurationProviderProps> = ({
@@ -46,12 +46,12 @@ export const ConfigurationProvider: React.FC<IConfigurationProviderProps> = ({
     const configuration: IConfiguration | undefined =
       loading || error || !data
         ? {
-          _id: '',
-          googleApiKey: '',
-          riderAppSentryUrl: '',
-          currency: '',
-          currencySymbol: '',
-        }
+            _id: "",
+            googleApiKey: "",
+            riderAppSentryUrl: "",
+            currency: "",
+            currencySymbol: "",
+          }
         : data?.configuration;
 
     setConfiguration(configuration);
@@ -69,7 +69,6 @@ export const ConfigurationProvider: React.FC<IConfigurationProviderProps> = ({
   useEffect(() => {
     onFetchConfiguration();
   }, [data]);
-
 
   return (
     <ConfigurationContext.Provider value={configuration}>

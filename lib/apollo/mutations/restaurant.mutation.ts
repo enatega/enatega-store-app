@@ -11,4 +11,4 @@ mutation AddFavourite($id:String!){
         selected
       }
     }
-  }`
+  }`;

@@ -4,7 +4,7 @@ query Users {
     _id
    email
  }
-}`
+}`;
 
 export const profile = `#graphql
         query{
@@ -29,4 +29,4 @@ export const profile = `#graphql
             }
             favourite
           }
-        }`
+        }`;

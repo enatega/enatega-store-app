@@ -17,7 +17,7 @@ export default function TabTwoScreen() {
           params: { id: 1 },
         }}
       >
-        News 1
+        Coming Soon
       </Link>
       <Link
         href={{

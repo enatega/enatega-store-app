@@ -4,7 +4,7 @@ export const cancelOrder = `#graphql
               _id
               orderStatus
             }
-          }`
+          }`;
 
 export const reviewOrder = `#graphql 
 mutation ReviewOrder(
@@ -88,9 +88,9 @@ mutation ReviewOrder(
       cancelledAt
       assignedAt
     }
-  }`
+  }`;
 
-  export const placeOrder = `#graphql 
+export const placeOrder = `#graphql 
   mutation PlaceOrder($restaurant:String!,$orderInput:[OrderInput!]!,$paymentMethod:String!,$couponCode:String,$tipping:Float!, $taxationAmount: Float!,$address:AddressInput!, $orderDate: String!,$isPickedUp: Boolean!, $deliveryCharges: Float!, $instructions: String){
     placeOrder(restaurant:$restaurant,orderInput: $orderInput,paymentMethod:$paymentMethod,couponCode:$couponCode,tipping:$tipping, taxationAmount: $taxationAmount, address:$address, orderDate: $orderDate,isPickedUp: $isPickedUp, deliveryCharges:$deliveryCharges, instructions: $instructions) {
       _id
@@ -165,4 +165,4 @@ mutation ReviewOrder(
       assignedAt
       instructions
     }
-  }`
+  }`;

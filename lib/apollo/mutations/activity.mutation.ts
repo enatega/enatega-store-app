@@ -14,4 +14,4 @@ export const createActivity = `#graphql
           details: $details
       )
     }
-`
+`;

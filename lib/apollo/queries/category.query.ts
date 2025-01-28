@@ -7,4 +7,4 @@ query subCategoriesByParentId($parentCategoryId:String!){
     parentCategoryId
   }
 }
-`
+`;

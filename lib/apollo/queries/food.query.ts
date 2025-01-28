@@ -1,7 +1,7 @@
 export const relatedItems = `#graphql
 query RelatedItems($itemId: String!, $restaurantId: String!) {
   relatedItems(itemId: $itemId, restaurantId: $restaurantId)
-}`
+}`;
 
 export const food = `#graphql
 fragment FoodItem on Food{
@@ -19,7 +19,7 @@ fragment FoodItem on Food{
 
   }
 }
-`
+`;
 export const popularItems = `#graphql
 query PopularItems($restaurantId: String!) {
   popularItems(restaurantId: $restaurantId) {
@@ -27,4 +27,4 @@ query PopularItems($restaurantId: String!) {
     count
   }
 }
-`
+`;

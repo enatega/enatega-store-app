@@ -7,4 +7,4 @@ query Zones{
   location{coordinates}
   isActive
   }
-}`
+}`;

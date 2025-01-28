@@ -242,4 +242,4 @@ export const restaurantFragment = `#graphql
     enableNotification
     shopType
   }
-`
+`;

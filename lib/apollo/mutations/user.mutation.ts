@@ -15,7 +15,7 @@ export const createUser = `#graphql
             email
             phone
         }
-      }`
+      }`;
 
 export const updateUser = `#graphql
       mutation UpdateUser($name:String!,$phone:String,$phoneIsVerified:Boolean,$emailIsVerified:Boolean){
@@ -26,4 +26,4 @@ export const updateUser = `#graphql
             phoneIsVerified
             emailIsVerified
           }
-        }`
+        }`;

@@ -72,7 +72,7 @@ query UserFavourite ($latitude:Float,$longitude:Float){
       }
     }
    }
-}`
+}`;
 export const restaurant = `#graphql
 query Restaurant($id:String){
   restaurant(id:$id){
@@ -157,4 +157,4 @@ query Restaurant($id:String){
     restaurantUrl
     cuisines
   }
-}`
+}`;

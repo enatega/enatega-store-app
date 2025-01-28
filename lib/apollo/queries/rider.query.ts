@@ -4,4 +4,4 @@ query Rider($id:String){
     _id
     location {coordinates}
   }
-}`
+}`;

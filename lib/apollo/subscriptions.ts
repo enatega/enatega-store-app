@@ -8,14 +8,14 @@ export const subscriptionOrder = `subscription SubscriptionOrder($id:String!){
         completionTime
         preparationTime
     }
-  }`
+  }`;
 
 export const subscriptionRiderLocation = `subscription SubscriptionRiderLocation($riderId:String!){
     subscriptionRiderLocation(riderId:$riderId) {
       _id
       location {coordinates}
     }
-  }`
+  }`;
 
 export const orderStatusChanged = `subscription OrderStatusChanged($userId:String!){
     orderStatusChanged(userId:$userId){
@@ -95,7 +95,7 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
       instructions
       }
     }
-  }`
+  }`;
 
 export const subscriptionNewMessage = `subscription SubscriptionNewMessage($order:ID!){
   subscriptionNewMessage(order:$order){
@@ -107,4 +107,4 @@ export const subscriptionNewMessage = `subscription SubscriptionNewMessage($orde
     }
     createdAt
   }
-}`
+}`;

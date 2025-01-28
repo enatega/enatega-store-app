@@ -1,1 +1,1 @@
-export *  from './global.enum'
+export * from "./global.enum";

@@ -6,4 +6,4 @@ export const updateNotificationStatus = `#graphql
               isOrderNotification
               isOfferNotification
             }
-          }`
+          }`;

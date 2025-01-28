@@ -8,4 +8,4 @@ query GetCountryByIso($iso: String!) {
       longitude
     }
   }
-}`
+}`;

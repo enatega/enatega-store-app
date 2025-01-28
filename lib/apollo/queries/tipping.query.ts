@@ -5,4 +5,4 @@ query Tips{
       tipVariations
       enabled
     }
-  }`
+  }`;

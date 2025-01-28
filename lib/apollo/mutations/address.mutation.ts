@@ -10,7 +10,7 @@ mutation DeleteAddress($id:ID!){
         location{coordinates}
       }
     }
-  }`
+  }`;
 
 export const deleteBulkAddresses = `#graphql
 mutation DeleteBulkAddresses($ids:[ID!]!){
@@ -24,7 +24,7 @@ mutation DeleteBulkAddresses($ids:[ID!]!){
         location{coordinates}
       }
     }
-  }`
+  }`;
 
 export const createAddress = `#graphql
 mutation CreateAddress($addressInput:AddressInput!){
@@ -39,7 +39,7 @@ mutation CreateAddress($addressInput:AddressInput!){
         selected
       }
     }
-  }`
+  }`;
 
 export const editAddress = `#graphql
 mutation EditAddress($addressInput:AddressInput!){
@@ -54,7 +54,7 @@ mutation EditAddress($addressInput:AddressInput!){
         selected
       }
     }
-  }`
+  }`;
 
 export const selectAddress = `#graphql
 mutation SelectAddress($id:String!){
@@ -69,4 +69,4 @@ mutation SelectAddress($id:String!){
         selected
       }
     }
-  }`
+  }`;
