@@ -20,8 +20,6 @@ export default function HomeOrdersMain(props: IOrderTabsComponentProps) {
 
   // Context
   const {
-    loadingProfile,
-    errorProfile,
     dataProfile,
     loadingAssigned,
     errorAssigned,

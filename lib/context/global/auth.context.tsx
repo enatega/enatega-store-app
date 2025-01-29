@@ -6,15 +6,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // Interfaces§
 import { IAuthContext, IAuthProviderProps } from "@/lib/utils/interfaces";
 import { RIDER_TOKEN } from "@/lib/utils/constants";
+import { useRouter } from "expo-router";
 
 export const AuthContext = React.createContext<IAuthContext>(
-  {} as IAuthContext,
+  {} as IAuthContext
 );
 
 export const AuthProvider: React.FC<IAuthProviderProps> = ({
   client,
   children,
 }) => {
+  // Hooks
+  const router = useRouter();
+  // State
   const [token, setToken] = useState<string>("");
 
   const setTokenAsync = async (token: string) => {
@@ -27,11 +31,11 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
     try {
       client.clearStore();
       await AsyncStorage.removeItem(RIDER_TOKEN);
-
       setToken("");
       if (await Location.hasStartedLocationUpdatesAsync("RIDER_LOCATION")) {
         await Location.stopLocationUpdatesAsync("RIDER_LOCATION");
       }
+      router.replace("/login");
     } catch (e) {
       console.log("Logout Error: ", e);
     }
