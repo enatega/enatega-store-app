@@ -240,7 +240,7 @@ export default function OrderDetail() {
               <ItemDetails orderData={order} tab={tab} />
             </AccordionItem>
 
-            {/* Login Button */}
+            {/* Pick up Button */}
             {tab === "processing" && order.orderStatus === "ASSIGNED" && (
               <TouchableOpacity
                 className="h-14 bg-green-500 rounded-3xl py-3 w-full mt-4 mb-10"
@@ -254,6 +254,42 @@ export default function OrderDetail() {
                   <SpinnerComponent />
                 : <Text className="text-center text-white text-lg font-medium">
                     Pick up
+                  </Text>
+                }
+              </TouchableOpacity>
+            )}
+
+            {tab === "processing" && order.orderStatus === "PICKED" && (
+              <TouchableOpacity
+                className="h-14 bg-green-500 rounded-3xl py-3 w-full mt-4 mb-10"
+                onPress={() =>
+                  mutateOrderStatus({
+                    variables: { id: order?._id, status: "DELIVERED" },
+                  })
+                }
+              >
+                {loadingOrderStatus ?
+                  <SpinnerComponent />
+                : <Text className="text-center text-white text-lg font-medium">
+                    Mark as Delivered
+                  </Text>
+                }
+              </TouchableOpacity>
+            )}
+
+            {tab === "new_orders" && order.orderStatus === "ACCEPTED" && (
+              <TouchableOpacity
+                className="h-12 bg-green-500 rounded-3xl py-3 mt-10 w-full"
+                onPress={() =>
+                  mutateAssignOrder({
+                    variables: { id: order?._id },
+                  })
+                }
+              >
+                {loadingAssignOrder ?
+                  <SpinnerComponent />
+                : <Text className="text-center text-white text-lg font-medium">
+                    Assign me
                   </Text>
                 }
               </TouchableOpacity>

@@ -186,7 +186,6 @@ const Order = ({ order, tab }: IOrderComponentProps) => {
               </Text>
             </View>
 
-            {/* Login Button */}
             {tab === "new_orders" && (
               <TouchableOpacity
                 className="h-12 bg-green-500 rounded-3xl py-3 mt-10 w-full"
@@ -204,50 +203,6 @@ const Order = ({ order, tab }: IOrderComponentProps) => {
                 }
               </TouchableOpacity>
             )}
-
-            {/* <View>
-              <Text>Payment Method</Text>
-              <Text>{order?.paymentMethod}</Text>
-            </View>
-            {active === "MyOrders" && (
-              <View>
-                <Text>Delivery Time</Text>
-                <Text>
-                  {new Date(order?.createdAt).toLocaleDateString()}
-                  {new Date(order?.createdAt).toLocaleTimeString()}
-                </Text>
-              </View>
-            )}
-            <View />
-            <View>
-              {active === "NewOrders" && (
-                <View>
-                  <Text>Time Left</Text>
-                  <Text>{time}</Text>
-                </View>
-              )}
-              {active === "MyOrders" ?
-                <TouchableOpacity activeOpacity={0.8}>
-                  <Text>
-                    {order?.orderStatus === "DELIVERED" ?
-                      "Delivered"
-                    : "In-Progress"}
-                  </Text>
-                </TouchableOpacity>
-              : <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() => {
-                    mutateAssignOrder({
-                      variables: { id: order?._id },
-                    });
-                  }}
-                >
-                  {loadingAssignOrder ?
-                    <Spinner />
-                  : <Text>Assign Me</Text>}
-                </TouchableOpacity>
-              }
-            </View> */}
           </View>
         </TouchableOpacity>
       </View>
