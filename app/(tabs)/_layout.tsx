@@ -21,7 +21,6 @@ const RootLayout = () => {
         tabBarStyle: Platform.select({
           ios: {
             position: "absolute",
-
           },
 
           default: {
@@ -45,7 +44,7 @@ const RootLayout = () => {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
+            <IconSymbol size={28} name="home" color={color} />
           ),
         }}
       />

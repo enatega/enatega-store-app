@@ -1,10 +1,11 @@
 import { ReactNode } from "react";
 import { IGlobalComponentProps } from "./global.interface";
 import { IRiderProfile } from "./user.interface";
+import { ORDER_TYPE } from "../types";
 
 export interface IOrderComponentProps extends IGlobalComponentProps {
   order: IOrder;
-  orderAmount: number;
+  tab: ORDER_TYPE;
 }
 
 export interface IOrder {

@@ -21,6 +21,8 @@ import FlashMessage from "react-native-flash-message";
 import { AuthProvider } from "@/lib/context/global/auth.context";
 import { LocationProvider } from "@/lib/context/global/location.context";
 import { UserProvider } from "@/lib/context/global/user.context";
+import { Colors } from "@/lib/utils/constants";
+import { Platform } from "react-native";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -51,16 +53,22 @@ export default function RootLayout() {
         <ConfigurationProvider>
           <AuthProvider client={client}>
             <LocationProvider>
-
               <UserProvider>
                 <>
                   <Stack>
-                    <Stack.Screen name="login" options={{ headerShown: false }} />
+                    <Stack.Screen
+                      name="login"
+                      options={{ headerShown: false }}
+                    />
                     <Stack.Screen
                       name="(tabs)"
                       options={{ headerShown: false }}
                     />
                     <Stack.Screen name="+not-found" />
+                    <Stack.Screen
+                      name="order-detail"
+                      options={{ headerShown: false }}
+                    />
                   </Stack>
 
                   <StatusBar style="auto" />

@@ -166,7 +166,6 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         }
     }, [locationPermission])
 
-    console.log({ dataAssigned })
 
     return (
         <UserContext.Provider

@@ -1,3 +1,3 @@
 export const ROUTES = {
-  home: "/(tabs)/home",
+  home: "/(tabs)/home/orders",
 };
