@@ -44,7 +44,7 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
         trackRiderLocation()
         return () => {
             if (locationListener.current) {
-                locationListener.current.remove()
+                locationListener?.current?.remove()
             }
         }
     }, [locationPermission])

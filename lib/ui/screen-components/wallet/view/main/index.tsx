@@ -7,7 +7,7 @@ import {
   RIDER_EARNINGS,
   RIDER_TRANSACTIONS_HISTORY,
 } from '@/lib/apollo/queries'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   IRiderByIdResponse,
   IRiderEarningsResponse,
@@ -16,33 +16,28 @@ import {
 import { ILazyQueryResult } from '@/lib/utils/interfaces'
 import { ScrollView } from 'react-native'
 import { FlashMessageComponent } from '@/lib/ui/useable-components/flash-message'
-import { ApolloError, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import WithdrawModal from '../form'
 import SpinnerComponent from '@/lib/ui/useable-components/spinner'
 import { CREATE_WITHDRAW_REQUEST } from '@/lib/apollo/mutations/withdraw-request.mutation'
-import { AuthContext } from '@/lib/context/global/auth.context'
-import UserContext, { useUserContext } from '@/lib/context/global/user.context'
+import { useUserContext } from '@/lib/context/global/user.context'
 import { GraphQLError } from 'graphql'
 import { Alert } from 'react-native'
+import { router } from 'expo-router'
 
 export default function WalletMain() {
   // States
   const [isBottomModalOpen, setIsBottomModalOpen] = useState(false)
   const [amountErrMsg, setAmountErrMsg] = useState('')
 
-  const { logout } = useContext(AuthContext)
   const { userId } = useUserContext()
 
-  // logout();
   // Queries
-  const {
-    data: riderEarnings,
-    fetch: fetchRiderEarnings,
-    loading: isRiderEarningsLoading,
-  } = useLazyQueryQL(RIDER_EARNINGS) as ILazyQueryResult<
-    IRiderEarningsResponse | undefined,
-    undefined
-  >
+  const { fetch: fetchRiderEarnings, loading: isRiderEarningsLoading } =
+    useLazyQueryQL(RIDER_EARNINGS) as ILazyQueryResult<
+      IRiderEarningsResponse | undefined,
+      undefined
+    >
   const {
     data: riderTransactionData,
     fetch: fetchRiderTransactions,
@@ -82,6 +77,8 @@ export default function WalletMain() {
       FlashMessageComponent({
         message: 'Successfully created the withdraw request!',
       })
+      setIsBottomModalOpen(false)
+      router.push('/(tabs)/wallet/(routes)/success')
     },
     onError: (error) => {
       Alert.alert('Warning', error.message)
@@ -93,6 +90,10 @@ export default function WalletMain() {
           'Something went wrong',
       })
     },
+    refetchQueries: [
+      { query: RIDER_BY_ID, variables: { id: userId } },
+      { query: RIDER_EARNINGS, variables: { id: userId } },
+    ],
   })
 
   // Handlers
@@ -137,7 +138,7 @@ export default function WalletMain() {
           Current Balance
         </Text>
         <Text className="font-semibold text-[32px]">
-          {isRiderEarningsLoading && 'Loading...'}$
+          {(isRiderEarningsLoading || isRiderProfileLoading) && 'Loading...'}$
           {riderProfileData?.rider.currentWalletAmount ?? 0}
         </Text>
         <CustomContinueButton
@@ -151,8 +152,9 @@ export default function WalletMain() {
       {isRiderTransactionLoading ?
         <SpinnerComponent />
       : <ScrollView style={{ backgroundColor: 'white' }}>
-          {riderTransactionData?.transactionHistory.data.map(
-            (transaction, index) => {
+          {riderTransactionData?.transactionHistory.data
+            .slice(0, 20)
+            .map((transaction, index) => {
               return (
                 <RecentTransaction
                   transaction={transaction}
@@ -163,8 +165,7 @@ export default function WalletMain() {
                   }
                 />
               )
-            },
-          )}
+            })}
         </ScrollView>
       }
       <WithdrawModal

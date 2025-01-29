@@ -8,6 +8,7 @@ import {
     View,
     TouchableOpacity,
     StyleSheet,
+    Text,
 } from "react-native";
 import { TabView, SceneMap } from "react-native-tab-view";
 
@@ -32,7 +33,7 @@ const HomeOrdersScreen: React.FC = () => {
                         ),
                     });
 
-                    return (
+                   if(typeof route?.title === "string") return (
                         <TouchableOpacity
                             key={route.key}
                             style={[
@@ -42,7 +43,7 @@ const HomeOrdersScreen: React.FC = () => {
                             onPress={() => setIndex(i)} // Update index on press
                         >
                             <Animated.Text style={{ opacity }} className="font-[Inter] font-bold">
-                                {route.title}
+                                {(route?.title)}
                             </Animated.Text>
                         </TouchableOpacity>
                     );

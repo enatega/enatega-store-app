@@ -171,7 +171,7 @@ console.log({userId})
         trackRiderLocation()
         return () => {
             if (locationListener.current) {
-                locationListener.current.remove()
+                locationListener?.current?.remove()
             }
         }
     }, [locationPermission])
