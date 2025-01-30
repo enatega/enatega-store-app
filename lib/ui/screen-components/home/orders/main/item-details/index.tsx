@@ -1,5 +1,5 @@
 import { ConfigurationContext } from "@/lib/context/global/configuration.context";
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { View, Text } from "react-native";
 
 const ItemDetails = ({ orderData: order }) => {
@@ -7,6 +7,12 @@ const ItemDetails = ({ orderData: order }) => {
   const configuration = useContext(ConfigurationContext);
 
   if (!order) return null;
+
+  const itemAmount = useMemo(() => {
+    return order?.items?.reduce((sum, item) => {
+      return sum + item.quantity * item.variation.price;
+    }, 0);
+  }, [order._id]);
 
   return (
     <View className="pb-4">
@@ -56,6 +62,22 @@ const ItemDetails = ({ orderData: order }) => {
             </View>
           );
         })}
+      </View>
+
+      {/* Divider */}
+      <View className="flex-1 h-[1px] bg-gray-300 mb-4 mt-4" />
+
+      {/* Order Amount */}
+      <View className="flex-1 flex-row justify-between mb-4">
+        <Text className="font-[Inter] text-[16px] text-base font-[500] text-gray-600">
+          Total
+        </Text>
+        <View className="flex-row gap-x-1">
+          <Text className="font-[Inter] font-semibold text-left text-gray-900">
+            {configuration?.currencySymbol}
+            {itemAmount}
+          </Text>
+        </View>
       </View>
     </View>
   );

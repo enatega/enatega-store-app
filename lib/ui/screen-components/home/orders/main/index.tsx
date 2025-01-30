@@ -2,6 +2,7 @@
 import UserContext from "@/lib/context/global/user.context";
 import Order from "@/lib/ui/useable-components/order";
 import Spinner from "@/lib/ui/useable-components/spinner";
+import { NO_ORDER_PROMPT } from "@/lib/utils/constants";
 import { IOrderTabsComponentProps } from "@/lib/utils/interfaces";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
 import { ORDER_TYPE } from "@/lib/utils/types";
@@ -114,7 +115,9 @@ export default function HomeOrdersMain(props: IOrderTabsComponentProps) {
                 />
 
                 {orders.length === 0 ?
-                  <Text>No new orders yet!</Text>
+                  <Text className="font-[Inter] text-[18px] text-base font-[500] text-gray-600">
+                    {NO_ORDER_PROMPT[route.key]}
+                  </Text>
                 : <Text>Pull downto refresh</Text>}
               </View>
             );

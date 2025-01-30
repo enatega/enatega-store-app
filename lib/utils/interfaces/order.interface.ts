@@ -38,5 +38,6 @@ export interface IOrder {
   preparationTime: string;
   completionTime: string;
   isPickedUp: boolean;
+  isRiderRinged: boolean;
   rider: IRiderProfile;
 }

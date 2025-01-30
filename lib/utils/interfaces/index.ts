@@ -8,3 +8,4 @@ export * from "./tabs.interface";
 export * from "./location.interface";
 export * from "./user.interface";
 export * from "./text.interface";
+export * from "./sound.interface";

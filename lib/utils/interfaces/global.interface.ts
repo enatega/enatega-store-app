@@ -29,3 +29,18 @@ export interface IError {
   message: string;
   statusCode: number;
 }
+
+// SVG
+export interface ISVGComponentProps {
+  className?: string;
+  width?: string;
+  height?: string;
+  fill?: string;
+  stroke?: string;
+  strokeWidth?: string;
+}
+
+export interface ISVGRenderComponentProps {
+  key: string;
+  props: ISVGComponentProps;
+}
