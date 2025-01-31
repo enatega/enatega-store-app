@@ -9,8 +9,8 @@ import { OpaqueColorValue, StyleProp, ViewStyle } from "react-native";
 const MAPPING = {
   "house.fill": "home",
   "currency-exchange": "currency-exchange",
-  "wallet": "wallet",
-  "person": "person",
+  wallet: "wallet",
+  person: "person",
 } as Partial<
   Record<
     import("expo-symbols").SymbolViewProps["name"],

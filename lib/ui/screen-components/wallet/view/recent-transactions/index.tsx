@@ -1,29 +1,30 @@
-import { IRiderTransaction } from '@/lib/utils/interfaces/rider.interface'
-import { Ionicons } from '@expo/vector-icons'
-import { Text, View } from 'react-native'
+import { IRiderTransaction } from "@/lib/utils/interfaces/rider.interface";
+import { Ionicons } from "@expo/vector-icons";
+import { Text, View } from "react-native";
 
 export default function RecentTransaction({
   transaction,
   isLast,
 }: {
-  transaction: IRiderTransaction
-  isLast: boolean
+  transaction: IRiderTransaction;
+  isLast: boolean;
 }) {
-  const date = new Date(transaction.createdAt)
+  const date = new Date(transaction.createdAt);
   return (
     <View
-      className={`flex flex-row justify-between p-4 w-full ${isLast && 'mb-24'}`}
+      className={`flex flex-row justify-between p-4 w-full ${isLast && "mb-24"}`}
     >
       <View className="flex flex-row gap-3 items-center">
         <Ionicons
           size={20}
           name={
-            transaction.status === 'TRANSFERRED' ? 'arrow-up'
-            : transaction.status === 'PAID' ?
-              'cash-sharp'
-            : transaction.status === 'CANCELLED' ?
-              'remove-circle-outline'
-            : 'arrow-down-circle'
+            transaction.status === "TRANSFERRED"
+              ? "arrow-up"
+              : transaction.status === "PAID"
+                ? "cash-sharp"
+                : transaction.status === "CANCELLED"
+                  ? "remove-circle-outline"
+                  : "arrow-down-circle"
           }
         />
         <View className="flex flex-col justify-between gap-1">
@@ -35,5 +36,5 @@ export default function RecentTransaction({
         ${transaction?.amountTransferred}
       </Text>
     </View>
-  )
+  );
 }

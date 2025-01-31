@@ -1,49 +1,48 @@
 // Core
-import React, { useState } from "react";
-import * as Location from "expo-location";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useState } from 'react'
+import * as Location from 'expo-location'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 // Interfaces§
-import { IAuthContext, IAuthProviderProps } from "@/lib/utils/interfaces";
-import { RIDER_TOKEN } from "@/lib/utils/constants";
-import { useRouter } from "expo-router";
+import { IAuthContext, IAuthProviderProps } from '@/lib/utils/interfaces'
+import { RIDER_TOKEN } from '@/lib/utils/constants'
+import { useRouter } from 'expo-router'
 
-export const AuthContext = React.createContext<IAuthContext>(
-  {} as IAuthContext,
-);
+export const AuthContext = React.createContext<IAuthContext>({} as IAuthContext)
 
 export const AuthProvider: React.FC<IAuthProviderProps> = ({
   client,
   children,
 }) => {
-  const [token, setToken] = useState<string>("");
-  const router = useRouter();
+
+  const [token, setToken] = useState<string>('')
+  const router = useRouter()
   const setTokenAsync = async (token: string) => {
-    await AsyncStorage.setItem(RIDER_TOKEN, token);
-    client.clearStore();
-    setToken(token);
-  };
+    await AsyncStorage.setItem(RIDER_TOKEN, token)
+    client.clearStore()
+    setToken(token)
+  }
 
   const logout = async () => {
     try {
-      client.clearStore();
-      await AsyncStorage.removeItem(RIDER_TOKEN);
-      await AsyncStorage.removeItem("rider-id");
-      router.replace("/login");
-      setToken("");
-      if (await Location.hasStartedLocationUpdatesAsync("RIDER_LOCATION")) {
-        await Location.stopLocationUpdatesAsync("RIDER_LOCATION");
+      client.clearStore()
+      await AsyncStorage.removeItem(RIDER_TOKEN)
+      await AsyncStorage.removeItem('rider-id')
+      router.replace('/login')
+      setToken('')
+      if (await Location.hasStartedLocationUpdatesAsync('RIDER_LOCATION')) {
+        await Location.stopLocationUpdatesAsync('RIDER_LOCATION')
       }
     } catch (e) {
-      console.log("Logout Error: ", e);
+      console.log('Logout Error: ', e)
     }
-  };
+  }
 
   const values: IAuthContext = {
-    token: token ?? "",
+    token: token ?? '',
     logout,
-    setTokenAsync,
-  };
+    setTokenAsync
+  }
 
-  return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
-};
+  return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>
+}

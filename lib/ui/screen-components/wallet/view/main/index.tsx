@@ -18,18 +18,18 @@ import { ScrollView } from 'react-native'
 import { FlashMessageComponent } from '@/lib/ui/useable-components/flash-message'
 import { useMutation } from '@apollo/client'
 import WithdrawModal from '../form'
-import SpinnerComponent from '@/lib/ui/useable-components/spinner'
 import { CREATE_WITHDRAW_REQUEST } from '@/lib/apollo/mutations/withdraw-request.mutation'
 import { useUserContext } from '@/lib/context/global/user.context'
 import { GraphQLError } from 'graphql'
 import { Alert } from 'react-native'
 import { router } from 'expo-router'
+import { WalletScreenMainLoading } from '@/lib/ui/skeletons'
+
 
 export default function WalletMain() {
   // States
   const [isBottomModalOpen, setIsBottomModalOpen] = useState(false)
   const [amountErrMsg, setAmountErrMsg] = useState('')
-
   const { userId } = useUserContext()
 
   // Queries
@@ -69,44 +69,47 @@ export default function WalletMain() {
   ) as ILazyQueryResult<IRiderByIdResponse | undefined, { id: string }>
 
   // Mutaions
-  const [
-    createWithDrawRequest,
-    { loading: createWithDrawRequestLoading, data: withdrawrequestData },
-  ] = useMutation(CREATE_WITHDRAW_REQUEST, {
-    onCompleted: () => {
-      FlashMessageComponent({
-        message: 'Successfully created the withdraw request!',
-      })
-      setIsBottomModalOpen(false)
-      router.push('/(tabs)/wallet/(routes)/success')
-    },
-    onError: (error) => {
-      Alert.alert('Warning', error.message)
-      FlashMessageComponent({
-        message:
-          error.message ||
-          error.graphQLErrors[0].message ||
-          JSON.stringify(error) ||
-          'Something went wrong',
-      })
-    },
-    refetchQueries: [
-      { query: RIDER_BY_ID, variables: { id: userId } },
-      { query: RIDER_EARNINGS, variables: { id: userId } },
-    ],
-  })
+  const [createWithDrawRequest, { loading: createWithDrawRequestLoading }] =
+    useMutation(CREATE_WITHDRAW_REQUEST, {
+      onCompleted: () => {
+        FlashMessageComponent({
+          message: 'Successfully created the withdraw request!',
+        })
+        setIsBottomModalOpen(false)
+        // setIsModalVisible(true)
+        router.push({
+          pathname: '/(tabs)/wallet/(routes)/success',
+        })
+      },
+      onError: (error) => {
+        Alert.alert('Warning', error.message)
+        FlashMessageComponent({
+          message:
+            error.message ||
+            error.graphQLErrors[0].message ||
+            JSON.stringify(error) ||
+            'Something went wrong',
+        })
+      },
+      refetchQueries: [
+        { query: RIDER_BY_ID, variables: { id: userId } },
+        { query: RIDER_EARNINGS, variables: { id: userId } },
+      ],
+    })
 
   // Handlers
   async function handleFormSubmission(withdrawAmount: number) {
     const currentAmount = riderProfileData?.rider.currentWalletAmount || 0
     if (withdrawAmount > (currentAmount || 0)) {
-      setAmountErrMsg(
+      return setAmountErrMsg(
         `Please enter a valid amount. You have $${currentAmount} available.`,
       )
     } else if (withdrawAmount < 100) {
-      setAmountErrMsg('The withdraw amount must be atleast 100 or greater.')
+      return setAmountErrMsg(
+        'The withdraw amount must be atleast 100 or greater.',
+      )
     } else if (typeof withdrawAmount !== 'number') {
-      setAmountErrMsg('Please enter a valid number.')
+      return setAmountErrMsg('Please enter a valid number.')
     }
     try {
       await createWithDrawRequest({
@@ -122,39 +125,44 @@ export default function WalletMain() {
       })
     }
   }
-  console.log({ withdrawrequestData, createWithDrawRequestLoading })
+  // Loading state
+  const isLoading =
+    createWithDrawRequestLoading ||
+    isRiderEarningsLoading ||
+    isRiderProfileLoading ||
+    isRiderTransactionLoading ||
+    !riderProfileData?.rider.currentWalletAmount
+
   // UseEffects
   useEffect(() => {
     fetchRiderProfile()
     fetchRiderEarnings()
     fetchRiderTransactions()
   }, [])
-  console.log('🚀 ~  riderProfileData:', riderProfileData)
+  if (isLoading) return <WalletScreenMainLoading />
   return (
-    <View className="flex flex-col gap-0  w-[100%] h-full">
-      {createWithDrawRequestLoading && <SpinnerComponent />}
-      <View className="flex flex-column gap-4 items-center bg-[#F3F4F6]">
-        <Text className="text-[18px] text-[#4B5563] font-[600] mt-12">
-          Current Balance
-        </Text>
-        <Text className="font-semibold text-[32px]">
-          {(isRiderEarningsLoading || isRiderProfileLoading) && 'Loading...'}$
-          {riderProfileData?.rider.currentWalletAmount ?? 0}
-        </Text>
-        <CustomContinueButton
-          title="Withdraw Now"
-          onPress={() => setIsBottomModalOpen((prev) => !prev)}
-        />
-      </View>
+    <View className="flex flex-col justify-between  w-[100%] h-full">
+      {!isLoading && riderProfileData?.rider.currentWalletAmount && (
+        <View className="flex flex-column gap-4 items-center bg-[#F3F4F6]">
+          <Text className="text-[18px] text-[#4B5563] font-[600] mt-12">
+            Current Balance
+          </Text>
+          <Text className="font-semibold text-[32px]">
+            ${riderProfileData?.rider.currentWalletAmount ?? 0}
+          </Text>
+          <CustomContinueButton
+            title="Withdraw Now"
+            onPress={() => setIsBottomModalOpen((prev) => !prev)}
+          />
+        </View>
+      )}
       <Text className="font-bold text-lg bg-white p-5 mt-4">
         Recent Transactions
       </Text>
-      {isRiderTransactionLoading ?
-        <SpinnerComponent />
-      : <ScrollView style={{ backgroundColor: 'white' }}>
-          {riderTransactionData?.transactionHistory.data
-            .slice(0, 20)
-            .map((transaction, index) => {
+
+       <ScrollView style={{ backgroundColor: 'white' }}>
+          {riderTransactionData?.transactionHistory.data.map(
+            (transaction, index) => {
               return (
                 <RecentTransaction
                   transaction={transaction}
@@ -165,9 +173,10 @@ export default function WalletMain() {
                   }
                 />
               )
-            })}
+            },
+          )}
         </ScrollView>
-      }
+
       <WithdrawModal
         isBottomModalOpen={isBottomModalOpen}
         setIsBottomModalOpen={setIsBottomModalOpen}

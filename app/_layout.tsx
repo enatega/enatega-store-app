@@ -51,11 +51,13 @@ export default function RootLayout() {
         <ConfigurationProvider>
           <AuthProvider client={client}>
             <LocationProvider>
-
               <UserProvider>
                 <>
                   <Stack>
-                    <Stack.Screen name="login" options={{ headerShown: false }} />
+                    <Stack.Screen
+                      name="login"
+                      options={{ headerShown: false }}
+                    />
                     <Stack.Screen
                       name="(tabs)"
                       options={{ headerShown: false }}

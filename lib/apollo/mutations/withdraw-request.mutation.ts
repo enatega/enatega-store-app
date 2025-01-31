@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from "@apollo/client";
 
 export const CREATE_WITHDRAW_REQUEST = gql`
   mutation Mutation($requestAmount: Float!) {
@@ -6,4 +6,4 @@ export const CREATE_WITHDRAW_REQUEST = gql`
       status
     }
   }
-`
+`;

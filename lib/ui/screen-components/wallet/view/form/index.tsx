@@ -1,10 +1,10 @@
-import { IWithdrawModalProps } from '@/lib/utils/interfaces/withdraw.interface'
-import { Text } from 'react-native'
-import { ReactNativeModal } from 'react-native-modal'
-import { View } from 'react-native'
-import { CustomContinueButton } from '@/lib/ui/useable-components'
-import { TextInput } from 'react-native'
-import { useState } from 'react'
+import { IWithdrawModalProps } from "@/lib/utils/interfaces/withdraw.interface";
+import { Text } from "react-native";
+import { ReactNativeModal } from "react-native-modal";
+import { View } from "react-native";
+import { CustomContinueButton } from "@/lib/ui/useable-components";
+import { TextInput } from "react-native";
+import { useState } from "react";
 
 export default function WithdrawModal({
   isBottomModalOpen,
@@ -16,13 +16,13 @@ export default function WithdrawModal({
   withdrawRequestLoading,
 }: IWithdrawModalProps) {
   // States
-  const [withdrawAmount, setWithdrawAmount] = useState('')
-  const [ModalMarginTop, setModalMargintTop] = useState(480)
+  const [withdrawAmount, setWithdrawAmount] = useState("");
+  const [ModalMarginTop, setModalMargintTop] = useState(480);
 
   // Handlers
   function handleTextChange(val: string) {
-    setWithdrawAmount(val)
-    setAmountErrMsg("")
+    setWithdrawAmount(val);
+    setAmountErrMsg("");
   }
   return (
     <ReactNativeModal
@@ -30,18 +30,18 @@ export default function WithdrawModal({
       animationIn="slideInUp"
       animationOut="slideOutDown"
       onBackdropPress={() => {
-        setIsBottomModalOpen(false)
+        setIsBottomModalOpen(false);
       }}
       useNativeDriver={true}
       style={{
         maxHeight: 350,
-        width: '100%',
-        height: '100%',
-        backgroundColor: '#fff',
+        width: "100%",
+        height: "100%",
+        backgroundColor: "#fff",
         borderRadius: 20,
         padding: 5,
-        alignItems: 'center',
-        shadowColor: '#000',
+        alignItems: "center",
+        shadowColor: "#000",
         shadowOffset: {
           width: 0,
           height: 2,
@@ -65,11 +65,10 @@ export default function WithdrawModal({
             maxLength={9999999}
             onFocus={() => setModalMargintTop(200)}
             onBlur={() => setModalMargintTop(480)}
-  
             placeholder="$0.00"
             keyboardType="number-pad"
             returnKeyType="done"
-            className={`${amountErrMsg?"border-red-600":"border-gray-300"} border w-full h-12 rounded p-3 placeholder:text-black`}
+            className={`${amountErrMsg ? "border-red-600" : "border-gray-300"} border w-full h-12 rounded p-3 placeholder:text-black`}
           />
           {amountErrMsg && (
             <Text className="text-red-500 text-sm">{amountErrMsg}</Text>
@@ -77,12 +76,14 @@ export default function WithdrawModal({
         </View>
         <View>
           <CustomContinueButton
-            title={!withdrawRequestLoading?"Confirm Withdraw":"Please wait..."}
+            title={
+              !withdrawRequestLoading ? "Confirm Withdraw" : "Please wait..."
+            }
             disabled={withdrawRequestLoading}
-            onPress={() => handleFormSubmission(Number(withdrawAmount))}
+            onPress={() => handleFormSubmission(Number(withdrawAmount)).then(()=>setWithdrawAmount(""))}
           />
         </View>
       </View>
     </ReactNativeModal>
-  )
+  );
 }

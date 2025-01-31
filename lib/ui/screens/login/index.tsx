@@ -1,7 +1,7 @@
 // Core
-import { useEffect, useState } from 'react'
-import { Formik } from 'formik'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { useEffect, useState } from "react";
+import { Formik } from "formik";
+import { SafeAreaView } from "react-native-safe-area-context";
 // React Native
 import {
   View,
@@ -11,57 +11,57 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-} from 'react-native'
+} from "react-native";
 // Components
-import SpinnerComponent from '@/lib/ui/useable-components/spinner'
+import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 // Icon
-import Icon from 'react-native-vector-icons/FontAwesome6'
+import Icon from "react-native-vector-icons/FontAwesome6";
 // Schemas
-import { SignInSchema } from '@/lib/utils/schema'
+import { SignInSchema } from "@/lib/utils/schema";
 // Hook
-import useLogin from '@/lib/hooks/useLogin'
+import useLogin from "@/lib/hooks/useLogin";
 // Interface
-import { ILoginInitialValues } from '@/lib/utils/interfaces'
+import { ILoginInitialValues } from "@/lib/utils/interfaces";
 
 // const { height } = Dimensions.get("window")
 
 const initial: ILoginInitialValues = {
-  username: '',
-  password: '',
-}
+  username: "",
+  password: "",
+};
 
 const LoginScreen = () => {
   // States
-  const [passwordVisible, setPasswordVisible] = useState(false)
-  const [initialValues, setInitialValues] = useState(initial)
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [initialValues, setInitialValues] = useState(initial);
 
   // Hooks
-  const { onLogin, creds, isLogging } = useLogin()
+  const { onLogin, creds, isLogging } = useLogin();
 
   // Handlers
   const onLoginHandler = async (creds: ILoginInitialValues) => {
     // TODO: Implement login logic
     try {
-      await onLogin(creds.username, creds.password)
+      await onLogin(creds.username, creds.password);
     } catch (err: unknown) {
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
 
   const onInit = () => {
-    if (!creds?.username) return
-    setInitialValues(creds)
-  }
+    if (!creds?.username) return;
+    setInitialValues(creds);
+  };
 
   // Use Effect
   useEffect(() => {
-    onInit()
-  }, [creds])
+    onInit();
+  }, [creds]);
 
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-white justify-center"
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <SafeAreaView>
         <ScrollView
@@ -78,11 +78,7 @@ const LoginScreen = () => {
               return (
                 <View className="mt-24 p-5 items-start gap-y-2">
                   {/* Icon */}
-                  <Icon
-                    name="envelope"
-                    size={30}
-                    color="#000"
-                  />
+                  <Icon name="envelope" size={30} color="#000" />
 
                   {/* Title */}
                   <Text className="text-center text-xl font-semibold  text-black">
@@ -100,8 +96,8 @@ const LoginScreen = () => {
                       placeholder="Email"
                       keyboardType="email-address"
                       value={values.username}
-                      onChangeText={handleChange('username')}
-                      onBlur={handleBlur('username')}
+                      onChangeText={handleChange("username")}
+                      onBlur={handleBlur("username")}
                     />
                   </View>
                   {errors.username && (
@@ -117,15 +113,15 @@ const LoginScreen = () => {
                       placeholder="Password"
                       secureTextEntry={!passwordVisible}
                       value={values.password}
-                      onChangeText={handleChange('password')}
-                      onBlur={handleBlur('password')}
+                      onChangeText={handleChange("password")}
+                      onBlur={handleBlur("password")}
                     />
                     <TouchableOpacity
                       onPress={() => setPasswordVisible(!passwordVisible)}
                       className="ml-2"
                     >
                       <Icon
-                        name={passwordVisible ? 'eye-slash' : 'eye'}
+                        name={passwordVisible ? "eye-slash" : "eye"}
                         size={14}
                         color="#000"
                       />
@@ -142,21 +138,22 @@ const LoginScreen = () => {
                     className="h-12 bg-green-500 rounded-3xl py-3 mt-10 w-full"
                     onPress={() => handleSubmit()}
                   >
-                    {isLogging ?
+                    {isLogging ? (
                       <SpinnerComponent />
-                    : <Text className="text-center text-white text-lg font-medium">
+                    ) : (
+                      <Text className="text-center text-white text-lg font-medium">
                         Login
                       </Text>
-                    }
+                    )}
                   </TouchableOpacity>
                 </View>
-              )
+              );
             }}
           </Formik>
         </ScrollView>
       </SafeAreaView>
     </KeyboardAvoidingView>
-  )
-}
+  );
+};
 
-export default LoginScreen
+export default LoginScreen;

@@ -1,20 +1,20 @@
-import { ConfigurationContext } from '@/lib/context/global/configuration.context'
-import UserContext from '@/lib/context/global/user.context'
-import Order from '@/lib/ui/useable-components/order'
-import Spinner from '@/lib/ui/useable-components/spinner'
-import { IOrderTabsComponentProps } from '@/lib/utils/interfaces'
-import { IOrder } from '@/lib/utils/interfaces/order.interface'
-import { NetworkStatus } from '@apollo/client'
-import { useEffect, useState } from 'react'
-import { useContext } from 'react'
-import { View, Text, Dimensions, Platform } from 'react-native'
-import { FlatList } from 'react-native-gesture-handler'
+import { ConfigurationContext } from "@/lib/context/global/configuration.context";
+import UserContext from "@/lib/context/global/user.context";
+import Order from "@/lib/ui/useable-components/order";
+import Spinner from "@/lib/ui/useable-components/spinner";
+import { IOrderTabsComponentProps } from "@/lib/utils/interfaces";
+import { IOrder } from "@/lib/utils/interfaces/order.interface";
+import { NetworkStatus } from "@apollo/client";
+import { useEffect, useState } from "react";
+import { useContext } from "react";
+import { View, Text, Dimensions, Platform } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
 
-const { height } = Dimensions.get('window')
+const { height } = Dimensions.get("window");
 
 export default function HomeOrdersMain(props: IOrderTabsComponentProps) {
   // Props
-  const { route } = props
+  const { route } = props;
   // // Context
   // const configuration = useContext(ConfigurationContext)
   const {
@@ -26,61 +26,61 @@ export default function HomeOrdersMain(props: IOrderTabsComponentProps) {
     assignedOrders,
     refetchAssigned,
     networkStatusAssigned,
-  } = useContext(UserContext)
-  const [orders, setOrders] = useState<IOrder[]>([])
+  } = useContext(UserContext);
+  const [orders, setOrders] = useState<IOrder[]>([]);
 
   // Constants
-  const noNewOrders = orders.length === 0
+  const noNewOrders = orders.length === 0;
 
   // Handlers
   const onInitOrders = () => {
-    if (loadingAssigned || errorAssigned) return
-    if (assignedOrders.length === 0) return
-    let _orders: IOrder[] = []
+    if (loadingAssigned || errorAssigned) return;
+    if (assignedOrders.length === 0) return;
+    let _orders: IOrder[] = [];
     switch (route.key) {
-      case 'new_orders':
+      case "new_orders":
         _orders = assignedOrders.filter(
           (o: IOrder) =>
-            o.orderStatus === 'ACCEPTED' && !o.rider && !o.isPickedUp,
-        )
-        break
-      case 'processing':
+            o.orderStatus === "ACCEPTED" && !o.rider && !o.isPickedUp,
+        );
+        break;
+      case "processing":
         _orders = assignedOrders.filter(
-          (o: IOrder) => o.orderStatus === 'ASSIGNED' && !o.isPickedUp,
-        )
+          (o: IOrder) => o.orderStatus === "ASSIGNED" && !o.isPickedUp,
+        );
 
-        break
-      case 'delivered':
+        break;
+      case "delivered":
         _orders = assignedOrders.filter(
           (o: IOrder) =>
-            ['PICKED', 'ACCEPTED', 'DELIVERED'].includes(o.orderStatus) &&
+            ["PICKED", "ACCEPTED", "DELIVERED"].includes(o.orderStatus) &&
             o.rider &&
             dataProfile?.rider?._id === o?.rider?._id,
-        )
+        );
 
-        break
+        break;
       default:
-        alert('Default')
-        break
+        alert("Default");
+        break;
     }
 
-    setOrders(_orders)
-  }
+    setOrders(_orders);
+  };
 
   // Use Effect
   useEffect(() => {
-    onInitOrders()
-  }, [assignedOrders, route.key])
+    onInitOrders();
+  }, [assignedOrders, route.key]);
 
   useEffect(() => {
     // Trigger refetch when orders length changes
     if (noNewOrders) {
-      refetchAssigned()
+      refetchAssigned();
     }
-  }, [noNewOrders])
+  }, [noNewOrders]);
 
   // Calculate the marginBottom dynamically
-  const marginBottom = Platform.OS === 'ios' ? height * 0.4 : height * 0.35
+  const marginBottom = Platform.OS === "ios" ? height * 0.4 : height * 0.35;
 
   // Render
   return (
@@ -91,12 +91,13 @@ export default function HomeOrdersMain(props: IOrderTabsComponentProps) {
         </View>
       )}
 
-      {errorAssigned ?
+      {errorAssigned ? (
         <View className="flex-1 justify-center items-center">
-          {' '}
+          {" "}
           <Text className="text-2xl">Something went wrong</Text>
         </View>
-      : <FlatList
+      ) : (
+        <FlatList
           className={`h-[${height}px] mb-[${marginBottom}px]`}
           keyExtractor={(item) => item._id}
           data={orders}
@@ -111,7 +112,7 @@ export default function HomeOrdersMain(props: IOrderTabsComponentProps) {
             />
           )}
         />
-      }
+      )}
     </View>
-  )
+  );
 }

@@ -4,7 +4,7 @@ import { ConfigurationContext } from "./lib/context/global/configuration.context
 
 const getEnvVars = (env = Updates.channel) => {
   const configuration = useContext(ConfigurationContext);
-console.log({env})
+  console.log({ env });
   if (env === "production" || env === "staging") {
     return {
       GRAPHQL_URL: "https://enatega-multivendor.up.railway.app/graphql",
@@ -16,8 +16,8 @@ console.log({env})
     };
   }
   return {
-    GRAPHQL_URL: 'http://192.168.18.87:8003/graphql',
-    WS_GRAPHQL_URL: 'ws://192.168.18.87:8003/graphql',
+    GRAPHQL_URL: "http://192.168.18.87:8003/graphql",
+    WS_GRAPHQL_URL: "ws://192.168.18.87:8003/graphql",
     // GRAPHQL_URL: "https://enatega-multivendor.up.railway.app/graphql",
     // WS_GRAPHQL_URL: "wss://enatega-multivendor.up.railway.app/graphql",
     SENTRY_DSN:

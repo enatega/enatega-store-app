@@ -6,4 +6,4 @@ export const CONFIGURATION = `query Configuration{
       riderAppSentryUrl
       googleApiKey
     }
-  }`
+  }`;
