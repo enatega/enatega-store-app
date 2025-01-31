@@ -1,0 +1,104 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+import { IGlobalProviderProps } from "./global.interface";
+
+export interface IUserContextProps {}
+export interface IUserProviderProps extends IGlobalProviderProps {}
+
+interface Zone {
+  __typename: string;
+  _id: string;
+}
+
+export interface IRiderProfile {
+  __typename: string;
+  _id: string;
+  accountNumber: string | null;
+  available: boolean;
+  currentWalletAmount: number;
+  email: string | null;
+  name: string;
+  totalWalletAmount: number;
+  username: string;
+  withdrawnWalletAmount: number;
+  zone: Zone;
+}
+
+export interface Order {
+  _id: string;
+  orderId: string;
+  createdAt: string;
+  acceptedAt?: string;
+  pickedAt?: string;
+  assignedAt?: string;
+  isPickedUp: boolean;
+  deliveredAt?: string;
+  expectedTime?: string;
+  deliveryCharges: number;
+  restaurant: {
+    _id: string;
+    name: string;
+    address: string;
+    location: {
+      coordinates: [number, number];
+    };
+  };
+  deliveryAddress: {
+    location: {
+      coordinates: [number, number];
+    };
+    deliveryAddress: string;
+    label?: string;
+    details?: string;
+  };
+  items: {
+    _id: string;
+    title: string;
+    food: string;
+    description?: string;
+    quantity: number;
+    variation: {
+      _id: string;
+      title: string;
+      price: number;
+    };
+    addons?: {
+      _id: string;
+      title: string;
+      description?: string;
+      quantityMinimum: number;
+      quantityMaximum: number;
+      options: {
+        _id: string;
+        title: string;
+        price: number;
+      }[];
+    }[];
+    isActive: boolean;
+    createdAt: string;
+  }[];
+  user: {
+    _id: string;
+    name: string;
+    phone: string;
+  };
+  paymentMethod: string;
+  paidAmount: number;
+  orderAmount: number;
+  paymentStatus: string;
+  orderStatus: string;
+  tipping: number;
+  taxationAmount: number;
+  reason?: string;
+  isRiderRinged: boolean;
+  preparationTime?: string;
+  rider?: {
+    _id: string;
+    name: string;
+    username: string;
+  };
+}
+
+export interface IRidersOnCompletedResponsee {
+  rider: IRiderProfile;
+  assignedOrders: Order[];
+}

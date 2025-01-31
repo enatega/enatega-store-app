@@ -13,7 +13,17 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/lib/hooks/useColorScheme";
 
-import '../global.css'
+import "../global.css";
+import { ConfigurationProvider } from "@/lib/context/global/configuration.context";
+import { ApolloProvider } from "@apollo/client";
+import setupApollo from "@/lib/apollo";
+import FlashMessage from "react-native-flash-message";
+import { AuthProvider } from "@/lib/context/global/auth.context";
+import { LocationProvider } from "@/lib/context/global/location.context";
+import { UserProvider } from "@/lib/context/global/user.context";
+import { Colors } from "@/lib/utils/constants";
+import { Platform } from "react-native";
+import { SoundProvider } from "@/lib/context/global/sound.context";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -22,8 +32,12 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../lib/assets/fonts/SpaceMono-Regular.ttf"),
+    Inter: require("../lib/assets/fonts/Inter.ttf"),
   });
 
+  const client = setupApollo();
+
+  // Use Effect
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
@@ -36,12 +50,38 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
+      <ApolloProvider client={client}>
+        <ConfigurationProvider>
+          <AuthProvider client={client}>
+            <LocationProvider>
+              <UserProvider>
+                <SoundProvider>
+                  <>
+                    <Stack>
+                      <Stack.Screen
+                        name="login"
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name="(tabs)"
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen name="+not-found" />
+                      <Stack.Screen
+                        name="order-detail"
+                        options={{ headerShown: false }}
+                      />
+                    </Stack>
 
-      <StatusBar style="auto" />
+                    <StatusBar style="auto" />
+                    <FlashMessage position="bottom" />
+                  </>
+                </SoundProvider>
+              </UserProvider>
+            </LocationProvider>
+          </AuthProvider>
+        </ConfigurationProvider>
+      </ApolloProvider>
     </ThemeProvider>
   );
 }
