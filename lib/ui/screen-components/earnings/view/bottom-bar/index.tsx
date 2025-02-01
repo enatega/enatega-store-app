@@ -1,8 +1,19 @@
+// Contexts
 import { useUserContext } from '@/lib/context/global/user.context'
+
+// Interfaces
 import { IEarningBottomProps } from '@/lib/utils/interfaces/earning.interface'
+
+// Icons
 import { Ionicons } from '@expo/vector-icons'
+
+// Expo
 import { router } from 'expo-router'
+
+// Core
 import { Text, TouchableOpacity, View } from 'react-native'
+
+// React Native Modal
 import ReactNativeModal from 'react-native-modal'
 
 export default function EarningBottomBar({
@@ -12,9 +23,8 @@ export default function EarningBottomBar({
   modalVisible,
   setModalVisible,
 }: IEarningBottomProps) {
-
   // Contexts
-  const {setRiderOrderEarnings} = useUserContext();
+  const { setRiderOrderEarnings } = useUserContext()
   return (
     <ReactNativeModal
       animationIn={'slideInUp'}
@@ -28,6 +38,7 @@ export default function EarningBottomBar({
           earningsArray: [],
           totalEarningsSum: 0,
           totalTipsSum: 0,
+          totalDeliveries: 0,
         })
       }}
       style={{
@@ -66,6 +77,7 @@ export default function EarningBottomBar({
             earningsArray: [],
             totalEarningsSum: 0,
             totalTipsSum: 0,
+            totalDeliveries: 0,
           })
         }}
       />
@@ -96,6 +108,7 @@ export default function EarningBottomBar({
                 earningsArray: [],
                 totalEarningsSum: 0,
                 totalTipsSum: 0,
+                totalDeliveries: 0,
               })
             }}
           >

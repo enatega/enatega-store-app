@@ -15,6 +15,7 @@ export interface IRiderEarnings {
   date:string
   totalEarningsSum: number
   totalTipsSum: number
+  totalDeliveries: number
 }
 export interface IRiderEarningsResponse {
   riderEarningsGraph: {

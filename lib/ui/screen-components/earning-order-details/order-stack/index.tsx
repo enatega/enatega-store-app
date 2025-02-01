@@ -1,4 +1,7 @@
+// Interfaces
 import { IRiderEarningsOrderProps } from '@/lib/utils/interfaces/rider-earnings.interface'
+
+// Core
 import { Text, View } from 'react-native'
 
 export default function OrderStack({

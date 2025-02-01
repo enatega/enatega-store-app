@@ -1,8 +1,13 @@
+// GraphQL
 import { RIDER_EARNINGS_GRAPH } from '@/lib/apollo/queries/earnings.query'
+
+// Hooks
 import { useUserContext } from '@/lib/context/global/user.context'
+import { QueryResult, useQuery } from '@apollo/client'
+
+// 
 import SpinnerComponent from '@/lib/ui/useable-components/spinner'
 import { IRiderEarningsResponse } from '@/lib/utils/interfaces/rider-earnings.interface'
-import { QueryResult, useQuery } from '@apollo/client'
 import { useEffect, useState } from 'react'
 import { Text, View } from 'react-native'
 
@@ -39,7 +44,10 @@ export default function EarningDetailsHeader() {
         0,
       )
       const totalDeliveries =
-        riderEarningsData?.riderEarningsGraph.earnings?.length
+        riderEarningsData?.riderEarningsGraph.earnings.reduce(
+          (acc, curr) => acc + curr.totalDeliveries,
+          0,
+        )
       setRiderEarningsGrandTotal({
         earnings: totalEarnings,
         tips: totalTips,
@@ -50,7 +58,7 @@ export default function EarningDetailsHeader() {
 
   if (isRiderEarningsLoading) return <SpinnerComponent />
   return (
-    <View className='bg-gray-100 py-3 border border-gray-100'>
+    <View className="bg-gray-100 py-3 border border-gray-100">
       <Text className="left-5 text-xl font-semibold">Summary</Text>
       <View className="flex flex-row justify-between items-center p-5">
         <View className="flex gap-2 items-center">
@@ -68,7 +76,7 @@ export default function EarningDetailsHeader() {
         <View className="flex gap-2 items-center border-l-2 border-l-gray-200 pl-3">
           <Text className="text-lg text-black ">Total Deliveries</Text>
           <Text className="font-semibold text-lg text-start self-start">
-            ${riderEarningsGrandTotal.totalDeliveries}
+            {riderEarningsGrandTotal.totalDeliveries}
           </Text>
         </View>
       </View>

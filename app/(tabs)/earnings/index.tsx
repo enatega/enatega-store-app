@@ -1,5 +1,11 @@
-import EarningsScreen from "@/lib/ui/screens/earnings";
+import EarningsScreen from '@/lib/ui/screens/earnings'
+import { View } from 'react-native'
 
 export default function Earnings() {
-  return <EarningsScreen />;
+  return (
+    <View>
+      <EarningsScreen />
+      
+    </View>
+  )
 }

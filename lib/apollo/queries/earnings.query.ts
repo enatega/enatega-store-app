@@ -29,6 +29,7 @@ export const RIDER_EARNINGS_GRAPH = gql`
           deliveryFee
           date
         }
+        totalDeliveries
         totalEarningsSum
         totalHours
         totalTipsSum

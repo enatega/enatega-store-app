@@ -1,22 +1,39 @@
+
+// Core
 import { TouchableOpacity, View } from 'react-native'
-import EarningsBarChart from '../../bar-chart'
 import { Text } from 'react-native'
+
+// Contexts
 import { useUserContext } from '@/lib/context/global/user.context'
+
+// Interfaces
 import {
   IRiderEarnings,
   IRiderEarningsResponse,
 } from '@/lib/utils/interfaces/rider-earnings.interface'
+
+// Charts
 import { barDataItem } from 'react-native-gifted-charts'
+
+// GraphQL
 import { RIDER_EARNINGS_GRAPH } from '@/lib/apollo/queries/earnings.query'
+
+// Hooks
 import { QueryResult, useQuery } from '@apollo/client'
-import EarningStack from '../earnings-stack'
-import EarningBottomBar from '../bottom-bar'
+
+// Expo
 import { router } from 'expo-router'
+
+// Skeletons
 import { EarningScreenMainLoading } from '@/lib/ui/skeletons'
+
+// Components
+import EarningStack from '../earnings-stack'
+import EarningsBarChart from '../../bar-chart'
 
 export default function EarningsMain() {
   // Contexts
-  const { userId, modalVisible, setModalVisible } = useUserContext()
+  const { userId, setModalVisible } = useUserContext()
 
   // Queries
   const { loading: isRiderEarningsLoading, data: riderEarningsData } = useQuery(
@@ -54,7 +71,7 @@ export default function EarningsMain() {
   if (isRiderEarningsLoading) return <EarningScreenMainLoading />
 
   return (
-    <View>
+    <View className="bg-white">
       <EarningsBarChart
         data={barData}
         width={900}
@@ -72,6 +89,7 @@ export default function EarningsMain() {
               earningsArray: [],
               totalEarningsSum: 0,
               totalTipsSum: 0,
+              totalDeliveries: 0,
             })
             router.push('/(tabs)/earnings/(routes)/earnings-detail')
           }}
@@ -93,6 +111,7 @@ export default function EarningsMain() {
               <EarningStack
                 date={earning.date}
                 earning={earning.totalEarningsSum}
+                totalDeliveries={earning.earningsArray.length}
                 _id={earning._id}
                 tip={earning.totalTipsSum}
                 earningsArray={earning.earningsArray}
@@ -101,13 +120,6 @@ export default function EarningsMain() {
               />
             ))}
       </View>
-      <EarningBottomBar
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-        totalDeliveries={modalVisible.earningsArray.length || 0}
-        totalEarnings={modalVisible.totalEarningsSum}
-        totalTips={modalVisible.totalTipsSum}
-      />
     </View>
   )
 }
