@@ -5,7 +5,7 @@ import { RIDER_EARNINGS_GRAPH } from '@/lib/apollo/queries/earnings.query'
 import { useUserContext } from '@/lib/context/global/user.context'
 import { QueryResult, useQuery } from '@apollo/client'
 
-// 
+//
 import SpinnerComponent from '@/lib/ui/useable-components/spinner'
 import { IRiderEarningsResponse } from '@/lib/utils/interfaces/rider-earnings.interface'
 import { useEffect, useState } from 'react'
@@ -62,19 +62,19 @@ export default function EarningDetailsHeader() {
       <Text className="left-5 text-xl font-semibold">Summary</Text>
       <View className="flex flex-row justify-between items-center p-5">
         <View className="flex gap-2 items-center">
-          <Text className="text-lg text-black ">Total Earnings</Text>
+          <Text className="text-lg text-black">Total Earnings</Text>
           <Text className="font-semibold text-lg text-start self-start">
             ${riderEarningsGrandTotal.earnings}
           </Text>
         </View>
         <View className="flex gap-2 items-center border-l-2 border-l-gray-200 pl-3">
-          <Text className="text-lg text-black ">Total Tips</Text>
+          <Text className="text-lg text-black">Total Tips</Text>
           <Text className="font-semibold text-lg text-start self-start">
             ${riderEarningsGrandTotal.tips}
           </Text>
         </View>
         <View className="flex gap-2 items-center border-l-2 border-l-gray-200 pl-3">
-          <Text className="text-lg text-black ">Total Deliveries</Text>
+          <Text className="text-lg text-black">Total Deliveries</Text>
           <Text className="font-semibold text-lg text-start self-start">
             {riderEarningsGrandTotal.totalDeliveries}
           </Text>

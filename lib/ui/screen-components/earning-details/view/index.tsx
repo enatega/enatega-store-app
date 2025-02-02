@@ -15,9 +15,12 @@ import { RIDER_EARNINGS_GRAPH } from '@/lib/apollo/queries/earnings.query'
 import EarningDetailsHeader from '../header'
 import EarningsDetailStacks from './earnings'
 
+// Skeletons
+import { EarningsSummaryMainLoading } from '@/lib/ui/skeletons'
+
 export default function EarningDetailsMain() {
   // Contexts
-  const {setModalVisible, userId } = useUserContext()
+  const { setModalVisible, userId } = useUserContext()
 
   // Queries
   const { loading: isRiderEarningsLoading, data: riderEarningsData } = useQuery(
@@ -28,6 +31,9 @@ export default function EarningDetailsMain() {
       },
     },
   ) as QueryResult<IRiderEarningsResponse | undefined, { riderId: string }>
+
+  // If loading
+  if (isRiderEarningsLoading) return <EarningsSummaryMainLoading />
   return (
     <View>
       <EarningDetailsHeader />
@@ -36,7 +42,6 @@ export default function EarningDetailsMain() {
         riderEarningsData={riderEarningsData}
         setModalVisible={setModalVisible}
       />
-      
     </View>
   )
 }
