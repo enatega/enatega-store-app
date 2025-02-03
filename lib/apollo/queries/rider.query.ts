@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client'
 
 export const RIDER_BY_ID = gql`
   query Rider($id: String) {
@@ -12,7 +12,7 @@ export const RIDER_BY_ID = gql`
       withdrawnWalletAmount
     }
   }
-`;
+`
 
 export const RIDER_EARNINGS = gql`
   query RiderEarnings {
@@ -31,7 +31,7 @@ export const RIDER_EARNINGS = gql`
       }
     }
   }
-`;
+`
 
 export const RIDER_TRANSACTIONS_HISTORY = gql`
   query TransactionHistory($userType: UserTypeEnum, $userId: String) {
@@ -43,7 +43,18 @@ export const RIDER_TRANSACTIONS_HISTORY = gql`
       }
     }
   }
-`;
+`
+
+export const RIDER_CURRENT_WITHDRAW_REQUEST = gql`
+  query RiderCurrentWithdrawRequest($riderId: String) {
+    riderCurrentWithdrawRequest(riderId: $riderId) {
+      _id
+      requestAmount
+      status
+      createdAt
+    }
+  }
+`
 
 export const RIDER_PROFILE = gql`
   query Rider($id: String) {
@@ -62,7 +73,7 @@ export const RIDER_PROFILE = gql`
       withdrawnWalletAmount
     }
   }
-`;
+`
 
 export const rider = gql`
   query Rider($id: String) {
@@ -73,7 +84,7 @@ export const rider = gql`
       }
     }
   }
-`;
+`
 
 export const RIDER_ORDERS = gql`
   query RiderOrders {
@@ -152,4 +163,4 @@ export const RIDER_ORDERS = gql`
       }
     }
   }
-`;
+`

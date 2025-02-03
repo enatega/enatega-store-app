@@ -1,42 +1,45 @@
-import { CustomContinueButton } from "@/lib/ui/useable-components";
-import { Text, View } from "react-native";
-import RecentTransaction from "../recent-transactions";
-import { useLazyQueryQL } from "@/lib/hooks/useLazyQueryQL";
+import { CustomContinueButton } from '@/lib/ui/useable-components'
+import { Text, View } from 'react-native'
+import RecentTransaction from '../recent-transactions'
+import { useLazyQueryQL } from '@/lib/hooks/useLazyQueryQL'
 import {
   RIDER_BY_ID,
+  RIDER_CURRENT_WITHDRAW_REQUEST,
   RIDER_EARNINGS,
   RIDER_TRANSACTIONS_HISTORY,
-} from "@/lib/apollo/queries";
-import { useEffect, useState } from "react";
+} from '@/lib/apollo/queries'
+import { useEffect, useState } from 'react'
 import {
   IRiderByIdResponse,
+  IRiderCurrentWithdrawRequestResponse,
   IRiderEarningsResponse,
   IRiderTransactionHistoryResponse,
-} from "@/lib/utils/interfaces/rider.interface";
-import { ILazyQueryResult } from "@/lib/utils/interfaces";
-import { ScrollView } from "react-native";
-import { FlashMessageComponent } from "@/lib/ui/useable-components/flash-message";
-import { useMutation } from "@apollo/client";
-import WithdrawModal from "../form";
-import { CREATE_WITHDRAW_REQUEST } from "@/lib/apollo/mutations/withdraw-request.mutation";
-import { useUserContext } from "@/lib/context/global/user.context";
-import { GraphQLError } from "graphql";
-import { Alert } from "react-native";
-import { router } from "expo-router";
-import { WalletScreenMainLoading } from "@/lib/ui/skeletons";
+} from '@/lib/utils/interfaces/rider.interface'
+import { ILazyQueryResult } from '@/lib/utils/interfaces'
+import { ScrollView } from 'react-native'
+import { FlashMessageComponent } from '@/lib/ui/useable-components/flash-message'
+import { useMutation } from '@apollo/client'
+import WithdrawModal from '../form'
+import { CREATE_WITHDRAW_REQUEST } from '@/lib/apollo/mutations/withdraw-request.mutation'
+import { useUserContext } from '@/lib/context/global/user.context'
+import { GraphQLError } from 'graphql'
+import { Alert } from 'react-native'
+import { router } from 'expo-router'
+import { WalletScreenMainLoading } from '@/lib/ui/skeletons'
 
 export default function WalletMain() {
   // States
-  const [isBottomModalOpen, setIsBottomModalOpen] = useState(false);
-  const [amountErrMsg, setAmountErrMsg] = useState("");
-  const { userId } = useUserContext();
+  const [isBottomModalOpen, setIsBottomModalOpen] = useState(false)
+  const [amountErrMsg, setAmountErrMsg] = useState('')
+  const { userId } = useUserContext()
 
   // Queries
   const { fetch: fetchRiderEarnings, loading: isRiderEarningsLoading } =
     useLazyQueryQL(RIDER_EARNINGS) as ILazyQueryResult<
       IRiderEarningsResponse | undefined,
       undefined
-    >;
+    >
+
   const {
     data: riderTransactionData,
     fetch: fetchRiderTransactions,
@@ -45,16 +48,16 @@ export default function WalletMain() {
     RIDER_TRANSACTIONS_HISTORY,
     {},
     {
-      userType: "RIDER",
+      userType: 'RIDER',
       userId: userId,
     },
   ) as ILazyQueryResult<
     IRiderTransactionHistoryResponse | undefined,
     {
-      userType: string;
-      userId: string;
+      userType: string
+      userId: string
     }
-  >;
+  >
   const {
     data: riderProfileData,
     fetch: fetchRiderProfile,
@@ -65,63 +68,78 @@ export default function WalletMain() {
     {
       id: userId,
     },
-  ) as ILazyQueryResult<IRiderByIdResponse | undefined, { id: string }>;
+  ) as ILazyQueryResult<IRiderByIdResponse | undefined, { id: string }>
+
+  const {
+    data: riderCurrentWithdrawRequestData,
+    fetch: fetchRiderCurrentWithdrawRequest,
+    loading: isRiderCurrentWithdrawRequestLoading,
+  } = useLazyQueryQL(
+    RIDER_CURRENT_WITHDRAW_REQUEST,
+    {},
+    { riderId: userId },
+  ) as ILazyQueryResult<
+    IRiderCurrentWithdrawRequestResponse | undefined,
+    {
+      riderId: string
+    }
+  >
 
   // Mutaions
   const [createWithDrawRequest, { loading: createWithDrawRequestLoading }] =
     useMutation(CREATE_WITHDRAW_REQUEST, {
       onCompleted: () => {
         FlashMessageComponent({
-          message: "Successfully created the withdraw request!",
-        });
-        setIsBottomModalOpen(false);
+          message: 'Successfully created the withdraw request!',
+        })
+        setIsBottomModalOpen(false)
         // setIsModalVisible(true)
         router.push({
-          pathname: "/(tabs)/wallet/(routes)/success",
-        });
+          pathname: '/(tabs)/wallet/(routes)/success',
+        })
       },
       onError: (error) => {
-        Alert.alert("Warning", error.message);
+        Alert.alert('Warning', error.message)
         FlashMessageComponent({
           message:
             error.message ||
             error.graphQLErrors[0].message ||
             JSON.stringify(error) ||
-            "Something went wrong",
-        });
+            'Something went wrong',
+        })
       },
       refetchQueries: [
         { query: RIDER_BY_ID, variables: { id: userId } },
         { query: RIDER_EARNINGS, variables: { id: userId } },
       ],
-    });
+    })
 
   // Handlers
   async function handleFormSubmission(withdrawAmount: number) {
-    const currentAmount = riderProfileData?.rider.currentWalletAmount || 0;
+    const currentAmount = riderProfileData?.rider.currentWalletAmount || 0
     if (withdrawAmount > (currentAmount || 0)) {
       return setAmountErrMsg(
         `Please enter a valid amount. You have $${currentAmount} available.`,
-      );
+      )
     } else if (withdrawAmount < 100) {
       return setAmountErrMsg(
-        "The withdraw amount must be atleast 100 or greater.",
-      );
-    } else if (typeof withdrawAmount !== "number") {
-      return setAmountErrMsg("Please enter a valid number.");
+        'The withdraw amount must be atleast 100 or greater.',
+      )
+    } else if (typeof withdrawAmount !== 'number') {
+      return setAmountErrMsg('Please enter a valid number.')
     }
     try {
       await createWithDrawRequest({
         variables: {
           requestAmount: withdrawAmount,
         },
-      });
+      })
     } catch (error) {
-      const err = error as GraphQLError;
-      console.log(error);
+      const err = error as GraphQLError
+      console.log(error)
       FlashMessageComponent({
-        message: err.message || JSON.stringify(error) || "Something went wrong",
-      });
+        message: err.message || JSON.stringify(error) || 'Something went wrong',
+      })
     }
   }
   // Loading state
@@ -130,15 +148,21 @@ export default function WalletMain() {
     isRiderEarningsLoading ||
     isRiderProfileLoading ||
     isRiderTransactionLoading ||
-    !riderProfileData?.rider.currentWalletAmount;
+    isRiderCurrentWithdrawRequestLoading ||
+    !riderProfileData?.rider.currentWalletAmount
 
   // UseEffects
   useEffect(() => {
-    fetchRiderProfile();
-    fetchRiderEarnings();
-    fetchRiderTransactions();
-  }, []);
-  if (isLoading) return <WalletScreenMainLoading />;
+    if (userId) {
+      fetchRiderProfile()
+      fetchRiderEarnings()
+      fetchRiderTransactions()
+      fetchRiderCurrentWithdrawRequest({
+        riderId: userId,
+      })
+    }
+  }, [userId])
+  if (isLoading) return <WalletScreenMainLoading />
   return (
     <View className="flex flex-col justify-between  w-[100%] h-full">
       {!isLoading && riderProfileData?.rider.currentWalletAmount && (
@@ -155,11 +179,38 @@ export default function WalletMain() {
           />
         </View>
       )}
+      {riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
+        .requestAmount !== 0 &&
+        riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest && (
+          <View>
+            <Text className="font-bold text-lg bg-white p-5 mt-4">
+              Pending Request
+            </Text>
+            <RecentTransaction
+              transaction={{
+                amountTransferred:
+                  riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
+                    .requestAmount || 0,
+                status:
+                  riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
+                    .status,
+                createdAt:
+                  riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
+                    .createdAt,
+              }}
+              key={
+                riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
+                  .createdAt
+              }
+              isLast={false}
+            />
+          </View>
+        )}
       <Text className="font-bold text-lg bg-white p-5 mt-4">
         Recent Transactions
       </Text>
 
-      <ScrollView style={{ backgroundColor: "white" }}>
+      <ScrollView style={{ backgroundColor: 'white' }}>
         {riderTransactionData?.transactionHistory.data.map(
           (transaction, index) => {
             return (
@@ -171,7 +222,7 @@ export default function WalletMain() {
                   index
                 }
               />
-            );
+            )
           },
         )}
       </ScrollView>
@@ -186,5 +237,5 @@ export default function WalletMain() {
         withdrawRequestLoading={createWithDrawRequestLoading}
       />
     </View>
-  );
+  )
 }

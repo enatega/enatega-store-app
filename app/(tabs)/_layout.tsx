@@ -12,8 +12,6 @@ const RootLayout = () => {
   const [tabKey, setTabKey] = useState(1);
   const colorScheme = useColorScheme();
   const pathName = usePathname();
-  console.log("🚀 ~ RootLayout ~ pathName:", pathName);
-  console.log(pathName.startsWith("/wallet/success"));
   useEffect(() => {
     if (pathName.startsWith("/wallet/success")) {
       setTabKey((prev) => prev + 1); // Force a re-render of the tab bar
@@ -54,7 +52,7 @@ const RootLayout = () => {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="home" color={color} />
+            <IconSymbol size={28} name="house" color={color} />
           ),
         }}
       />
