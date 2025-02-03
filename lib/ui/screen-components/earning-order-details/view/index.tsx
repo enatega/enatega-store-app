@@ -1,24 +1,22 @@
 // Contexts
-import { useUserContext } from '@/lib/context/global/user.context'
+import { useUserContext } from "@/lib/context/global/user.context";
 
 // Interfaces
-import { IRiderEarningsArray } from '@/lib/utils/interfaces/rider-earnings.interface'
+import { IRiderEarningsArray } from "@/lib/utils/interfaces/rider-earnings.interface";
 
 // Core
-import { View } from 'react-native'
+import { View } from "react-native";
 
 // Components
-import NoRecordFound from '@/lib/ui/useable-components/no-record-found'
-import OrderStack from '../order-stack'
+import NoRecordFound from "@/lib/ui/useable-components/no-record-found";
+import OrderStack from "../order-stack";
 
 export default function EarningsOrderDetailsMain() {
   // Contexts
-  const { riderOrderEarnings } = useUserContext()
+  const { riderOrderEarnings } = useUserContext();
   return (
     <View>
-      {(riderOrderEarnings.length === 0) && (
-        <NoRecordFound/>
-      )}
+      {riderOrderEarnings.length === 0 && <NoRecordFound />}
       {riderOrderEarnings?.map(
         (earning: IRiderEarningsArray, index: number) => {
           return (
@@ -27,9 +25,9 @@ export default function EarningsOrderDetailsMain() {
               amount={earning.totalEarnings}
               orderId={earning.orderDetails.orderId}
             />
-          )
+          );
         },
       )}
     </View>
-  )
+  );
 }

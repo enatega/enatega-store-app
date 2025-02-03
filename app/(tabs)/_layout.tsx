@@ -9,19 +9,19 @@ import { useColorScheme } from "@/lib/hooks/useColorScheme";
 import { useEffect, useState } from "react";
 
 const RootLayout = () => {
-  const [tabKey, setTabKey] = useState(1)
+  const [tabKey, setTabKey] = useState(1);
   const colorScheme = useColorScheme();
-   const pathName = usePathname();
-   console.log("🚀 ~ RootLayout ~ pathName:", pathName)
-   console.log(pathName.startsWith("/wallet/success"))
-   useEffect(() => {
+  const pathName = usePathname();
+  console.log("🚀 ~ RootLayout ~ pathName:", pathName);
+  console.log(pathName.startsWith("/wallet/success"));
+  useEffect(() => {
     if (pathName.startsWith("/wallet/success")) {
-      setTabKey(prev => prev + 1); // Force a re-render of the tab bar
+      setTabKey((prev) => prev + 1); // Force a re-render of the tab bar
     }
   }, [pathName]);
   return (
     <Tabs
-    key={tabKey}
+      key={tabKey}
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].primary,
         headerShown: false,
@@ -35,7 +35,7 @@ const RootLayout = () => {
 
           default: {
             position: "absolute",
-            display: pathName.startsWith("/wallet/success")?"none":"flex",
+            display: pathName.startsWith("/wallet/success") ? "none" : "flex",
             backgroundColor: Colors.light.tabNaviatorBackground,
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,

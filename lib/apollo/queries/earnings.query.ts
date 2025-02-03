@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from "@apollo/client";
 
 export const RIDER_EARNINGS_GRAPH = gql`
   query RiderEarningsGraph(
@@ -37,7 +37,7 @@ export const RIDER_EARNINGS_GRAPH = gql`
       }
     }
   }
-`
+`;
 
 export const RIDER_GRAND_TOTAL_EARNINGS = gql`
   query Earnings(
@@ -58,12 +58,12 @@ export const RIDER_GRAND_TOTAL_EARNINGS = gql`
     ) {
       data {
         earnings {
-        grandTotalEarnings {
-          riderTotal
+          grandTotalEarnings {
+            riderTotal
+          }
         }
+        message
       }
-      message
     }
   }
-  }
-`
+`;

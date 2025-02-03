@@ -1,11 +1,11 @@
-import { MotiView } from 'moti'
-import EarningHeadingSkeleton from './earning-heading'
-import EarningTopChartSkeleton from './earning-top-chart'
-import EarningStackSkeleton from './earning-stack'
+import { MotiView } from "moti";
+import EarningHeadingSkeleton from "./earning-heading";
+import EarningTopChartSkeleton from "./earning-top-chart";
+import EarningStackSkeleton from "./earning-stack";
 
 export default function EarningScreenMainLoading() {
   return (
-    <MotiView className='flex flex-col justify-between items-center'>
+    <MotiView className="flex flex-col justify-between items-center">
       <EarningTopChartSkeleton />
       <EarningHeadingSkeleton />
       <MotiView>
@@ -14,5 +14,5 @@ export default function EarningScreenMainLoading() {
         ))}
       </MotiView>
     </MotiView>
-  )
+  );
 }

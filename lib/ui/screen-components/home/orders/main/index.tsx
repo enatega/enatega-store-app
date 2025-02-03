@@ -48,9 +48,8 @@ export default function HomeOrdersMain(props: IOrderTabsComponentProps) {
       },
     };
 
-    const _orders =
-      orderFilters[route.key] ?
-        assignedOrders?.filter(orderFilters[route.key])
+    const _orders = orderFilters[route.key]
+      ? assignedOrders?.filter(orderFilters[route.key])
       : [];
 
     setOrders(_orders);
@@ -74,15 +73,16 @@ export default function HomeOrdersMain(props: IOrderTabsComponentProps) {
   // Render
   return (
     <View className="flex-1 bg-white pb-12">
-      {errorAssigned ?
+      {errorAssigned ? (
         <View className="flex-1 justify-center items-center">
           <Text className="text-2xl">Something went wrong</Text>
         </View>
-      : loadingAssigned ?
+      ) : loadingAssigned ? (
         <View className="flex-1">
           <Spinner />
         </View>
-      : <FlatList
+      ) : (
+        <FlatList
           className={`h-[${height}px] mb-[${marginBottom}px]`}
           keyExtractor={(item) => item._id}
           data={orders}
@@ -97,9 +97,9 @@ export default function HomeOrdersMain(props: IOrderTabsComponentProps) {
               <View
                 style={{
                   minHeight:
-                    height > 670 ?
-                      height - height * 0.5
-                    : height - height * 0.6,
+                    height > 670
+                      ? height - height * 0.5
+                      : height - height * 0.6,
                   justifyContent: "center",
                   alignItems: "center",
                 }}
@@ -114,16 +114,18 @@ export default function HomeOrdersMain(props: IOrderTabsComponentProps) {
                   loop
                 />
 
-                {orders.length === 0 ?
+                {orders.length === 0 ? (
                   <Text className="font-[Inter] text-[18px] text-base font-[500] text-gray-600">
                     {NO_ORDER_PROMPT[route.key]}
                   </Text>
-                : <Text>Pull downto refresh</Text>}
+                ) : (
+                  <Text>Pull downto refresh</Text>
+                )}
               </View>
             );
           }}
         />
-      }
+      )}
     </View>
   );
 }

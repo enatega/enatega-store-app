@@ -80,7 +80,11 @@ export default function WithdrawModal({
               !withdrawRequestLoading ? "Confirm Withdraw" : "Please wait..."
             }
             disabled={withdrawRequestLoading}
-            onPress={() => handleFormSubmission(Number(withdrawAmount)).then(()=>setWithdrawAmount(""))}
+            onPress={() =>
+              handleFormSubmission(Number(withdrawAmount)).then(() =>
+                setWithdrawAmount(""),
+              )
+            }
           />
         </View>
       </View>

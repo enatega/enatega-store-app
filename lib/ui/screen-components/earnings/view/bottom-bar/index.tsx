@@ -1,20 +1,20 @@
 // Contexts
-import { useUserContext } from '@/lib/context/global/user.context'
+import { useUserContext } from "@/lib/context/global/user.context";
 
 // Interfaces
-import { IEarningBottomProps } from '@/lib/utils/interfaces/earning.interface'
+import { IEarningBottomProps } from "@/lib/utils/interfaces/earning.interface";
 
 // Icons
-import { Ionicons } from '@expo/vector-icons'
+import { Ionicons } from "@expo/vector-icons";
 
 // Expo
-import { router } from 'expo-router'
+import { router } from "expo-router";
 
 // Core
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Text, TouchableOpacity, View } from "react-native";
 
 // React Native Modal
-import ReactNativeModal from 'react-native-modal'
+import ReactNativeModal from "react-native-modal";
 
 export default function EarningBottomBar({
   totalEarnings,
@@ -24,34 +24,34 @@ export default function EarningBottomBar({
   setModalVisible,
 }: IEarningBottomProps) {
   // Contexts
-  const { setRiderOrderEarnings } = useUserContext()
+  const { setRiderOrderEarnings } = useUserContext();
   return (
     <ReactNativeModal
-      animationIn={'slideInUp'}
-      animationOut={'slideOutDown'}
+      animationIn={"slideInUp"}
+      animationOut={"slideOutDown"}
       isVisible={modalVisible.bool}
       onBackdropPress={() => {
         setModalVisible({
           bool: false,
-          _id: '',
-          date: '',
+          _id: "",
+          date: "",
           earningsArray: [],
           totalEarningsSum: 0,
           totalTipsSum: 0,
           totalDeliveries: 0,
-        })
+        });
       }}
       style={{
         maxHeight: 350,
-        width: '100%',
-        height: '100%',
-        backgroundColor: '#fff',
+        width: "100%",
+        height: "100%",
+        backgroundColor: "#fff",
         borderRadius: 20,
         padding: 5,
-        alignItems: 'center',
-        justifyContent: 'flex-start',
+        alignItems: "center",
+        justifyContent: "flex-start",
 
-        shadowColor: '#000',
+        shadowColor: "#000",
         shadowOffset: {
           width: 0,
           height: 2,
@@ -72,13 +72,13 @@ export default function EarningBottomBar({
         onPress={() => {
           setModalVisible({
             bool: false,
-            _id: '',
-            date: '',
+            _id: "",
+            date: "",
             earningsArray: [],
             totalEarningsSum: 0,
             totalTipsSum: 0,
             totalDeliveries: 0,
-          })
+          });
         }}
       />
       <View className="flex flex-col justify-between h-[65%] w-full">
@@ -98,30 +98,27 @@ export default function EarningBottomBar({
             className="flex flex-row gap-2 items-center flex-2"
             onPress={() => {
               router.push({
-                pathname: '/(tabs)/earnings/(routes)/earnings-order-details',
-              })
-              setRiderOrderEarnings(modalVisible.earningsArray)
+                pathname: "/(tabs)/earnings/(routes)/earnings-order-details",
+              });
+              setRiderOrderEarnings(modalVisible.earningsArray);
               setModalVisible({
                 bool: false,
-                _id: '',
-                date: '',
+                _id: "",
+                date: "",
                 earningsArray: [],
                 totalEarningsSum: 0,
                 totalTipsSum: 0,
                 totalDeliveries: 0,
-              })
+              });
             }}
           >
             <Text className="text-md text-[#3B82F6] font-bold">
-              ${totalEarnings - totalTips}{' '}
+              ${totalEarnings - totalTips}{" "}
             </Text>
-            <Ionicons
-              name="arrow-forward"
-              size={23}
-            />
+            <Ionicons name="arrow-forward" size={23} />
           </TouchableOpacity>
         </View>
       </View>
     </ReactNativeModal>
-  )
+  );
 }

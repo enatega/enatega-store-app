@@ -1,34 +1,33 @@
-import { Image, View } from 'react-native'
-import { Text } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
-import { IMAGES } from '@/lib/assets/images'
-import { IWalletSuccessModalProps } from '@/lib/utils/interfaces/withdraw.interface'
-import { router } from 'expo-router'
+import { Image, View } from "react-native";
+import { Text } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { IMAGES } from "@/lib/assets/images";
+import { IWalletSuccessModalProps } from "@/lib/utils/interfaces/withdraw.interface";
+import { router } from "expo-router";
 const SuccessModal = ({ message }: IWalletSuccessModalProps) => {
   return (
     <View
       style={{
-        shadowRadius:480,
-        shadowOpacity:1,
-        shadowColor:"black",
-        backgroundColor: 'white',
-        justifyContent: 'center',
-        alignItems: 'center',
+        shadowRadius: 480,
+        shadowOpacity: 1,
+        shadowColor: "black",
+        backgroundColor: "white",
+        justifyContent: "center",
+        alignItems: "center",
         maxHeight: 400,
         marginTop: 0,
         borderRadius: 10,
         width: 350,
         padding: 12,
-        boxShadow:"25px 25px 35px gray"
+        boxShadow: "25px 25px 35px gray",
       }}
     >
-
       <View className="absolute right-3 top-3">
         <Ionicons
           name="close-circle-outline"
           size={20}
           onPress={() => {
-            router.back()
+            router.back();
           }}
         />
       </View>
@@ -43,7 +42,7 @@ const SuccessModal = ({ message }: IWalletSuccessModalProps) => {
         <Text>Usually it takes 1-2 business days</Text>
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default SuccessModal
+export default SuccessModal;

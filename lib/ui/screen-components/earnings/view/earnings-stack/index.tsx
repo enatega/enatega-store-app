@@ -1,11 +1,11 @@
 // Interfaces
-import { IEarningStackProps } from '@/lib/utils/interfaces/earning.interface'
+import { IEarningStackProps } from "@/lib/utils/interfaces/earning.interface";
 
 // Icons
-import { Ionicons } from '@expo/vector-icons'
+import { Ionicons } from "@expo/vector-icons";
 
 // Core
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Text, TouchableOpacity, View } from "react-native";
 
 export default function EarningStack({
   date,
@@ -26,7 +26,7 @@ export default function EarningStack({
       totalTipsSum: tip,
       totalEarningsSum: earning,
       totalDeliveries: totalDeliveries,
-    })
+    });
   }
   return (
     <View className="flex flex-row justify-between items-center p-4 w-[95%] mx-auto my-3 border-b-gray-300 border-b-2">
@@ -39,11 +39,8 @@ export default function EarningStack({
         onPress={handleForwardPress}
       >
         <Text className="font-bold">${earning}</Text>
-        <Ionicons
-          name="arrow-forward"
-          size={23}
-        />
+        <Ionicons name="arrow-forward" size={23} />
       </TouchableOpacity>
     </View>
-  )
+  );
 }

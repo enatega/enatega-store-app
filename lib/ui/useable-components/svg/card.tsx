@@ -7,7 +7,11 @@ interface IconProps {
   color?: string;
 }
 
-const CardIcon: FC<IconProps> = ({ width = 16, height = 16, color = "#000" }) => {
+const CardIcon: FC<IconProps> = ({
+  width = 16,
+  height = 16,
+  color = "#000",
+}) => {
   return (
     <Svg width={width} height={height} viewBox="0 0 16 12" fill="none">
       <Path

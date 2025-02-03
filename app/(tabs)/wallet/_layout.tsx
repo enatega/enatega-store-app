@@ -7,10 +7,7 @@ export default function StackLayout() {
         name="index"
         options={{ headerShown: true, headerTitle: "Wallet" }}
       />
-      <Stack.Screen
-        name="(routes)/success"
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name="(routes)/success" options={{ headerShown: false }} />
     </Stack>
   );
 }

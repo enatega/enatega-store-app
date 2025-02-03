@@ -1,4 +1,4 @@
-import { MotiView, Text } from 'moti'
+import { MotiView, Text } from "moti";
 
 export default function EarningHeadingSkeleton() {
   return (
@@ -6,9 +6,7 @@ export default function EarningHeadingSkeleton() {
       <Text className="font-bold text-lg bg-white pb-5 mt-0">
         Recent Activity
       </Text>
-      <Text className="text-sm text-[#3B82F6] font-bold">
-        See More
-      </Text>
+      <Text className="text-sm text-[#3B82F6] font-bold">See More</Text>
     </MotiView>
-  )
+  );
 }

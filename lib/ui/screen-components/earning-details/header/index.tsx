@@ -1,15 +1,15 @@
 // GraphQL
-import { RIDER_EARNINGS_GRAPH } from '@/lib/apollo/queries/earnings.query'
+import { RIDER_EARNINGS_GRAPH } from "@/lib/apollo/queries/earnings.query";
 
 // Hooks
-import { useUserContext } from '@/lib/context/global/user.context'
-import { QueryResult, useQuery } from '@apollo/client'
+import { useUserContext } from "@/lib/context/global/user.context";
+import { QueryResult, useQuery } from "@apollo/client";
 
 //
-import SpinnerComponent from '@/lib/ui/useable-components/spinner'
-import { IRiderEarningsResponse } from '@/lib/utils/interfaces/rider-earnings.interface'
-import { useEffect, useState } from 'react'
-import { Text, View } from 'react-native'
+import SpinnerComponent from "@/lib/ui/useable-components/spinner";
+import { IRiderEarningsResponse } from "@/lib/utils/interfaces/rider-earnings.interface";
+import { useEffect, useState } from "react";
+import { Text, View } from "react-native";
 
 export default function EarningDetailsHeader() {
   // States
@@ -17,20 +17,20 @@ export default function EarningDetailsHeader() {
     earnings: 0,
     tips: 0,
     totalDeliveries: 0,
-  })
+  });
 
   // Contexts
-  const { userId } = useUserContext()
+  const { userId } = useUserContext();
 
   // Queries
   const { loading: isRiderEarningsLoading, data: riderEarningsData } = useQuery(
     RIDER_EARNINGS_GRAPH,
     {
       variables: {
-        riderId: userId ?? '',
+        riderId: userId ?? "",
       },
     },
-  ) as QueryResult<IRiderEarningsResponse | undefined, { riderId: string }>
+  ) as QueryResult<IRiderEarningsResponse | undefined, { riderId: string }>;
 
   useEffect(() => {
     if (riderEarningsData?.riderEarningsGraph?.earnings?.length) {
@@ -38,25 +38,25 @@ export default function EarningDetailsHeader() {
         riderEarningsData?.riderEarningsGraph?.earnings?.reduce(
           (acc, curr) => acc + curr.totalEarningsSum,
           0,
-        )
+        );
       const totalTips = riderEarningsData?.riderEarningsGraph?.earnings?.reduce(
         (acc, curr) => acc + curr.totalTipsSum,
         0,
-      )
+      );
       const totalDeliveries =
         riderEarningsData?.riderEarningsGraph.earnings.reduce(
           (acc, curr) => acc + curr.totalDeliveries,
           0,
-        )
+        );
       setRiderEarningsGrandTotal({
         earnings: totalEarnings,
         tips: totalTips,
         totalDeliveries: totalDeliveries,
-      })
+      });
     }
-  }, [])
+  }, []);
 
-  if (isRiderEarningsLoading) return <SpinnerComponent />
+  if (isRiderEarningsLoading) return <SpinnerComponent />;
   return (
     <View className="bg-gray-100 py-3 border border-gray-100">
       <Text className="left-5 text-xl font-semibold">Summary</Text>
@@ -81,5 +81,5 @@ export default function EarningDetailsHeader() {
         </View>
       </View>
     </View>
-  )
+  );
 }

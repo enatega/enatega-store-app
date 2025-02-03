@@ -1,30 +1,30 @@
 export interface IRiderEarningsArray {
-  tip: number
+  tip: number;
   orderDetails: {
-    orderType: string
-    orderId: string
-    paymentMethod: string
-  }
-  totalEarnings: number
-  deliveryFee: number
-  date: string
+    orderType: string;
+    orderId: string;
+    paymentMethod: string;
+  };
+  totalEarnings: number;
+  deliveryFee: number;
+  date: string;
 }
 export interface IRiderEarnings {
-  _id: string
-  earningsArray: IRiderEarningsArray[]
-  date:string
-  totalEarningsSum: number
-  totalTipsSum: number
-  totalDeliveries: number
+  _id: string;
+  earningsArray: IRiderEarningsArray[];
+  date: string;
+  totalEarningsSum: number;
+  totalTipsSum: number;
+  totalDeliveries: number;
 }
 export interface IRiderEarningsResponse {
   riderEarningsGraph: {
-    totalCount: number
-    earnings: IRiderEarnings[]
-  }
+    totalCount: number;
+    earnings: IRiderEarnings[];
+  };
 }
 
 export interface IRiderEarningsOrderProps {
-  amount: number,
-  orderId: string,
+  amount: number;
+  orderId: string;
 }

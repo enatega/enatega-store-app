@@ -1,18 +1,19 @@
 // Core
-import { ScrollView } from 'react-native'
+import { ScrollView } from "react-native";
 
 // Interfaces
-import {
-  IRiderEarnings,
-} from '@/lib/utils/interfaces/rider-earnings.interface'
+import { IRiderEarnings } from "@/lib/utils/interfaces/rider-earnings.interface";
 
 // Components
-import EarningStack from '../../../earnings/view/earnings-stack'
-import NoRecordFound from '@/lib/ui/useable-components/no-record-found'
-import { IRiderEarningsDetailProps } from '@/lib/utils/interfaces/earning.interface'
+import EarningStack from "../../../earnings/view/earnings-stack";
+import NoRecordFound from "@/lib/ui/useable-components/no-record-found";
+import { IRiderEarningsDetailProps } from "@/lib/utils/interfaces/earning.interface";
 
-export default function EarningsDetailStacks({riderEarningsData, isRiderEarningsLoading, setModalVisible  }:IRiderEarningsDetailProps) {
-
+export default function EarningsDetailStacks({
+  riderEarningsData,
+  isRiderEarningsLoading,
+  setModalVisible,
+}: IRiderEarningsDetailProps) {
   return (
     <ScrollView className="h-full border-t-2 border-t-gray-200 bg-white">
       {riderEarningsData?.riderEarningsGraph?.earnings?.length === 0 &&
@@ -33,5 +34,5 @@ export default function EarningsDetailStacks({riderEarningsData, isRiderEarnings
           ),
         )}
     </ScrollView>
-  )
+  );
 }

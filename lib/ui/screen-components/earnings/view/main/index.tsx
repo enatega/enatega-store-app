@@ -1,49 +1,48 @@
-
 // Core
-import { TouchableOpacity, View } from 'react-native'
-import { Text } from 'react-native'
+import { TouchableOpacity, View } from "react-native";
+import { Text } from "react-native";
 
 // Contexts
-import { useUserContext } from '@/lib/context/global/user.context'
+import { useUserContext } from "@/lib/context/global/user.context";
 
 // Interfaces
 import {
   IRiderEarnings,
   IRiderEarningsResponse,
-} from '@/lib/utils/interfaces/rider-earnings.interface'
+} from "@/lib/utils/interfaces/rider-earnings.interface";
 
 // Charts
-import { barDataItem } from 'react-native-gifted-charts'
+import { barDataItem } from "react-native-gifted-charts";
 
 // GraphQL
-import { RIDER_EARNINGS_GRAPH } from '@/lib/apollo/queries/earnings.query'
+import { RIDER_EARNINGS_GRAPH } from "@/lib/apollo/queries/earnings.query";
 
 // Hooks
-import { QueryResult, useQuery } from '@apollo/client'
+import { QueryResult, useQuery } from "@apollo/client";
 
 // Expo
-import { router } from 'expo-router'
+import { router } from "expo-router";
 
 // Skeletons
-import { EarningScreenMainLoading } from '@/lib/ui/skeletons'
+import { EarningScreenMainLoading } from "@/lib/ui/skeletons";
 
 // Components
-import EarningStack from '../earnings-stack'
-import EarningsBarChart from '../../bar-chart'
+import EarningStack from "../earnings-stack";
+import EarningsBarChart from "../../bar-chart";
 
 export default function EarningsMain() {
   // Contexts
-  const { userId, setModalVisible } = useUserContext()
+  const { userId, setModalVisible } = useUserContext();
 
   // Queries
   const { loading: isRiderEarningsLoading, data: riderEarningsData } = useQuery(
     RIDER_EARNINGS_GRAPH,
     {
       variables: {
-        riderId: userId ?? '',
+        riderId: userId ?? "",
       },
     },
-  ) as QueryResult<IRiderEarningsResponse | undefined, { riderId: string }>
+  ) as QueryResult<IRiderEarningsResponse | undefined, { riderId: string }>;
 
   const barData: barDataItem[] =
     riderEarningsData?.riderEarningsGraph.earnings
@@ -55,20 +54,20 @@ export default function EarningsMain() {
           return (
             <Text
               style={{
-                color: '#000',
+                color: "#000",
                 fontSize: 14,
-                fontWeight: '600',
+                fontWeight: "600",
                 marginBottom: 1,
               }}
             >
               ${earning.totalEarningsSum}
             </Text>
-          )
+          );
         },
-      })) ?? ([] as barDataItem[])
+      })) ?? ([] as barDataItem[]);
 
   // If loading
-  if (isRiderEarningsLoading) return <EarningScreenMainLoading />
+  if (isRiderEarningsLoading) return <EarningScreenMainLoading />;
 
   return (
     <View className="bg-white">
@@ -84,14 +83,14 @@ export default function EarningsMain() {
           onPress={() => {
             setModalVisible({
               bool: false,
-              _id: '',
-              date: '',
+              _id: "",
+              date: "",
               earningsArray: [],
               totalEarningsSum: 0,
               totalTipsSum: 0,
               totalDeliveries: 0,
-            })
-            router.push('/(tabs)/earnings/(routes)/earnings-detail')
+            });
+            router.push("/(tabs)/earnings/(routes)/earnings-detail");
           }}
         >
           <Text className="text-sm text-[#3B82F6] font-bold">See More</Text>
@@ -121,5 +120,5 @@ export default function EarningsMain() {
             ))}
       </View>
     </View>
-  )
+  );
 }

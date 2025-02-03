@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native";
 export default function EarningsDetailScreen() {
   return (
     <SafeAreaView className="bg-white">
-        <EarningDetailsMain/>
+      <EarningDetailsMain />
     </SafeAreaView>
-  )
+  );
 }
