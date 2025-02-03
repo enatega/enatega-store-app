@@ -1,10 +1,19 @@
 import { Tabs, usePathname } from "expo-router";
 import { Platform } from "react-native";
 
+// UI Components
 import { HapticTab } from "@/lib/ui/useable-components/HapticTab";
-import { IconSymbol } from "@/lib/ui/useable-components/IconSymbol";
-import TabBarBackground from "@/lib/ui/useable-components/TabBarBackground";
+import {
+  HomeIcon,
+  WalletIcon,
+  CurrencyIcon,
+  PersonIcon,
+} from "@/lib/ui/useable-components/svg";
+
+// Constants
 import { Colors } from "@/lib/utils/constants/colors";
+
+// Hooks
 import { useColorScheme } from "@/lib/hooks/useColorScheme";
 import { useEffect, useState } from "react";
 
@@ -21,25 +30,31 @@ const RootLayout = () => {
     <Tabs
       key={tabKey}
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].primary,
+        tabBarActiveTintColor: Colors[colorScheme ?? "dark"].primary,
         headerShown: false,
         tabBarButton: HapticTab,
-
-        tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
             position: "absolute",
-          },
 
-          default: {
+            backgroundColor: "#1F2937",
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            borderTopWidth: 0.5, // Optional border at the top
+            shadowColor: "#000", // Shadow for iOS
+            shadowOffset: { width: 0, height: -5 },
+            shadowOpacity: 0.1,
+            shadowRadius: 5,
+          },
+          android: {
             position: "absolute",
+            backgroundColor: "#1F2937",
             display: pathName.startsWith("/wallet/success") ? "none" : "flex",
-            backgroundColor: Colors.light.tabNaviatorBackground,
+
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
             borderTopWidth: 0.5, // Optional border at the top
             elevation: 5, // Shadow for Android
-            shadowColor: "#000", // Shadow for iOS
             shadowOffset: { width: 0, height: -5 },
             shadowOpacity: 0.1,
             shadowRadius: 5,
@@ -52,7 +67,8 @@ const RootLayout = () => {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house" color={color} />
+            // <IconSymbol size={28} name="home" color={color} />
+            <HomeIcon color={color} width={25} height={25} />
           ),
         }}
       />
@@ -61,7 +77,7 @@ const RootLayout = () => {
         options={{
           title: "Wallet",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="wallet.pass.fill" color={color} />
+            <WalletIcon color={color} width={25} height={25} />
           ),
         }}
       />
@@ -70,7 +86,7 @@ const RootLayout = () => {
         options={{
           title: "Earnings",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="dollarsign.circle" color={color} />
+            <CurrencyIcon color={color} width={25} height={25} />
           ),
         }}
       />
@@ -79,7 +95,7 @@ const RootLayout = () => {
         options={{
           title: "Profile",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="person" color={color} />
+            <PersonIcon color={color} width={25} height={25} />
           ),
         }}
       />

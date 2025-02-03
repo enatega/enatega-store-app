@@ -21,7 +21,7 @@ const useLogin = () => {
 
   // Context
   const { setTokenAsync } = useContext(AuthContext);
-  console.log();
+
   // API
   const [login, { data: riderLoginData }] = useMutation(RIDER_LOGIN, {
     onCompleted,
@@ -108,13 +108,11 @@ const useLogin = () => {
           notificationToken: notificationToken,
         },
       });
-      console.log({ data });
+
       if (riderLoginData?.userId) {
         await AsyncStorage.setItem("rider-id", data.userId);
       }
     } catch (err) {
-      console.log({ wrong: err });
-
       FlashMessageComponent({
         message:
           err?.graphQLErrors[0]?.message ??

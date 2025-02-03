@@ -87,17 +87,19 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
     }
   }`;
 
-export const subscriptionNewMessage = `subscription SubscriptionNewMessage($order:ID!){
-  subscriptionNewMessage(order:$order){
-    id
-    message
-    user {
+export const SUBSCRIPTION_NEW_MESSAGE = gql`
+  subscription SubscriptionNewMessage($order: ID!) {
+    subscriptionNewMessage(order: $order) {
       id
-      name
+      message
+      user {
+        id
+        name
+      }
+      createdAt
     }
-    createdAt
   }
-}`;
+`;
 
 export const SUBSCRIPTION_ZONE_ORDERS = gql`
   subscription SubscriptionZoneOrders($zoneId: String!) {

@@ -1,3 +1,5 @@
+import { useRouter } from "expo-router";
+import { useContext } from "react";
 import { View, TouchableOpacity, Text } from "react-native";
 
 // Components
@@ -5,11 +7,14 @@ import { IconSymbol } from "@/lib/ui/useable-components/IconSymbol";
 import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 // Interface
 import { IOrderComponentProps } from "@/lib/utils/interfaces/order.interface";
+
+// Contexrtg
+import { ConfigurationContext } from "@/lib/context/global/configuration.context";
 // Hook
 import useOrder from "@/lib/hooks/useOrder";
-import { ConfigurationContext } from "@/lib/context/global/configuration.context";
-import { useContext } from "react";
-import { useRouter } from "expo-router";
+
+// Cion
+import { ChatIcon } from "../svg";
 
 const Order = ({ order, tab }: IOrderComponentProps) => {
   // Hook
@@ -181,14 +186,32 @@ const Order = ({ order, tab }: IOrderComponentProps) => {
               </View>
             </View>
 
-            {/* Order Comment */}
-            <View className="flex-1">
-              <Text className="font-[Inter] text-[16px] text-base font-[500] text-gray-600">
-                Order Comment
-              </Text>
-              <Text className="font-[Inter] text-[16px] italic font-medium text-gray-900">
-                No Comment
-              </Text>
+            <View className="flex-row items-center gap-x-2">
+              <TouchableOpacity
+                onPress={() => {
+                  router.push({
+                    pathname: "/chat",
+                    params: {
+                      phoneNumber: order?.user.phone,
+                      orderId: order?.orderId,
+                      id: order?._id,
+                    },
+                  });
+                }}
+              >
+                <View className="border border-[#E2E8F0] rounded-full p-3">
+                  <ChatIcon width={30} height={30} />
+                </View>
+              </TouchableOpacity>
+              {/* Order Comment */}
+              <View className="flex-1">
+                <Text className="font-[Inter] text-[16px] text-base font-[500] text-gray-600">
+                  Order Comment
+                </Text>
+                <Text className="font-[Inter] text-[16px] italic font-medium text-gray-900">
+                  No Comment
+                </Text>
+              </View>
             </View>
 
             {tab === "new_orders" && (

@@ -20,8 +20,8 @@ const useOrderDetail = () => {
   const { GOOGLE_MAPS_KEY } = getEnvVars();
   const { location } = useLocationContext();
 
-  const [distance, setDistance] = useState(null);
-  const [duration, setDuration] = useState(null);
+  const [distance, setDistance] = useState<number | null>(null);
+  const [duration, setDuration] = useState<number | null>(null);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -63,6 +63,7 @@ const useOrderDetail = () => {
       longitude: +location?.longitude || 0,
     },
   };
+
   return {
     locationPin,
     restaurantAddressPin,

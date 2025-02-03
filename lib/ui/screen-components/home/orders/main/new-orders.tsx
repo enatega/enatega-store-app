@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
+
 import UserContext from "@/lib/context/global/user.context";
 import Order from "@/lib/ui/useable-components/order";
 import Spinner from "@/lib/ui/useable-components/spinner";
@@ -8,6 +9,7 @@ import { IOrder } from "@/lib/utils/interfaces/order.interface";
 import { ORDER_TYPE } from "@/lib/utils/types";
 import { NetworkStatus } from "@apollo/client";
 import LottieView from "lottie-react-native";
+import React from "react";
 import { useEffect, useState } from "react";
 import { useContext } from "react";
 import { View, Text, Dimensions, Platform } from "react-native";
@@ -15,7 +17,7 @@ import { FlatList } from "react-native-gesture-handler";
 
 const { height, width } = Dimensions.get("window");
 
-export default function HomeOrdersMain(props: IOrderTabsComponentProps) {
+export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
   // Props
   const { route } = props;
 
@@ -36,21 +38,9 @@ export default function HomeOrdersMain(props: IOrderTabsComponentProps) {
   const onInitOrders = () => {
     if (loadingAssigned || errorAssigned) return;
 
-    const orderFilters: Record<string, (o: IOrder) => boolean> = {
-      new_orders: (o) =>
-        o.orderStatus === "ACCEPTED" && !o.rider && !o.isPickedUp,
-      processing: (o) =>
-        ["PICKED", "ASSIGNED"].includes(o.orderStatus) && !o.isPickedUp,
-      delivered: (o) => {
-        const isDelivered = ["DELIVERED", "CANCELLED"].includes(o.orderStatus);
-        const isCurrentRider = o.rider?._id === dataProfile?.rider?._id;
-        return isDelivered && isCurrentRider;
-      },
-    };
-
-    const _orders = orderFilters[route.key]
-      ? assignedOrders?.filter(orderFilters[route.key])
-      : [];
+    const _orders = assignedOrders?.filter(
+      (o: IOrder) => o.orderStatus === "ACCEPTED" && !o.rider && !o.isPickedUp
+    );
 
     setOrders(_orders);
   };
@@ -72,16 +62,16 @@ export default function HomeOrdersMain(props: IOrderTabsComponentProps) {
 
   // Render
   return (
-    <View className="flex-1 bg-white pb-12">
-      {errorAssigned ? (
+    <View key={route.key} className="flex-1 bg-white pb-12">
+      {errorAssigned ?
         <View className="flex-1 justify-center items-center">
           <Text className="text-2xl">Something went wrong</Text>
         </View>
-      ) : loadingAssigned ? (
+      : loadingAssigned ?
         <View className="flex-1">
           <Spinner />
         </View>
-      ) : (
+      : orders.length > 0 ?
         <FlatList
           className={`h-[${height}px] mb-[${marginBottom}px]`}
           keyExtractor={(item) => item._id}
@@ -97,9 +87,9 @@ export default function HomeOrdersMain(props: IOrderTabsComponentProps) {
               <View
                 style={{
                   minHeight:
-                    height > 670
-                      ? height - height * 0.5
-                      : height - height * 0.6,
+                    height > 670 ?
+                      height - height * 0.5
+                    : height - height * 0.6,
                   justifyContent: "center",
                   alignItems: "center",
                 }}
@@ -114,18 +104,40 @@ export default function HomeOrdersMain(props: IOrderTabsComponentProps) {
                   loop
                 />
 
-                {orders.length === 0 ? (
+                {orders.length === 0 ?
                   <Text className="font-[Inter] text-[18px] text-base font-[500] text-gray-600">
                     {NO_ORDER_PROMPT[route.key]}
                   </Text>
-                ) : (
-                  <Text>Pull downto refresh</Text>
-                )}
+                : <Text>Pull downto refresh</Text>}
               </View>
             );
           }}
         />
-      )}
+      : <View
+          style={{
+            minHeight:
+              height > 670 ? height - height * 0.5 : height - height * 0.6,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <LottieView
+            style={{
+              width: width - 100,
+              height: 350,
+            }}
+            source={require("@/lib/assets/loader.json")}
+            autoPlay
+            loop
+          />
+
+          {orders.length === 0 ?
+            <Text className="font-[Inter] text-[18px] text-base font-[500] text-gray-600">
+              {NO_ORDER_PROMPT[route.key]}
+            </Text>
+          : <Text>Pull downto refresh</Text>}
+        </View>
+      }
     </View>
   );
 }

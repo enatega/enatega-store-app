@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import OrderTab from "@/lib/ui/screen-components/home/orders/main";
+// Constants
 import { Colors } from "@/lib/utils/constants";
 import React, { useState } from "react";
 import {
@@ -8,9 +8,15 @@ import {
   View,
   TouchableOpacity,
   StyleSheet,
-  Text,
+  Dimensions,
 } from "react-native";
-import { TabView, SceneMap } from "react-native-tab-view";
+import { SceneMap, TabView } from "react-native-tab-view";
+
+// Components
+
+import HomeNewOrdersMain from "@/lib/ui/screen-components/home/orders/main/new-orders";
+import HomeProcessingOrdersMain from "@/lib/ui/screen-components/home/orders/main/processing-orders";
+import HomeDeliveredOrdersMain from "@/lib/ui/screen-components/home/orders/main/delivered-orders";
 
 const HomeOrdersScreen: React.FC = () => {
   const [index, setIndex] = useState(0); // State for the active tab index
@@ -46,51 +52,55 @@ const HomeOrdersScreen: React.FC = () => {
                 | null
                 | undefined;
             },
-            i: number,
+            i: number
           ) => {
             const opacity = props.position.interpolate({
               inputRange,
               outputRange: inputRange.map((inputIndex: number) =>
-                inputIndex === i ? 1 : 0.5,
+                inputIndex === i ? 1 : 0.5
               ),
             });
 
-            if (typeof route?.title === "string")
-              return (
-                <TouchableOpacity
-                  key={route.key}
-                  style={[
-                    styles.tabItem,
-                    index === i && styles.activeTabItem, // Add bottom border for the selected tab
-                  ]}
-                  onPress={() => setIndex(i)} // Update index on press
+            return (
+              <TouchableOpacity
+                key={route.key}
+                style={[
+                  styles.tabItem,
+                  index === i && styles.activeTabItem, // Add bottom border for the selected tab
+                ]}
+                onPress={() => setIndex(i)} // Update index on press
+              >
+                <Animated.Text
+                  style={{ opacity }}
+                  className="font-[Inter] font-bold"
                 >
-                  <Animated.Text
-                    style={{ opacity }}
-                    className="font-[Inter] font-bold"
-                  >
-                    {route?.title}
-                  </Animated.Text>
-                </TouchableOpacity>
-              );
-          },
+                  {route.title}
+                </Animated.Text>
+              </TouchableOpacity>
+            );
+          }
         )}
       </View>
     );
   };
 
   const renderScene = SceneMap({
-    new_orders: OrderTab,
-    processing: OrderTab,
-    delivered: OrderTab,
+    new_orders: HomeNewOrdersMain,
+    processing: HomeProcessingOrdersMain,
+    delivered: HomeDeliveredOrdersMain,
   });
 
   return (
     <TabView
+      lazy
       navigationState={{ index, routes }}
       renderScene={renderScene}
       renderTabBar={renderTabBar}
-      onIndexChange={setIndex} // Update index on tab change
+      onIndexChange={setIndex}
+      swipeEnabled={true}
+      style={{ flex: 1 }} // Important for layout
+      orientation={"horizontal"}
+      initialLayout={{ height: Dimensions.get("window").height }}
     />
   );
 };
