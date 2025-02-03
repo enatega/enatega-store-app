@@ -1,3 +1,4 @@
+import { ApolloQueryResult } from "@apollo/client";
 import { Dispatch, SetStateAction } from "react";
 
 export interface IRiderEarningsArray {

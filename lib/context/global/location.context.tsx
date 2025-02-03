@@ -8,7 +8,7 @@ import {
 } from "@/lib/utils/interfaces";
 
 const LocationContext = React.createContext<ILocationContextProps>(
-  {} as ILocationContextProps,
+  {} as ILocationContextProps
 );
 
 export const LocationProvider = ({ children }: ILocationProviderProps) => {
@@ -46,13 +46,13 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
             latitude: location.coords.latitude.toString(),
             longitude: location.coords.longitude.toString(),
           });
-        },
+        }
       );
     };
     trackRiderLocation();
     return () => {
       if (locationListener.current) {
-        locationListener?.current?.remove();
+        locationListener.current.remove();
       }
     };
   }, [locationPermission]);

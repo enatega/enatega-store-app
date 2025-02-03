@@ -4,7 +4,7 @@ import { ConfigurationContext } from "./lib/context/global/configuration.context
 
 const getEnvVars = (env = Updates.channel) => {
   const configuration = useContext(ConfigurationContext);
-  console.log({ env });
+
   if (env === "production" || env === "staging") {
     return {
       GRAPHQL_URL: "https://enatega-multivendor.up.railway.app/graphql",

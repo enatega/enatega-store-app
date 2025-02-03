@@ -9,3 +9,5 @@ export * from "./location.interface";
 export * from "./user.interface";
 export * from "./text.interface";
 export * from "./sound.interface";
+export * from "./well-done.interface";
+export * from "./chat.interface";

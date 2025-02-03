@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
+import { useEffect } from "react";
 import {
   DarkTheme,
   DefaultTheme,
@@ -8,27 +9,34 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
 import "react-native-reanimated";
+import { ApolloProvider } from "@apollo/client";
 
 import { useColorScheme } from "@/lib/hooks/useColorScheme";
 
-import "../global.css";
-import { ConfigurationProvider } from "@/lib/context/global/configuration.context";
-import { ApolloProvider } from "@apollo/client";
-import setupApollo from "@/lib/apollo";
 import FlashMessage from "react-native-flash-message";
+
+// Service
+import setupApollo from "@/lib/apollo";
+
+// Context
 import { AuthProvider } from "@/lib/context/global/auth.context";
-import { LocationProvider } from "@/lib/context/global/location.context";
 import { UserProvider } from "@/lib/context/global/user.context";
-import { Colors } from "@/lib/utils/constants";
-import { Platform } from "react-native";
 import { SoundProvider } from "@/lib/context/global/sound.context";
+import { LocationProvider } from "@/lib/context/global/location.context";
+import { ConfigurationProvider } from "@/lib/context/global/configuration.context";
+
+// Locale
+import "@/i18next";
+
+// Style
+import "../global.css";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  // Hooks
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../lib/assets/fonts/SpaceMono-Regular.ttf"),
@@ -57,7 +65,11 @@ export default function RootLayout() {
               <UserProvider>
                 <SoundProvider>
                   <>
-                    <Stack>
+                    <Stack
+                      screenOptions={{
+                        headerShown: false,
+                      }}
+                    >
                       <Stack.Screen
                         name="login"
                         options={{ headerShown: false }}
@@ -69,6 +81,11 @@ export default function RootLayout() {
                       <Stack.Screen name="+not-found" />
                       <Stack.Screen
                         name="order-detail"
+                        options={{ headerShown: false }}
+                      />
+
+                      <Stack.Screen
+                        name="chat"
                         options={{ headerShown: false }}
                       />
                     </Stack>

@@ -22,10 +22,9 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
   // Handlers
   const playSound = async () => {
     try {
-      console.log("playing...");
       await stopSound();
       const { sound: newSound } = await Audio.Sound.createAsync(
-        require("@/lib/assets/sound/beep3.mp3"),
+        require("@/lib/assets/sound/beep3.mp3")
       );
       await newSound.setIsLoopingAsync(true);
       await Audio.setAudioModeAsync({
@@ -41,7 +40,6 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
       await newSound.playAsync();
 
       setSound(newSound);
-      console.log("played.....");
     } catch (err) {
       console.log(err);
     }
@@ -59,18 +57,11 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
     if (assignedOrders) {
       // Check if any order should play sound
       const new_order = assignedOrders?.find(
-        (o: IOrder) => o.orderStatus === "ACCEPTED" && !o?.isPickedUp,
+        (o: IOrder) => o.orderStatus === "ACCEPTED" && !o?.isPickedUp
       );
 
-      if (new_order) {
-        console.log({ new_order: new_order._id });
-      }
       const shouldPlaySound = !!new_order;
 
-      // const shouldPlaySound = assignedOrders?.some(
-      //   (o: IOrder) =>
-      //     o.orderStatus === "ACCEPTED" && o?.isRiderRinged && !o?.isPickedUp
-      // );
       if (shouldPlaySound && !sound) {
         playSound();
       } else if (!shouldPlaySound && sound) {

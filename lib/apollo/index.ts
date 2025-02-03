@@ -56,7 +56,6 @@ const setupApollo = () => {
         fields: {
           distanceWithCurrentLocation: {
             read(_existing: IRestaurantLocation, { variables, readField }) {
-              console.log(_existing);
               const restaurantLocation: IRestaurantLocation | undefined =
                 readField("location");
               if (
@@ -68,21 +67,19 @@ const setupApollo = () => {
                 restaurantLocation.coordinates[0][0][0],
                 restaurantLocation.coordinates[0][0][1],
                 variables?.latitude,
-                variables?.longitude,
+                variables?.longitude
               );
               return distance;
             },
           },
           freeDelivery: {
             read(_existing: IRestaurantLocation) {
-              console.log(_existing);
               const randomValue = Math.random() * 10;
               return randomValue > 5;
             },
           },
           acceptVouchers: {
             read(_existing: IRestaurantLocation) {
-              console.log(_existing);
               const randomValue = Math.random() * 10;
               return randomValue < 5;
             },
@@ -131,7 +128,7 @@ const setupApollo = () => {
         return () => {
           if (handle) handle.unsubscribe();
         };
-      }),
+      })
   );
 
   // const terminatingLink = split(({ query }) => {

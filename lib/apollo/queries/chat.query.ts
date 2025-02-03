@@ -1,12 +1,15 @@
-export const chat = `#graphql
-query Chat($order: ID!) {
-  chat(order: $order) {
-    id
-    message
-    user {
+import { gql } from "@apollo/client";
+
+export const CHAT = gql`
+  query Chat($order: ID!) {
+    chat(order: $order) {
       id
-      name
+      message
+      user {
+        id
+        name
+      }
+      createdAt
     }
-    createdAt
   }
-}`;
+`;

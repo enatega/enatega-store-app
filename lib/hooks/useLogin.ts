@@ -13,7 +13,7 @@ import {
 import { Href, router } from "expo-router";
 import { FlashMessageComponent } from "../ui/useable-components/flash-message";
 import { IRiderLoginCompleteResponse } from "../utils/interfaces/auth.interface";
-import { ROUTES } from "../utils/constants";
+import { RIDER_TOKEN, ROUTES } from "../utils/constants";
 
 const useLogin = () => {
   const [creds, setCreds] = useState({ username: "", password: "" });
@@ -21,7 +21,7 @@ const useLogin = () => {
 
   // Context
   const { setTokenAsync } = useContext(AuthContext);
-  console.log();
+
   // API
   const [login, { data: riderLoginData }] = useMutation(RIDER_LOGIN, {
     onCompleted,
@@ -93,13 +93,13 @@ const useLogin = () => {
             Notifications.IosAuthorizationStatus.PROVISIONAL) &&
         Device.isDevice
       ) {
+        console.log(await AsyncStorage.getItem(RIDER_TOKEN))
         notificationToken = (
           await Notifications.getExpoPushTokenAsync({
             projectId: Constants.expoConfig?.extra?.eas.projectId,
           })
         ).data;
       }
-
       // Perform mutation with the obtained data
       const { data } = await login({
         variables: {
@@ -108,13 +108,11 @@ const useLogin = () => {
           notificationToken: notificationToken,
         },
       });
-      console.log({ data });
+
       if (riderLoginData?.userId) {
         await AsyncStorage.setItem("rider-id", data.userId);
       }
     } catch (err) {
-      console.log({ wrong: err });
-
       FlashMessageComponent({
         message:
           err?.graphQLErrors[0]?.message ??

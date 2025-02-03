@@ -2,7 +2,7 @@ import { Colors } from "@/lib/utils/constants";
 import { Stack } from "expo-router";
 import { Platform } from "react-native";
 
-export default function LoginLayour() {
+export default function OrderDetailLayour() {
   return (
     <Stack
       screenOptions={{
