@@ -1,17 +1,5 @@
 import { gql } from "@apollo/client";
 
-export const subscriptionOrder = `subscription SubscriptionOrder($id:String!){
-    subscriptionOrder(id:$id){
-        _id
-        orderStatus
-        rider{
-            _id
-        }
-        completionTime
-        preparationTime
-    }
-  }`;
-
 export const subscriptionRiderLocation = `subscription SubscriptionRiderLocation($riderId:String!){
     subscriptionRiderLocation(riderId:$riderId) {
       _id

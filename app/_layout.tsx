@@ -21,6 +21,9 @@ import FlashMessage from "react-native-flash-message";
 import { AuthProvider } from "@/lib/context/global/auth.context";
 import { LocationProvider } from "@/lib/context/global/location.context";
 import { UserProvider } from "@/lib/context/global/user.context";
+import { Colors } from "@/lib/utils/constants";
+import { Platform } from "react-native";
+import { SoundProvider } from "@/lib/context/global/sound.context";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -52,22 +55,28 @@ export default function RootLayout() {
           <AuthProvider client={client}>
             <LocationProvider>
               <UserProvider>
-                <>
-                  <Stack>
-                    <Stack.Screen
-                      name="login"
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      name="(tabs)"
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen name="+not-found" />
-                  </Stack>
+                <SoundProvider>
+                  <>
+                    <Stack>
+                      <Stack.Screen
+                        name="login"
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name="(tabs)"
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen name="+not-found" />
+                      <Stack.Screen
+                        name="order-detail"
+                        options={{ headerShown: false }}
+                      />
+                    </Stack>
 
-                  <StatusBar style="auto" />
-                  <FlashMessage position="bottom" />
-                </>
+                    <StatusBar style="auto" />
+                    <FlashMessage position="bottom" />
+                  </>
+                </SoundProvider>
               </UserProvider>
             </LocationProvider>
           </AuthProvider>

@@ -7,10 +7,13 @@ import { OpaqueColorValue, StyleProp, ViewStyle } from "react-native";
 
 // Add your SFSymbol to MaterialIcons mappings here.
 const MAPPING = {
-  "house.fill": "home",
+  home: "home",
   "currency-exchange": "currency-exchange",
   wallet: "wallet",
   person: "person",
+  apartment: "apartment",
+  "access-time": "access-time",
+  "directions-bike": "directions-bike",
 } as Partial<
   Record<
     import("expo-symbols").SymbolViewProps["name"],
@@ -29,7 +32,7 @@ export function IconSymbol({
   name,
   size = 24,
   color,
-  style,
+  // style,
 }: {
   name: IconSymbolName;
   size?: number;
@@ -42,7 +45,7 @@ export function IconSymbol({
       color={color}
       size={size}
       name={MAPPING[name]}
-      style={style}
+      // style={style}
     />
   );
 }

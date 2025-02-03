@@ -1,33 +1,39 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import {
   requestForegroundPermissionsAsync,
   watchPositionAsync,
   LocationAccuracy,
   LocationSubscription,
-} from "expo-location";
-import { useQuery } from "@apollo/client";
+} from 'expo-location'
+import { useQuery } from '@apollo/client'
 // Interface
-import {
-  IUserContextProps,
-  IUserProviderProps,
-} from "@/lib/utils/interfaces";
+import { IUserContextProps, IUserProviderProps } from '@/lib/utils/interfaces'
 // Context
-import { useLocationContext } from "./location.context";
+import { useLocationContext } from './location.context'
 // API
-import { RIDER_ORDERS, RIDER_PROFILE } from "@/lib/apollo/queries";
-import { UPDATE_LOCATION } from "@/lib/apollo/mutations/rider.mutation";
+import { RIDER_ORDERS, RIDER_PROFILE } from '@/lib/apollo/queries'
+import { UPDATE_LOCATION } from '@/lib/apollo/mutations/rider.mutation'
 import {
   SUBSCRIPTION_ASSIGNED_RIDER,
   SUBSCRIPTION_ZONE_ORDERS,
-} from "@/lib/apollo/subscriptions";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { IRiderEarnings, IRiderEarningsArray } from "@/lib/utils/interfaces/rider-earnings.interface";
+} from '@/lib/apollo/subscriptions'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import {
+  IRiderEarnings,
+  IRiderEarningsArray,
+} from '@/lib/utils/interfaces/rider-earnings.interface'
 
-const UserContext = createContext<IUserContextProps>({});
+const UserContext = createContext<IUserContextProps>({} as IUserContextProps)
 
 export const UserProvider = ({ children }: IUserProviderProps) => {
-    // States
-    const [modalVisible, setModalVisible] = useState<
+  // States
+  const [modalVisible, setModalVisible] = useState<
     IRiderEarnings & { bool: boolean }
   >({
     bool: false,
@@ -36,30 +42,33 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     earningsArray: [] as IRiderEarningsArray[],
     totalEarningsSum: 0,
     totalTipsSum: 0,
+    totalDeliveries: 0,
   })
-  const [riderOrderEarnings, setRiderOrderEarnings] = useState<IRiderEarningsArray[]>([] as IRiderEarningsArray[])
-  const [userId, setUserId] = useState("");
+  const [riderOrderEarnings, setRiderOrderEarnings] = useState<
+    IRiderEarningsArray[]
+  >([] as IRiderEarningsArray[])
+  const [userId, setUserId] = useState('')
 
   // Refs
-  const locationListener = useRef<LocationSubscription>();
+  const locationListener = useRef<LocationSubscription>()
 
   // Context
-  const { locationPermission } = useLocationContext();
+  const { locationPermission } = useLocationContext()
 
   const {
     loading: loadingProfile,
     error: errorProfile,
     data: dataProfile,
   } = useQuery(RIDER_PROFILE, {
-    fetchPolicy: "network-only",
+    fetchPolicy: 'network-only',
     // onCompleted,
     // pollInterval: 10000,
     // onError: error1
     variables: {
       id: userId,
     },
-  });
-  console.log({ userId });
+  })
+  console.log({ userId })
   const {
     client,
     loading: loadingAssigned,
@@ -71,13 +80,13 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   } = useQuery(RIDER_ORDERS, {
     // onCompleted,
     // onError: error2,
-    fetchPolicy: "network-only",
+    fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true,
     // pollInterval: 15000
-  });
+  })
 
-  let unsubscribeZoneOrder = null;
-  let unsubscribeAssignOrder = null;
+  let unsubscribeZoneOrder = null
+  let unsubscribeAssignOrder = null
 
   // function onCompleted({ rider, assignedOrders }) {
   //     console.log({ rider, assignedOrders })
@@ -95,8 +104,8 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   // }
 
   async function getUserId() {
-    const id = await AsyncStorage.getItem("rider-id");
-    setUserId(id);
+    const id = await AsyncStorage.getItem('rider-id')
+    setUserId(id)
   }
 
   const subscribeNewOrders = () => {
@@ -105,16 +114,16 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         document: SUBSCRIPTION_ASSIGNED_RIDER,
         variables: { riderId: dataProfile.rider._id },
         updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData.data) return prev;
-          if (subscriptionData.data.subscriptionAssignRider.origin === "new") {
+          if (!subscriptionData.data) return prev
+          if (subscriptionData.data.subscriptionAssignRider.origin === 'new') {
             return {
               riderOrders: [
                 subscriptionData.data.subscriptionAssignRider.order,
                 ...prev.riderOrders,
               ],
-            };
+            }
           } else if (
-            subscriptionData.data.subscriptionAssignRider.origin === "remove"
+            subscriptionData.data.subscriptionAssignRider.origin === 'remove'
           ) {
             return {
               riderOrders: [
@@ -124,50 +133,50 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
                     subscriptionData.data.subscriptionAssignRider.order._id,
                 ),
               ],
-            };
+            }
           }
-          return prev;
+          return prev
         },
-      });
+      })
       const unsubZoneOrder = subscribeToMore({
         document: SUBSCRIPTION_ZONE_ORDERS,
         variables: { zoneId: dataProfile.rider.zone._id },
         updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData.data) return prev;
+          if (!subscriptionData.data) return prev
 
-          if (subscriptionData.data.subscriptionZoneOrders.origin === "new") {
+          if (subscriptionData.data.subscriptionZoneOrders.origin === 'new') {
             return {
               riderOrders: [
                 subscriptionData.data.subscriptionZoneOrders.order,
                 ...prev.riderOrders,
               ],
-            };
+            }
           }
-          return prev;
+          return prev
         },
-      });
-      return { unsubZoneOrder, unsubAssignOrder };
+      })
+      return { unsubZoneOrder, unsubAssignOrder }
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   // Use Effect
   useEffect(() => {
-    if (!dataProfile) return;
+    if (!dataProfile) return
     {
-      const { unsubZoneOrder, unsubAssignOrder } = subscribeNewOrders();
-      unsubscribeZoneOrder = unsubZoneOrder;
-      unsubscribeAssignOrder = unsubAssignOrder;
+      const { unsubZoneOrder, unsubAssignOrder } = subscribeNewOrders()
+      unsubscribeZoneOrder = unsubZoneOrder
+      unsubscribeAssignOrder = unsubAssignOrder
     }
     return () => {
       if (unsubscribeZoneOrder) {
-        unsubscribeZoneOrder();
+        unsubscribeZoneOrder()
       }
 
-      if (unsubscribeAssignOrder) unsubscribeAssignOrder();
-    };
-  }, [dataProfile]);
+      if (unsubscribeAssignOrder) unsubscribeAssignOrder()
+    }
+  }, [dataProfile])
 
   useEffect(() => {
     const trackRiderLocation = async () => {
@@ -180,29 +189,56 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
               latitude: location.coords.latitude.toString(),
               longitude: location.coords.longitude.toString(),
             },
-          });
+          })
         },
-      );
-    };
-    trackRiderLocation();
+      )
+    }
+    trackRiderLocation()
     return () => {
       if (locationListener.current) {
-        locationListener?.current?.remove();
+        locationListener?.current?.remove()
       }
-    };
-  }, [locationPermission]);
+    }
+  }, [locationPermission])
   useEffect(() => {
-    getUserId();
-  }, []);
-  console.log({ dataAssigned });
+    getUserId()
+  }, [])
+  console.log({ dataAssigned })
+
+  useEffect(() => {
+    const trackRiderLocation = async () => {
+      locationListener.current = await watchPositionAsync(
+        { accuracy: LocationAccuracy.BestForNavigation, timeInterval: 10000 },
+        async (location) => {
+          client.mutate({
+            mutation: UPDATE_LOCATION,
+            variables: {
+              latitude: location.coords.latitude.toString(),
+              longitude: location.coords.longitude.toString(),
+            },
+          })
+        },
+      )
+    }
+    trackRiderLocation()
+    return () => {
+      if (locationListener.current) {
+        locationListener.current.remove()
+      }
+    }
+  }, [locationPermission])
 
   return (
     <UserContext.Provider
       value={{
+        modalVisible,
+        riderOrderEarnings,
+        setModalVisible,
+        setRiderOrderEarnings,
+        userId,
         loadingProfile,
         errorProfile,
         dataProfile,
-        userId,
         loadingAssigned,
         errorAssigned,
         assignedOrders:
@@ -210,16 +246,12 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         refetchAssigned,
         networkStatusAssigned,
         requestForegroundPermissionsAsync,
-        modalVisible,
-        setModalVisible,
-        riderOrderEarnings,
-        setRiderOrderEarnings
       }}
     >
       {children}
     </UserContext.Provider>
-  );
-};
-export const UserConsumer = UserContext.Consumer;
-export const useUserContext = () => useContext(UserContext);
-export default UserContext;
+  )
+}
+export const UserConsumer = UserContext.Consumer
+export const useUserContext = () => useContext(UserContext)
+export default UserContext
