@@ -108,13 +108,11 @@ const useLogin = () => {
           notificationToken: notificationToken,
         },
       });
-      console.log({ data });
+
       if (riderLoginData?.userId) {
         await AsyncStorage.setItem("rider-id", data.userId);
       }
     } catch (err) {
-      console.log({ wrong: err });
-
       FlashMessageComponent({
         message:
           err?.graphQLErrors[0]?.message ??

@@ -68,7 +68,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
       id: userId,
     },
   });
-  console.log({ userId });
+
   const {
     client,
     loading: loadingAssigned,
@@ -87,21 +87,6 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
 
   let unsubscribeZoneOrder = null;
   let unsubscribeAssignOrder = null;
-
-  // function onCompleted({ rider, assignedOrders }) {
-  //     console.log({ rider, assignedOrders })
-
-  //     console.log(rider)
-  //     console.log(assignedOrders)
-  //     console.log('onCompleted context')
-  // }
-
-  // function error1(error) {
-  //     console.log('error on fetching context 1', JSON.stringify(error))
-  // }
-  // function error2(error) {
-  //     console.log('error on fetching context 2', JSON.stringify(error))
-  // }
 
   async function getUserId() {
     const id = await AsyncStorage.getItem("rider-id");
@@ -130,7 +115,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
                 ...prev.riderOrders.filter(
                   (o) =>
                     o._id !==
-                    subscriptionData.data.subscriptionAssignRider.order._id,
+                    subscriptionData.data.subscriptionAssignRider.order._id
                 ),
               ],
             };
@@ -190,7 +175,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
               longitude: location.coords.longitude.toString(),
             },
           });
-        },
+        }
       );
     };
     trackRiderLocation();
@@ -203,7 +188,6 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   useEffect(() => {
     getUserId();
   }, []);
-  console.log({ dataAssigned });
 
   useEffect(() => {
     const trackRiderLocation = async () => {
@@ -217,7 +201,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
               longitude: location.coords.longitude.toString(),
             },
           });
-        },
+        }
       );
     };
     trackRiderLocation();
