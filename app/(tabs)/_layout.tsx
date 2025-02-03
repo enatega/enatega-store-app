@@ -1,14 +1,20 @@
 import { Tabs } from "expo-router";
 import { Platform } from "react-native";
 
+// UI Components
 import { HapticTab } from "@/lib/ui/useable-components/HapticTab";
-import TabBarBackground from "@/lib/ui/useable-components/TabBarBackground";
+import {
+  HomeIcon,
+  WalletIcon,
+  CurrencyIcon,
+  PersonIcon,
+} from "@/lib/ui/useable-components/svg";
+
+// Constants
 import { Colors } from "@/lib/utils/constants/colors";
+
+// Hooks
 import { useColorScheme } from "@/lib/hooks/useColorScheme";
-import { HomeIcon } from "@/lib/ui/useable-components/svg";
-import WalletIcon from "@/lib/ui/useable-components/svg/wallet";
-import CurrencyIcon from "@/lib/ui/useable-components/svg/currency";
-import PersonIcon from "@/lib/ui/useable-components/svg/person";
 
 const RootLayout = () => {
   const colorScheme = useColorScheme();
