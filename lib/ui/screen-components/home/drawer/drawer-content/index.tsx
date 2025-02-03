@@ -4,14 +4,22 @@ import {
 } from "@react-navigation/drawer";
 import { useContext } from "react";
 import { Text, View, TouchableOpacity } from "react-native";
+
+// Context
 import { AuthContext } from "@/lib/context/global/auth.context";
+
+// Constants
 import { Colors } from "@/lib/utils/constants";
-import { LogoutIcon, RightArrowIcon } from "@/lib/ui/useable-components/svg";
+
 import CustomDrawerHeader from "@/lib/ui/screen-components/home/drawer/drawer-header";
+
+// UI-Componetns
+import { LogoutIcon, RightArrowIcon } from "@/lib/ui/useable-components/svg";
 
 export default function CustomDrawerContent(
   props: DrawerContentComponentProps
 ) {
+  // Context
   const { logout } = useContext(AuthContext);
 
   return (
@@ -39,9 +47,8 @@ export default function CustomDrawerContent(
               onPress={() => props.navigation.navigate(route.name)}
               className="flex-row justify-between items-center px-4 py-3 border-b-[0.5px]"
               style={{
-                backgroundColor: isFocused
-                  ? Colors.light.lowOpacityPrimaryColor
-                  : "",
+                backgroundColor:
+                  isFocused ? Colors.light.lowOpacityPrimaryColor : "",
                 borderColor: Colors.light.borderLineColor,
               }}
             >
@@ -53,13 +60,13 @@ export default function CustomDrawerContent(
                     backgroundColor: Colors.light.sidebarIconBackground,
                   }}
                 >
-                  {options.drawerIcon
-                    ? options.drawerIcon({
-                        color: Colors.light.black,
-                        size: 16,
-                        focused: true,
-                      })
-                    : null}
+                  {options.drawerIcon ?
+                    options.drawerIcon({
+                      color: Colors.light.black,
+                      size: 16,
+                      focused: true,
+                    })
+                  : null}
                 </View>
                 <Text className="text-sm font-semibold">
                   {(options.drawerLabel as string) ?? route.name}
