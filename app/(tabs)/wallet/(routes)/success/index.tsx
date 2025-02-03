@@ -1,5 +1,5 @@
 import WithDrawRequestSuccessScreen from "@/lib/ui/screens/withdrawrequest-success";
 
-export default function index() {
+export default function WithdrawRequestSuccess() {
   return <WithDrawRequestSuccessScreen />;
 }
