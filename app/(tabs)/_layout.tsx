@@ -13,7 +13,7 @@ const RootLayout = () => {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].primary,
+        tabBarActiveTintColor: Colors[colorScheme ?? "dark"].primary,
         headerShown: false,
         tabBarButton: HapticTab,
 
@@ -21,9 +21,17 @@ const RootLayout = () => {
         tabBarStyle: Platform.select({
           ios: {
             position: "absolute",
-          },
 
-          default: {
+            backgroundColor: Colors.light.tabNaviatorBackground,
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            borderTopWidth: 0.5, // Optional border at the top
+            shadowColor: "#000", // Shadow for iOS
+            shadowOffset: { width: 0, height: -5 },
+            shadowOpacity: 0.1,
+            shadowRadius: 5,
+          },
+          android: {
             position: "absolute",
 
             backgroundColor: Colors.light.tabNaviatorBackground,
@@ -31,7 +39,6 @@ const RootLayout = () => {
             borderTopRightRadius: 20,
             borderTopWidth: 0.5, // Optional border at the top
             elevation: 5, // Shadow for Android
-            shadowColor: "#000", // Shadow for iOS
             shadowOffset: { width: 0, height: -5 },
             shadowOpacity: 0.1,
             shadowRadius: 5,

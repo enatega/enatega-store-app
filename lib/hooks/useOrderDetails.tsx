@@ -63,6 +63,7 @@ const useOrderDetail = () => {
       longitude: +location?.longitude || 0,
     },
   };
+
   return {
     locationPin,
     restaurantAddressPin,

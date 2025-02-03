@@ -37,10 +37,12 @@ export default function HomeOrdersMain(props: IOrderTabsComponentProps) {
     if (loadingAssigned || errorAssigned) return;
 
     const orderFilters: Record<string, (o: IOrder) => boolean> = {
-      new_orders: (o) =>
-        o.orderStatus === "ACCEPTED" && !o.rider && !o.isPickedUp,
-      processing: (o) =>
-        ["PICKED", "ASSIGNED"].includes(o.orderStatus) && !o.isPickedUp,
+      new_orders: (o) => {
+        return o.orderStatus === "ACCEPTED" && !o.rider && !o.isPickedUp;
+      },
+      processing: (o) => {
+        return ["PICKED", "ASSIGNED"].includes(o.orderStatus) && !o.isPickedUp;
+      },
       delivered: (o) => {
         const isDelivered = ["DELIVERED", "CANCELLED"].includes(o.orderStatus);
         const isCurrentRider = o.rider?._id === dataProfile?.rider?._id;
@@ -73,7 +75,7 @@ export default function HomeOrdersMain(props: IOrderTabsComponentProps) {
 
   // Render
   return (
-    <View className="flex-1 bg-white pb-12">
+    <View key={route.key} className="flex-1 bg-white pb-12">
       {errorAssigned ?
         <View className="flex-1 justify-center items-center">
           <Text className="text-2xl">Something went wrong</Text>
