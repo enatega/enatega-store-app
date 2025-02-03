@@ -1,5 +1,5 @@
 import { Slot } from "expo-router";
 
-export default function index() {
+export default function EarningsOrderDetailsLayout() {
   return <Slot />;
 }
