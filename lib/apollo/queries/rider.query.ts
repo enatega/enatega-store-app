@@ -1,4 +1,60 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client'
+
+export const RIDER_BY_ID = gql`
+  query Rider($id: String) {
+    rider(id: $id) {
+      _id
+      location {
+        coordinates
+      }
+      currentWalletAmount
+      totalWalletAmount
+      withdrawnWalletAmount
+    }
+  }
+`
+
+export const RIDER_EARNINGS = gql`
+  query RiderEarnings {
+    earnings {
+      data {
+        grandTotalEarnings {
+          riderTotal
+        }
+        earnings {
+          riderEarnings {
+            deliveryFee
+            tip
+            totalEarnings
+          }
+        }
+      }
+    }
+  }
+`
+
+export const RIDER_TRANSACTIONS_HISTORY = gql`
+  query TransactionHistory($userType: UserTypeEnum, $userId: String) {
+    transactionHistory(userType: $userType, userId: $userId) {
+      data {
+        status
+        amountTransferred
+        createdAt
+      }
+    }
+  }
+`
+
+export const RIDER_CURRENT_WITHDRAW_REQUEST = gql`
+  query RiderCurrentWithdrawRequest($riderId: String) {
+    riderCurrentWithdrawRequest(riderId: $riderId) {
+      _id
+      requestAmount
+      status
+      createdAt
+    }
+  }
+`
 
 export const RIDER_PROFILE = gql`
   query Rider($id: String) {
@@ -17,7 +73,7 @@ export const RIDER_PROFILE = gql`
       withdrawnWalletAmount
     }
   }
-`;
+`
 
 export const rider = gql`
   query Rider($id: String) {
@@ -28,7 +84,7 @@ export const rider = gql`
       }
     }
   }
-`;
+`
 
 export const RIDER_ORDERS = gql`
   query RiderOrders {
@@ -107,4 +163,4 @@ export const RIDER_ORDERS = gql`
       }
     }
   }
-`;
+`

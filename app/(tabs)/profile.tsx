@@ -1,5 +1,5 @@
 import { Link } from "expo-router";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 
 export default function TabTwoScreen() {
   return (
@@ -17,7 +17,7 @@ export default function TabTwoScreen() {
           params: { id: 1 },
         }}
       >
-        Coming Soon
+        <Text>Coming Soon</Text>
       </Link>
       <Link
         href={{
@@ -25,7 +25,7 @@ export default function TabTwoScreen() {
           params: { id: 2 },
         }}
       >
-        News 2
+        <Text>News 2</Text>
       </Link>
       <Link
         href={{
@@ -33,7 +33,7 @@ export default function TabTwoScreen() {
           params: { id: 3 },
         }}
       >
-        News 3
+        <Text>News 3</Text>
       </Link>
     </View>
   );

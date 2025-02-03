@@ -58,12 +58,12 @@ const useDetails = (orderData: IOrder) => {
       onCompleted,
       onError,
       update,
-    }
+    },
   );
 
   const [mutateOrderStatus, { loading: loadingOrderStatus }] = useMutation(
     UPDATE_ORDER_STATUS_RIDER,
-    { onCompleted, onError, update }
+    { onCompleted, onError, update },
   );
 
   async function onCompleted(result) {
@@ -93,7 +93,7 @@ const useDetails = (orderData: IOrder) => {
       const data = cache.readQuery({ query: RIDER_ORDERS });
       if (data) {
         const index = data.riderOrders.findIndex(
-          (o) => o._id === result.assignOrder._id
+          (o) => o._id === result.assignOrder._id,
         );
         if (index > -1) {
           data.riderOrders[index].rider = result.assignOrder.rider;
@@ -109,7 +109,7 @@ const useDetails = (orderData: IOrder) => {
       const data = cache.readQuery({ query: RIDER_ORDERS });
       if (data) {
         const index = data.riderOrders.findIndex(
-          (o) => o._id === result.updateOrderStatusRider._id
+          (o) => o._id === result.updateOrderStatusRider._id,
         );
         if (index > -1) {
           data.riderOrders[index].orderStatus =

@@ -86,7 +86,7 @@ export default function OrderDetailScreen() {
                 onPress={() => {
                   linkToMapsApp(
                     deliveryAddressPin.location,
-                    deliveryAddressPin.label
+                    deliveryAddressPin.label,
                   );
                 }}
               >
@@ -100,7 +100,7 @@ export default function OrderDetailScreen() {
                 onPress={() => {
                   linkToMapsApp(
                     restaurantAddressPin.location,
-                    restaurantAddressPin.label
+                    restaurantAddressPin.label,
                   );
                 }}
               >
@@ -118,7 +118,7 @@ export default function OrderDetailScreen() {
                 <Image source={RiderIcon} style={{ height: 35, width: 32 }} />
               </Marker>
             )}
-            {order?.orderStatus === "ACCEPTED" ?
+            {order?.orderStatus === "ACCEPTED" ? (
               <MapViewDirections
                 origin={locationPin.location}
                 destination={restaurantAddressPin.location}
@@ -130,7 +130,7 @@ export default function OrderDetailScreen() {
                   setDuration(result?.duration);
                 }}
               />
-            : order?.orderStatus === "PICKED" ?
+            ) : order?.orderStatus === "PICKED" ? (
               <MapViewDirections
                 origin={locationPin.location}
                 destination={deliveryAddressPin.location}
@@ -142,7 +142,8 @@ export default function OrderDetailScreen() {
                   setDuration(result.duration);
                 }}
               />
-            : <MapViewDirections
+            ) : (
+              <MapViewDirections
                 origin={restaurantAddressPin.location}
                 destination={deliveryAddressPin.location}
                 apikey={GOOGLE_MAPS_KEY}
@@ -153,7 +154,7 @@ export default function OrderDetailScreen() {
                   setDuration(result?.duration);
                 }}
               />
-            }
+            )}
           </MapView>
         )}
       </View>
@@ -251,12 +252,13 @@ export default function OrderDetailScreen() {
                   })
                 }
               >
-                {loadingOrderStatus ?
+                {loadingOrderStatus ? (
                   <SpinnerComponent />
-                : <Text className="text-center text-white text-lg font-medium">
+                ) : (
+                  <Text className="text-center text-white text-lg font-medium">
                     Pick up
                   </Text>
-                }
+                )}
               </TouchableOpacity>
             )}
 
@@ -269,12 +271,13 @@ export default function OrderDetailScreen() {
                   })
                 }
               >
-                {loadingOrderStatus ?
+                {loadingOrderStatus ? (
                   <SpinnerComponent />
-                : <Text className="text-center text-white text-lg font-medium">
+                ) : (
+                  <Text className="text-center text-white text-lg font-medium">
                     Mark as Delivered
                   </Text>
-                }
+                )}
               </TouchableOpacity>
             )}
 
@@ -287,12 +290,13 @@ export default function OrderDetailScreen() {
                   })
                 }
               >
-                {loadingAssignOrder ?
+                {loadingAssignOrder ? (
                   <SpinnerComponent />
-                : <Text className="text-center text-white text-lg font-medium">
+                ) : (
+                  <Text className="text-center text-white text-lg font-medium">
                     Assign me
                   </Text>
-                }
+                )}
               </TouchableOpacity>
             )}
           </BottomSheetScrollView>
