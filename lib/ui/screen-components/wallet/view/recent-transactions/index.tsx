@@ -1,5 +1,10 @@
+// Interfaces
 import { IRiderTransaction } from '@/lib/utils/interfaces/rider.interface'
+
+// Icons
 import { Ionicons } from '@expo/vector-icons'
+
+// Core
 import { Text, View } from 'react-native'
 
 export default function RecentTransaction({
@@ -9,6 +14,7 @@ export default function RecentTransaction({
   transaction: IRiderTransaction
   isLast: boolean
 }) {
+  // Constants
   const date = new Date(transaction.createdAt)
   return (
     <View

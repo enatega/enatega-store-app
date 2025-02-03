@@ -5,9 +5,13 @@ import { RIDER_EARNINGS_GRAPH } from "@/lib/apollo/queries/earnings.query";
 import { useUserContext } from "@/lib/context/global/user.context";
 import { QueryResult, useQuery } from "@apollo/client";
 
-//
+// Components
 import SpinnerComponent from "@/lib/ui/useable-components/spinner";
+
+// Interfacs
 import { IRiderEarningsResponse } from "@/lib/utils/interfaces/rider-earnings.interface";
+
+// Core
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 

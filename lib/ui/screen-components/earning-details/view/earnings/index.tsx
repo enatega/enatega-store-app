@@ -3,11 +3,11 @@ import { ScrollView } from "react-native";
 
 // Interfaces
 import { IRiderEarnings } from "@/lib/utils/interfaces/rider-earnings.interface";
+import { IRiderEarningsDetailProps } from "@/lib/utils/interfaces/earning.interface";
 
 // Components
 import EarningStack from "../../../earnings/view/earnings-stack";
 import NoRecordFound from "@/lib/ui/useable-components/no-record-found";
-import { IRiderEarningsDetailProps } from "@/lib/utils/interfaces/earning.interface";
 
 export default function EarningsDetailStacks({
   riderEarningsData,

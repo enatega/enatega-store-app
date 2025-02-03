@@ -1,14 +1,4 @@
-import { CustomContinueButton } from '@/lib/ui/useable-components'
-import { Text, View } from 'react-native'
-import RecentTransaction from '../recent-transactions'
-import { useLazyQueryQL } from '@/lib/hooks/useLazyQueryQL'
-import {
-  RIDER_BY_ID,
-  RIDER_CURRENT_WITHDRAW_REQUEST,
-  RIDER_EARNINGS,
-  RIDER_TRANSACTIONS_HISTORY,
-} from '@/lib/apollo/queries'
-import { useEffect, useState } from 'react'
+// Interfaces
 import {
   IRiderByIdResponse,
   IRiderCurrentWithdrawRequestResponse,
@@ -16,15 +6,37 @@ import {
   IRiderTransactionHistoryResponse,
 } from '@/lib/utils/interfaces/rider.interface'
 import { ILazyQueryResult } from '@/lib/utils/interfaces'
-import { ScrollView } from 'react-native'
+
+// Components
+import { CustomContinueButton } from '@/lib/ui/useable-components'
+import RecentTransaction from '../recent-transactions'
 import { FlashMessageComponent } from '@/lib/ui/useable-components/flash-message'
-import { useMutation } from '@apollo/client'
 import WithdrawModal from '../form'
-import { CREATE_WITHDRAW_REQUEST } from '@/lib/apollo/mutations/withdraw-request.mutation'
+
+// Hooks
+import { useEffect, useState } from 'react'
+import { useLazyQueryQL } from '@/lib/hooks/useLazyQueryQL'
+import { useMutation } from '@apollo/client'
 import { useUserContext } from '@/lib/context/global/user.context'
+
+// GraphQL
+import { CREATE_WITHDRAW_REQUEST } from '@/lib/apollo/mutations/withdraw-request.mutation'
+import {
+  RIDER_BY_ID,
+  RIDER_CURRENT_WITHDRAW_REQUEST,
+  RIDER_EARNINGS,
+  RIDER_TRANSACTIONS_HISTORY,
+} from '@/lib/apollo/queries'
 import { GraphQLError } from 'graphql'
-import { Alert } from 'react-native'
+
+// Expo
 import { router } from 'expo-router'
+
+// Core
+import { ScrollView, Alert } from 'react-native'
+import { Text, View } from 'react-native'
+
+// Skeletons
 import { WalletScreenMainLoading } from '@/lib/ui/skeletons'
 
 export default function WalletMain() {

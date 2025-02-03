@@ -1,9 +1,18 @@
+// Core
 import { Image, View } from "react-native";
 import { Text } from "react-native";
+
+// Icons
 import { Ionicons } from "@expo/vector-icons";
+
+// Assets
 import { IMAGES } from "@/lib/assets/images";
-import { IWalletSuccessModalProps } from "@/lib/utils/interfaces/withdraw.interface";
+
+// Expo
 import { router } from "expo-router";
+
+// Interfaces
+import { IWalletSuccessModalProps } from "@/lib/utils/interfaces/withdraw.interface";
 const SuccessModal = ({ message }: IWalletSuccessModalProps) => {
   return (
     <View

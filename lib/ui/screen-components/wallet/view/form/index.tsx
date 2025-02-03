@@ -1,10 +1,15 @@
+// Interfaces
 import { IWithdrawModalProps } from "@/lib/utils/interfaces/withdraw.interface";
+
+// Core
 import { Text } from "react-native";
 import { ReactNativeModal } from "react-native-modal";
 import { View } from "react-native";
-import { CustomContinueButton } from "@/lib/ui/useable-components";
 import { TextInput } from "react-native";
 import { useState } from "react";
+
+// Components
+import { CustomContinueButton } from "@/lib/ui/useable-components";
 
 export default function WithdrawModal({
   isBottomModalOpen,
