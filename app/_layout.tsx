@@ -26,6 +26,9 @@ import { SoundProvider } from "@/lib/context/global/sound.context";
 import { LocationProvider } from "@/lib/context/global/location.context";
 import { ConfigurationProvider } from "@/lib/context/global/configuration.context";
 
+// Locale
+import "@/i18next";
+
 // Style
 import "../global.css";
 
