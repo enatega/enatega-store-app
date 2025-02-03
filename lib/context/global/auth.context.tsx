@@ -9,7 +9,7 @@ import { RIDER_TOKEN } from "@/lib/utils/constants";
 import { useRouter } from "expo-router";
 
 export const AuthContext = React.createContext<IAuthContext>(
-  {} as IAuthContext,
+  {} as IAuthContext
 );
 
 export const AuthProvider: React.FC<IAuthProviderProps> = ({
@@ -32,17 +32,14 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
       client.clearStore();
       await AsyncStorage.removeItem(RIDER_TOKEN);
       await AsyncStorage.removeItem("rider-id");
-      router.replace("/login");
-      setToken("");
+
       if (await Location.hasStartedLocationUpdatesAsync("RIDER_LOCATION")) {
         await Location.stopLocationUpdatesAsync("RIDER_LOCATION");
         client.clearStore();
         await AsyncStorage.removeItem(RIDER_TOKEN);
-        setToken("");
       }
-      if (await Location.hasStartedLocationUpdatesAsync("RIDER_LOCATION")) {
-        await Location.stopLocationUpdatesAsync("RIDER_LOCATION");
-      }
+
+      setToken("");
       router.replace("/login");
     } catch (e) {
       console.log("Logout Error: ", e);

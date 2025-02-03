@@ -1,11 +1,17 @@
-import { useLocationContext } from "@/lib/context/global/location.context";
-import { RIDER_TOKEN } from "@/lib/utils/constants";
-import { ROUTES } from "@/lib/utils/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Href, useRouter } from "expo-router";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
+import * as Notifications from "expo-notifications";
+// Context
+import { useLocationContext } from "@/lib/context/global/location.context";
+
+// Constant
+import { RIDER_TOKEN, ROUTES } from "@/lib/utils/constants";
+import { RIDER_ORDERS } from "@/lib/apollo/queries";
+import setupApollo from "@/lib/apollo";
 
 export default function App() {
+  const client = setupApollo();
   const router = useRouter();
   const { locationPermission } = useLocationContext();
 
@@ -24,9 +30,80 @@ export default function App() {
     router.navigate(ROUTES.login as Href);
   };
 
+  const registerForPushNotification = async () => {
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+
+    if (finalStatus === "granted") {
+      Notifications.setNotificationHandler({
+        handleNotification: async () => {
+          return {
+            shouldShowAlert: false, // Prevent the app from closing
+            shouldPlaySound: false,
+            shouldSetBadge: false,
+          };
+        },
+      });
+    }
+  };
+
+  const handleNotification = useCallback(async (response) => {
+    if (
+      response &&
+      response.notification &&
+      response.notification.request &&
+      response.notification.request.content &&
+      response.notification.request.content.data
+    ) {
+      const { _id } = response.notification.request.content.data;
+      const { data } = await client.query({
+        query: RIDER_ORDERS,
+        fetchPolicy: "network-only",
+      });
+      const order = data.riderOrders.find((o) => o._id === _id);
+      const lastNotificationHandledId = await AsyncStorage.getItem(
+        "@lastNotificationHandledId"
+      );
+      if (lastNotificationHandledId === _id) return;
+      await AsyncStorage.setItem("@lastNotificationHandledId", _id);
+      navigationService.navigate("OrderDetail", {
+        itemId: _id,
+        order,
+      });
+    }
+  }, []);
+
   useEffect(() => {
     init();
   }, [locationPermission]);
+
+  useEffect(() => {
+    const subscription =
+      Notifications.addNotificationResponseReceivedListener(handleNotification);
+
+    return () => subscription.remove();
+  }, [handleNotification]);
+
+  useEffect(() => {
+    registerForPushNotification();
+
+    // Register a notification handler that will be called when a notification is received.
+    Notifications.setNotificationHandler({
+      handleNotification: async (notification) => {
+        return {
+          shouldShowAlert: false, // Prevent the app from closing
+          shouldPlaySound: false,
+          shouldSetBadge: false,
+        };
+      },
+    });
+  }, []);
 
   // return <Redirect href="/(tabs)/home/orders" />;
   // return <Redirect href="/login" />;

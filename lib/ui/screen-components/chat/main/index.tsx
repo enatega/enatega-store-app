@@ -106,7 +106,7 @@ export default function ChatMain() {
         }}
         placeholder="Chats Here"
         // textInputStyle={{ paddingTop: 10 }}
-        renderAccessory={image.length > 0 ? renderAccessory : null}
+        // renderAccessory={image.length > 0 ? renderAccessory : null}
         text={inputMessage ?? ""}
         onInputTextChanged={(m) => setInputMessage(m)}
       />
