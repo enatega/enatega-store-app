@@ -84,7 +84,7 @@ export default function OrderDetailScreen() {
               customMapStyle={MapStyles}
               provider={PROVIDER_GOOGLE}
             >
-              {deliveryAddressPin && (
+              {deliveryAddressPin?.location && (
                 <Marker
                   coordinate={deliveryAddressPin.location}
                   title="Delivery Address"
@@ -98,7 +98,7 @@ export default function OrderDetailScreen() {
                   <Image source={HomeIcon} style={{ height: 35, width: 32 }} />
                 </Marker>
               )}
-              {restaurantAddressPin && (
+              {restaurantAddressPin?.location && (
                 <Marker
                   coordinate={restaurantAddressPin.location}
                   title="Restaurant"
@@ -112,7 +112,7 @@ export default function OrderDetailScreen() {
                   <Image source={RestIcon} style={{ height: 35, width: 32 }} />
                 </Marker>
               )}
-              {locationPin && (
+              {locationPin?.location && (
                 <Marker
                   coordinate={locationPin.location}
                   title="Rider"
@@ -123,47 +123,47 @@ export default function OrderDetailScreen() {
                   <Image source={RiderIcon} style={{ height: 35, width: 32 }} />
                 </Marker>
               )}
-              {order?.orderStatus === "ACCEPTED" ?
-                <MapViewDirections
-                  origin={locationPin.location}
-                  destination={restaurantAddressPin.location}
-                  apikey={GOOGLE_MAPS_KEY}
-                  strokeWidth={4}
-                  strokeColor="black"
-                  onReady={(result) => {
-                    setDistance(result?.distance);
-                    setDuration(result?.duration);
-                  }}
-                />
-              : order?.orderStatus === "PICKED" ?
-                <MapViewDirections
-                  origin={locationPin.location}
-                  destination={deliveryAddressPin.location}
-                  apikey={GOOGLE_MAPS_KEY}
-                  strokeWidth={4}
-                  strokeColor="black"
-                  onReady={(result) => {
-                    setDistance(result.distance);
-                    setDuration(result.duration);
-                  }}
-                />
-              : <MapViewDirections
-                  origin={restaurantAddressPin.location}
-                  destination={deliveryAddressPin.location}
-                  apikey={GOOGLE_MAPS_KEY}
-                  strokeWidth={4}
-                  strokeColor="black"
-                  onReady={(result) => {
-                    setDistance(result?.distance);
-                    setDuration(result?.duration);
-                  }}
-                />
-              }
+              {GOOGLE_MAPS_KEY &&
+                (order?.orderStatus === "ACCEPTED" ?
+                  <MapViewDirections
+                    origin={locationPin.location}
+                    destination={restaurantAddressPin.location}
+                    apikey={GOOGLE_MAPS_KEY ?? ""}
+                    strokeWidth={4}
+                    strokeColor="black"
+                    onReady={(result) => {
+                      setDistance(result?.distance);
+                      setDuration(result?.duration);
+                    }}
+                  />
+                : order?.orderStatus === "PICKED" ?
+                  <MapViewDirections
+                    origin={locationPin.location}
+                    destination={deliveryAddressPin.location}
+                    apikey={GOOGLE_MAPS_KEY ?? ""}
+                    strokeWidth={4}
+                    strokeColor="black"
+                    onReady={(result) => {
+                      setDistance(result.distance);
+                      setDuration(result.duration);
+                    }}
+                  />
+                : <MapViewDirections
+                    origin={restaurantAddressPin.location}
+                    destination={deliveryAddressPin.location}
+                    apikey={GOOGLE_MAPS_KEY ?? ""}
+                    strokeWidth={4}
+                    strokeColor="black"
+                    onReady={(result) => {
+                      setDistance(result?.distance);
+                      setDuration(result?.duration);
+                    }}
+                  />)}
             </MapView>
           : <View className="flex-1 justify-center items-center gap-y-3">
               <Text className="text-3xl">Map not loaded.</Text>
               <Text className="text-lg text-gray-600">
-                Please checkf for permissions.
+                Please check for permissions.
               </Text>
             </View>
           }
