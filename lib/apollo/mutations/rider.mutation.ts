@@ -7,3 +7,10 @@ export const UPDATE_LOCATION = gql`
     }
   }
 `;
+
+export const UPDATE_AVAILABILITY = `
+  mutation ToggleRider($id:String){
+    toggleAvailablity(id:$id){
+      _id
+    }
+}`
