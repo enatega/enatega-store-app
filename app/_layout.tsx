@@ -80,6 +80,11 @@ export default function RootLayout() {
                         name="order-detail"
                         options={{ headerShown: false }}
                       />
+
+                      <Stack.Screen
+                        name="chat"
+                        options={{ headerShown: false }}
+                      />
                     </Stack>
 
                     <StatusBar style="auto" />

@@ -1,5 +1,7 @@
-export const sendChatMessage = `#graphql 
-mutation SendChatMessage($orderId: ID!, $messageInput: ChatMessageInput!) {
+import { gql } from "@apollo/client";
+
+export const SEND_CHAT_MESSAGE = gql`
+  mutation SendChatMessage($orderId: ID!, $messageInput: ChatMessageInput!) {
     sendChatMessage(message: $messageInput, orderId: $orderId) {
       success
       message
@@ -14,4 +16,4 @@ mutation SendChatMessage($orderId: ID!, $messageInput: ChatMessageInput!) {
       }
     }
   }
-  `;
+`;

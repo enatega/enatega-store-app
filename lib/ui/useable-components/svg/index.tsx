@@ -11,3 +11,7 @@ export { default as RightArrowIcon } from "./right-arrow";
 export { default as WalletIcon } from "./wallet";
 export { default as CurrencyIcon } from "./currency";
 export { default as PersonIcon } from "./person";
+export { default as ChatIcon } from "./chat";
+export { default as CallIcon } from "./call";
+export { default as CircleCrossIcon } from "./circle-cross";
+export { default as SendIcon } from "./send";

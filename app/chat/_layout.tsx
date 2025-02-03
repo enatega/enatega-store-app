@@ -1,14 +1,19 @@
 import { Colors } from "@/lib/utils/constants";
 import { Stack } from "expo-router";
-import { Platform } from "react-native";
+import { Platform, Text, View } from "react-native";
 
-export default function OrderDetailLayour() {
+export default function LoginLayour() {
   return (
     <Stack
       screenOptions={{
         headerStyle: Platform.select({
           ios: {
             position: "absolute",
+            backgroundColor: Colors.light.white,
+            elevation: 0, // Shadow for Android
+            shadowColor: "white", // Shadow for iOS
+            shadowOpacity: 0,
+            shadowRadius: 0,
           },
 
           default: {
@@ -25,9 +30,11 @@ export default function OrderDetailLayour() {
       <Stack.Screen
         name="index"
         options={{
-          title: "Order Detail",
+          headerShown: false,
+          title: "Chat",
           headerTitleAlign: "center",
-          headerShadowVisible: false,
+          headerBackVisible: true,
+          headerBackTitle: "Back",
         }}
       />
     </Stack>

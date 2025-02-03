@@ -10,9 +10,6 @@ module.exports = function (api) {
       ],
       "nativewind/babel",
     ],
-    // plugins: [
-    //   "@babel/plugin-proposal-optional-chaining",
-    //   "@babel/plugin-syntax-optional-chaining",
-    // ],
+    plugins: ["react-native-reanimated/plugin"],
   };
 };

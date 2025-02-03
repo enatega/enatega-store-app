@@ -26,6 +26,11 @@ export interface IOrder {
     title: string;
     quantity: number;
   }>;
+  user: {
+    _id: string;
+    name: string;
+    phone: string;
+  };
   paymentStatus: string;
   createdAt: string;
   acceptedAt: string;
