@@ -43,7 +43,7 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
         ["PICKED", "ASSIGNED"].includes(o.orderStatus) && !o.isPickedUp
     );
 
-    setOrders(_orders);
+    setOrders(_orders ?? []);
   };
 
   // Use Effect

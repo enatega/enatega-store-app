@@ -17,8 +17,7 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
   const [location, setLocation] = useState<ICoodinates>({} as ICoodinates);
 
   const getLocationPermission = async () => {
-    const _res = await Location.getForegroundPermissionsAsync();
-    const { status } = _res;
+    const { status } = await Location.getForegroundPermissionsAsync();
     if (status === "granted") {
       setLocationPermission(true);
     }

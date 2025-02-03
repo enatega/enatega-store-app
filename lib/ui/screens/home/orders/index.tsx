@@ -19,7 +19,7 @@ import HomeProcessingOrdersMain from "@/lib/ui/screen-components/home/orders/mai
 import HomeDeliveredOrdersMain from "@/lib/ui/screen-components/home/orders/main/delivered-orders";
 
 const HomeOrdersScreen: React.FC = () => {
-  const [index, setIndex] = useState(2); // State for the active tab index
+  const [index, setIndex] = useState(0); // State for the active tab index
   const [routes] = useState([
     { key: "new_orders", title: "New Orders" },
     { key: "processing", title: "Processing" },

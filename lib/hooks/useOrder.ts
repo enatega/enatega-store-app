@@ -60,7 +60,7 @@ const useOrder = (order: IOrder) => {
       onCompleted,
       onError,
       refetchQueries: [{ query: refetchAssigned }],
-    }
+    },
   );
 
   async function onCompleted(result) {

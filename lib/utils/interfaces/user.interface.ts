@@ -1,7 +1,30 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
+import { Dispatch, SetStateAction } from "react";
 import { IGlobalProviderProps } from "./global.interface";
+import {
+  IRiderEarnings,
+  IRiderEarningsArray,
+} from "./rider-earnings.interface";
+import { ApolloError, NetworkStatus } from "@apollo/client";
+import { IOrder } from "./order.interface";
+import { LocationPermissionResponse } from "expo-location";
 
-export interface IUserContextProps {}
+export interface IUserContextProps {
+  loadingProfile: boolean;
+  errorProfile: ApolloError | undefined;
+  dataProfile: IRiderProfile | null;
+  userId: string | null;
+  loadingAssigned: boolean;
+  errorAssigned: ApolloError | undefined;
+  assignedOrders: IOrder[] | null;
+  refetchAssigned: () => void;
+  networkStatusAssigned: NetworkStatus;
+  requestForegroundPermissionsAsync: () => Promise<LocationPermissionResponse>;
+  modalVisible: IRiderEarnings & { bool: boolean };
+  setModalVisible: Dispatch<SetStateAction<IRiderEarnings & { bool: boolean }>>;
+  riderOrderEarnings: IRiderEarningsArray[];
+  setRiderOrderEarnings: Dispatch<SetStateAction<IRiderEarningsArray[]>>;
+}
 export interface IUserProviderProps extends IGlobalProviderProps {}
 
 interface Zone {

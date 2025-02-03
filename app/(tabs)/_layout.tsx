@@ -1,4 +1,4 @@
-import { Tabs } from "expo-router";
+import { Tabs, usePathname } from "expo-router";
 import { Platform } from "react-native";
 
 // UI Components
@@ -15,12 +15,20 @@ import { Colors } from "@/lib/utils/constants/colors";
 
 // Hooks
 import { useColorScheme } from "@/lib/hooks/useColorScheme";
+import { useEffect, useState } from "react";
 
 const RootLayout = () => {
+  const [tabKey, setTabKey] = useState(1);
   const colorScheme = useColorScheme();
-
+  const pathName = usePathname();
+  useEffect(() => {
+    if (pathName.startsWith("/wallet/success")) {
+      setTabKey((prev) => prev + 1); // Force a re-render of the tab bar
+    }
+  }, [pathName]);
   return (
     <Tabs
+      key={tabKey}
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "dark"].primary,
         headerShown: false,
@@ -40,8 +48,9 @@ const RootLayout = () => {
           },
           android: {
             position: "absolute",
-
             backgroundColor: "#1F2937",
+            display: pathName.startsWith("/wallet/success") ? "none" : "flex",
+
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
             borderTopWidth: 0.5, // Optional border at the top

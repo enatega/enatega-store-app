@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  ScrollView
+  ScrollView,
 } from "react-native";
 // Components
 import SpinnerComponent from "@/lib/ui/useable-components/spinner";
@@ -66,7 +66,7 @@ const LoginScreen = () => {
       <SafeAreaView>
         <ScrollView
           showsVerticalScrollIndicator={false}
-        // contentContainerStyle={{ height: height * 1 }}
+          // contentContainerStyle={{ height: height * 1 }}
         >
           <Formik
             initialValues={initialValues}
