@@ -21,7 +21,7 @@ const useLogin = () => {
 
   // Context
   const { setTokenAsync } = useContext(AuthContext);
-  console.log();
+
   // API
   const [login] = useMutation(RIDER_LOGIN, {
     onCompleted,
