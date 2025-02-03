@@ -8,7 +8,7 @@ export const UPDATE_LOCATION = gql`
   }
 `;
 
-export const UPDATE_AVAILABILITY = `
+export const UPDATE_AVAILABILITY = gql`
   mutation ToggleRider($id:String){
     toggleAvailablity(id:$id){
       _id

@@ -1,10 +1,13 @@
 import * as Updates from "expo-updates";
 import { useContext } from "react";
 import { ConfigurationContext } from "./lib/context/global/configuration.context";
-
+import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
 const getEnvVars = (env = Updates.channel) => {
   const configuration = useContext(ConfigurationContext);
-
+if(__DEV__){
+  loadDevMessages();
+  loadErrorMessages();
+}
   if (env === "production" || env === "staging") {
     return {
       GRAPHQL_URL: "https://enatega-multivendor.up.railway.app/graphql",

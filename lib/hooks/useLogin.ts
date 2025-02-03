@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useMutation, useQuery } from "@apollo/client";
+import { ApolloError, useMutation, useQuery } from "@apollo/client";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
@@ -13,7 +13,7 @@ import {
 import { Href, router } from "expo-router";
 import { FlashMessageComponent } from "../ui/useable-components/flash-message";
 import { IRiderLoginCompleteResponse } from "../utils/interfaces/auth.interface";
-import { RIDER_TOKEN, ROUTES } from "../utils/constants";
+import { ROUTES } from "../utils/constants";
 
 const useLogin = () => {
   const [creds, setCreds] = useState({ username: "", password: "" });
@@ -51,16 +51,16 @@ const useLogin = () => {
       });
     }
   }
-  function onError(err) {
+  function onError(err:ApolloError) {
+    const error = err as ApolloError
     setIsLoading(false);
     FlashMessageComponent({
       message:
-        err?.graphQLErrors[0]?.message ??
-        err?.networkError?.message ??
+        error?.graphQLErrors[0]?.message ??
+        error?.networkError?.message ??
         "Something went wrong",
     });
   }
-
   const onLogin = async (username: string, password: string) => {
     try {
       setIsLoading(true);
@@ -93,7 +93,6 @@ const useLogin = () => {
             Notifications.IosAuthorizationStatus.PROVISIONAL) &&
         Device.isDevice
       ) {
-        console.log(await AsyncStorage.getItem(RIDER_TOKEN))
         notificationToken = (
           await Notifications.getExpoPushTokenAsync({
             projectId: Constants.expoConfig?.extra?.eas.projectId,
@@ -113,10 +112,11 @@ const useLogin = () => {
         await AsyncStorage.setItem("rider-id", data.userId);
       }
     } catch (err) {
+      const error = err as ApolloError
       FlashMessageComponent({
         message:
-          err?.graphQLErrors[0]?.message ??
-          err?.networkError?.message ??
+          error?.graphQLErrors[0]?.message ??
+          error?.networkError?.message ??
           "Something went wrong",
       });
     }

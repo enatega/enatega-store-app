@@ -1,13 +1,13 @@
 import { gql } from "@apollo/client";
 
-export const subscriptionRiderLocation = `subscription SubscriptionRiderLocation($riderId:String!){
+export const subscriptionRiderLocation = gql`subscription SubscriptionRiderLocation($riderId:String!){
     subscriptionRiderLocation(riderId:$riderId) {
       _id
       location {coordinates}
     }
   }`;
 
-export const orderStatusChanged = `subscription OrderStatusChanged($userId:String!){
+export const orderStatusChanged = gql`subscription OrderStatusChanged($userId:String!){
     orderStatusChanged(userId:$userId){
       userId
       origin
