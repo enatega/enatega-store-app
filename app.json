@@ -12,12 +12,11 @@
     "plugins": [
       "expo-router",
       [
-        "expo-splash-screen",
+        "@sentry/react-native/expo",
         {
-          "image": "./lib/assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "organization": "ninjas-code",
+          "project": "enatega-rider-app",
+          "url": "https://sentry.io/"
         }
       ]
     ],
@@ -35,7 +34,6 @@
     },
     "android": {
       "versionCode": 38,
-
       "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
       "config": {
         "googleMaps": {

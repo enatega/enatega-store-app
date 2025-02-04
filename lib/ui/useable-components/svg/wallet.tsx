@@ -10,7 +10,7 @@ interface IconProps {
 const WalletIcon: FC<IconProps> = ({
   width = 16,
   height = 16,
-  color = "#000",
+  color = "#111827",
 }) => {
   return (
     <Svg width={width} height={height} viewBox="0 0 25 24" fill="none">

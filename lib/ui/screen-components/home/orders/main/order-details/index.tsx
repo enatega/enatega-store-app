@@ -63,7 +63,7 @@ export default function OrderDetailScreen() {
 
   return (
     <>
-      <GestureHandlerRootView className="flex-1 bg-red-100">
+      <GestureHandlerRootView className="flex-1 bg-transparent">
         <View
           className="bg-transparent justify-center items-center"
           style={{ height: height * 0.5, backgroundColor: "transparent" }}
@@ -82,7 +82,6 @@ export default function OrderDetailScreen() {
                 longitudeDelta: 0.0421,
               }}
               customMapStyle={MapStyles}
-              provider={PROVIDER_GOOGLE}
             >
               {deliveryAddressPin?.location && (
                 <Marker

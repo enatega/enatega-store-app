@@ -1,20 +1,21 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Href, useRouter } from "expo-router";
 import { useCallback, useEffect } from "react";
 import * as Notifications from "expo-notifications";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // Context
 import { useLocationContext } from "@/lib/context/global/location.context";
-
+// API
+import { RIDER_ORDERS } from "@/lib/apollo/queries";
 // Constant
 import { RIDER_TOKEN, ROUTES } from "@/lib/utils/constants";
-import { RIDER_ORDERS } from "@/lib/apollo/queries";
+// Service
 import setupApollo from "@/lib/apollo";
 
-export default function App() {
+function App() {
   const client = setupApollo();
   const router = useRouter();
   const { locationPermission } = useLocationContext();
-
   // Handler
   const init = async () => {
     const token = await AsyncStorage.getItem(RIDER_TOKEN);
@@ -30,6 +31,7 @@ export default function App() {
     router.navigate(ROUTES.login as Href);
   };
 
+  // Notification Handler
   const registerForPushNotification = async () => {
     const { status: existingStatus } =
       await Notifications.getPermissionsAsync();
@@ -79,10 +81,7 @@ export default function App() {
     }
   }, []);
 
-  useEffect(() => {
-    init();
-  }, [locationPermission]);
-
+  // Use Effect
   useEffect(() => {
     const subscription =
       Notifications.addNotificationResponseReceivedListener(handleNotification);
@@ -105,7 +104,13 @@ export default function App() {
     });
   }, []);
 
+  useEffect(() => {
+    init();
+  }, [locationPermission]);
+
   // return <Redirect href="/(tabs)/home/orders" />;
   // return <Redirect href="/login" />;
   return <></>;
 }
+
+export default App;

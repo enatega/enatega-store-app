@@ -1,6 +1,7 @@
 import { useRouter } from "expo-router";
 import { useContext } from "react";
-import { View, TouchableOpacity, Text } from "react-native";
+import { View, TouchableOpacity, Text, Button } from "react-native";
+import * as Sentry from "@sentry/react-native";
 
 // Components
 import { IconSymbol } from "@/lib/ui/useable-components/IconSymbol";
@@ -29,10 +30,9 @@ const Order = ({ order, tab }: IOrderComponentProps) => {
   return (
     <>
       <View className="flex-1">
-        {order?.orderStatus === "ACCEPTED" ||
-        order?.orderStatus === "PICKED" ? (
+        {order?.orderStatus === "ACCEPTED" || order?.orderStatus === "PICKED" ?
           <View />
-        ) : null}
+        : null}
 
         <TouchableOpacity
           activeOpacity={0.8}
@@ -51,20 +51,16 @@ const Order = ({ order, tab }: IOrderComponentProps) => {
               </Text>
               <View
                 className={`ps-3 pe-3 bg-green-100 border border-1 rounded-[12px] ${
-                  tab === "delivered"
-                    ? "border-blue-500 bg-blue-100"
-                    : tab === "processing"
-                      ? "border-yellow-500 bg-yellow-100"
-                      : "border-green-500 bg-green-100"
+                  tab === "delivered" ? "border-blue-500 bg-blue-100"
+                  : tab === "processing" ? "border-yellow-500 bg-yellow-100"
+                  : "border-green-500 bg-green-100"
                 }`}
               >
                 <Text
                   className={`font-[Inter] text-[12px] font-semibold text-center decoration-skip-ink-0 ${
-                    tab === "delivered"
-                      ? "text-blue-800"
-                      : tab === "processing"
-                        ? "text-yellow-800"
-                        : "text-green-800"
+                    tab === "delivered" ? "text-blue-800"
+                    : tab === "processing" ? "text-yellow-800"
+                    : "text-green-800"
                   }`}
                 >
                   {order?.orderStatus}
@@ -223,13 +219,12 @@ const Order = ({ order, tab }: IOrderComponentProps) => {
                   })
                 }
               >
-                {loadingAssignOrder ? (
+                {loadingAssignOrder ?
                   <SpinnerComponent />
-                ) : (
-                  <Text className="text-center text-white text-lg font-medium">
+                : <Text className="text-center text-white text-lg font-medium">
                     Assign me
                   </Text>
-                )}
+                }
               </TouchableOpacity>
             )}
           </View>
