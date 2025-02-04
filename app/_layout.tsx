@@ -7,10 +7,12 @@ import {
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
+// import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 import { ApolloProvider } from "@apollo/client";
+// import * as Sentry from "sentry-expo";
+import * as Sentry from "@sentry/react-native";
 
 import { useColorScheme } from "@/lib/hooks/useColorScheme";
 
@@ -25,32 +27,34 @@ import { UserProvider } from "@/lib/context/global/user.context";
 import { SoundProvider } from "@/lib/context/global/sound.context";
 import { LocationProvider } from "@/lib/context/global/location.context";
 import { ConfigurationProvider } from "@/lib/context/global/configuration.context";
-
+// Service
+import { initSentry } from "@/lib/utils/service";
 // Locale
 import "@/i18next";
 
 // Style
 import "../global.css";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+initSentry();
 
-export default function RootLayout() {
+// Prevent the splash screen from auto-hiding before asset loading is complete.
+// SplashScreen.preventAutoHideAsync();
+
+function RootLayout() {
   // Hooks
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../lib/assets/fonts/SpaceMono-Regular.ttf"),
     Inter: require("../lib/assets/fonts/Inter.ttf"),
   });
-
   const client = setupApollo();
 
-  // Use Effect
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+  // // Use Effect
+  // useEffect(() => {
+  //   if (loaded) {
+  //     SplashScreen.hideAsync();
+  //   }
+  // }, [loaded]);
 
   if (!loaded) {
     return null;
@@ -102,3 +106,5 @@ export default function RootLayout() {
     </ThemeProvider>
   );
 }
+
+export default Sentry.wrap(RootLayout);
