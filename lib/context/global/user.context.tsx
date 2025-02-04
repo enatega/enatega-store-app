@@ -70,7 +70,6 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
       id: userId,
     },
   }) as QueryResult<IRiderProfileResponse | undefined, { id: string }>
-  console.log('🚀 ~ UserProvider ~ dataProfile:', dataProfile, userId)
 
   const {
     client,

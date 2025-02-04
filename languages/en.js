@@ -211,5 +211,9 @@ export const en = {
   amountReq: 'Amount is required!',
   CustomerPhoneNumber: 'Customer phone number',
   CustomerName: 'Customer Name',
-  continue: 'Continue'
+  continue: 'Continue',
+  Wallet: "Wallet",
+  Home: "Home",
+  Earnings: "Earnings",
+  Profile: "Profile"
 }

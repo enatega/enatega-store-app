@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, Image } from 'react-native'
 import { useTranslation } from 'react-i18next'
 
 import { useState } from 'react'
@@ -6,7 +6,6 @@ import { Colors } from '@/lib/utils/constants'
 import CustomSwitch from '@/lib/ui/useable-components/switch-button'
 import { useUserContext } from '@/lib/context/global/user.context'
 import { UPDATE_AVAILABILITY } from '@/lib/apollo/mutations/rider.mutation'
-import { IRiderByIdResponse } from '@/lib/utils/interfaces/rider.interface'
 import { MutationTuple, useMutation } from '@apollo/client'
 import { RIDER_PROFILE } from '@/lib/apollo/queries'
 import { showMessage } from 'react-native-flash-message'
@@ -21,7 +20,7 @@ const CustomDrawerHeader = () => {
   const { dataProfile, userId } = useUserContext()
 
   // Queries
-  const [toggleAvailablity, {loading}] = useMutation(UPDATE_AVAILABILITY, {
+  const [toggleAvailablity, { loading }] = useMutation(UPDATE_AVAILABILITY, {
     refetchQueries: [{ query: RIDER_PROFILE, variables: { id: userId } }],
     onCompleted: () => {
       if (dataProfile?.available) {
@@ -37,7 +36,6 @@ const CustomDrawerHeader = () => {
       })
     },
   }) as MutationTuple<IRiderProfile | undefined, { id: string }>
-
   return (
     <View className="w-full h-[130px] flex-row justify-between p-4">
       <View className="justify-between">
@@ -45,24 +43,21 @@ const CustomDrawerHeader = () => {
           className="w-[54px] h-[54px] rounded-full items-center justify-center overflow-hidden"
           style={{ backgroundColor: Colors.light.white }}
         >
-          {dataProfile?.image ?
-            <Text
-              className="text-[16px] font-semibold"
-              style={{
-                color: Colors.light.primary,
-              }}
-            >
-              {dataProfile?.username.substring(0, 2).toUpperCase()}
-            </Text>
-          : <Text
-              className="text-[16px] font-semibold"
-              style={{
-                color: Colors.light.primary,
-              }}
-            >
-              JS
-            </Text>
-          }
+          <Text
+            className="text-[16px] font-semibold"
+            style={{
+              color: Colors.light.primary,
+            }}
+          >
+            {dataProfile?.name
+              .split(' ')[0]
+              .substring(0, 1)
+              .toUpperCase()
+              .concat(
+                '',
+                dataProfile?.name.split(' ')[1].substring(0, 1).toUpperCase(),
+              ) ?? 'JS'}
+          </Text>
         </View>
         <View>
           <Text
@@ -92,7 +87,7 @@ const CustomDrawerHeader = () => {
           Availability
         </Text>
         <CustomSwitch
-          value={dataProfile?.available??isEnabled}
+          value={dataProfile?.available ?? isEnabled}
           isDisabled={loading}
           onToggle={async () =>
             await toggleAvailablity({ variables: { id: userId ?? '' } })
