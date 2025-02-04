@@ -24,7 +24,7 @@ export default function RecentTransaction({
         <Ionicons
           size={20}
           name={
-            transaction.status === 'TRANSFERRED' ? 'arrow-up'
+            transaction.status === 'TRANSFERRED' ? 'cash-outline'
             : transaction.status === 'PAID' ?
               'cash-sharp'
             : transaction.status === 'CANCELLED' ?

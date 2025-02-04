@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useMutation, useQuery } from "@apollo/client";
+import { ApolloError, useMutation, useQuery } from "@apollo/client";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
@@ -51,16 +51,16 @@ const useLogin = () => {
       });
     }
   }
-  function onError(err) {
+  function onError(err:ApolloError) {
+    const error = err as ApolloError
     setIsLoading(false);
     FlashMessageComponent({
       message:
-        err?.graphQLErrors[0]?.message ??
-        err?.networkError?.message ??
+        error?.graphQLErrors[0]?.message ??
+        error?.networkError?.message ??
         "Something went wrong",
     });
   }
-
   const onLogin = async (username: string, password: string) => {
     try {
       setIsLoading(true);
@@ -99,7 +99,6 @@ const useLogin = () => {
           })
         ).data;
       }
-
       // Perform mutation with the obtained data
       const { data } = await login({
         variables: {
@@ -113,10 +112,11 @@ const useLogin = () => {
         await AsyncStorage.setItem("rider-id", data.userId);
       }
     } catch (err) {
+      const error = err as ApolloError
       FlashMessageComponent({
         message:
-          err?.graphQLErrors[0]?.message ??
-          err?.networkError?.message ??
+          error?.graphQLErrors[0]?.message ??
+          error?.networkError?.message ??
           "Something went wrong",
       });
     }

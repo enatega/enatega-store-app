@@ -1,12 +1,15 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+// Core
+import { SafeAreaView } from "react-native";
 
-const index = () => {
+// Components
+import ProfileHeader from "../../screen-components/profile/header";
+import ProfileMain from "../../screen-components/profile/view/main";
+
+export default function ComponentName() {
   return (
-    <View>
-      <Text>user profile screen</Text>
-    </View>
+    <SafeAreaView>
+      <ProfileHeader />
+      <ProfileMain />
+    </SafeAreaView>
   )
 }
-
-export default index

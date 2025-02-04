@@ -21,22 +21,22 @@ export default function StackLayout() {
         }}
       >
         <Stack.Screen
-          name="/index"
+          name="index"
           options={{ headerShown: true, headerTitle: "Earnings Order Details" }}
         />
         <Stack.Screen
-          name="/(routes)/earnings-order-details"
+          name="(routes)"
           options={{
             headerShown: true,
             headerTitle: "Earnings Order Details",
             headerBackTitle: "Hi there",
           }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="/(routes)/earnings-details"
           options={{ headerShown: true, headerTitle: "Earning Details" }}
-        />
-      </Stack>
+        />*/}
+      </Stack> 
       <EarningBottomBar
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
