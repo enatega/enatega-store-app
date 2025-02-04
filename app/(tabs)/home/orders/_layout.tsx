@@ -67,7 +67,7 @@ export default function Layout() {
             height: 30,
             shadowColor: "white",
             shadowOpacity: 0,
-            paddingTop: 18,
+            paddingTop: 20,
           },
           android: {
             position: "absolute",
@@ -75,7 +75,7 @@ export default function Layout() {
             height: 50,
             shadowColor: "white",
             shadowOpacity: 0,
-            paddingTop: 18,
+            paddingTop: 20,
             elevation: 0,
           },
         }),
