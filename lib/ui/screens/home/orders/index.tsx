@@ -21,9 +21,9 @@ import HomeDeliveredOrdersMain from "@/lib/ui/screen-components/home/orders/main
 const HomeOrdersScreen: React.FC = () => {
   const [index, setIndex] = useState(0); // State for the active tab index
   const [routes] = useState([
-    { key: "new_orders", title: "New Orders" },
-    { key: "processing", title: "Processing" },
-    { key: "delivered", title: "Delivered" },
+    { id: 0, key: "new_orders", title: "New Orders" },
+    { id: 1, key: "processing", title: "Processing" },
+    { id: 2, key: "delivered", title: "Delivered" },
   ]);
 
   const renderTabBar = (props: any) => {
@@ -88,6 +88,9 @@ const HomeOrdersScreen: React.FC = () => {
     new_orders: HomeNewOrdersMain,
     processing: HomeProcessingOrdersMain,
     delivered: HomeDeliveredOrdersMain,
+    // new_orders: <View><Text>New Orders</Text></View>,
+    // processing: <View><Text>New Orders</Text></View>,
+    // delivered: <View><Text>New Orders</Text></View>,
   });
 
   return (
@@ -98,8 +101,8 @@ const HomeOrdersScreen: React.FC = () => {
       renderTabBar={renderTabBar}
       onIndexChange={setIndex}
       swipeEnabled={true}
-      style={{ flex: 1 }} // Important for layout
       orientation={"horizontal"}
+      style={{ flex: 1, backgroundColor: "white" }}
       initialLayout={{ height: Dimensions.get("window").height }}
     />
   );
