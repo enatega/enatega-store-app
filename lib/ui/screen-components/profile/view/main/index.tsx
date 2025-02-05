@@ -1,12 +1,15 @@
-import { View } from 'react-native'
-import DocumentsSection from '../forms/documents'
-import OtherDetailsSection from '../forms/other'
+import { View } from "react-native";
+import DocumentsSection from "../docs/documents";
+import OtherDetailsSection from "../docs/other";
+import { IRiderProfileMainProps } from "@/lib/utils/interfaces/rider-profile.interface";
 
-export default function ProfileMain() {
+export default function ProfileMain({
+  setIsFormOpened,
+}: IRiderProfileMainProps) {
   return (
     <View className="flex flex-col h-full items-center">
-      <DocumentsSection />
+      <DocumentsSection setIsFormOpened={setIsFormOpened} />
       <OtherDetailsSection />
     </View>
-  )
+  );
 }
