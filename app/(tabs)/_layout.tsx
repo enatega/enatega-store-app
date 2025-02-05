@@ -29,7 +29,6 @@ const RootLayout = () => {
   const {t} = useTranslation();
 
   useEffect(() => {
-    console.log({pathName})
     if (pathName.startsWith("/wallet/success")) {
       setTabKey((prev) => prev + 1); // Force a re-render of the tab bar
     }
