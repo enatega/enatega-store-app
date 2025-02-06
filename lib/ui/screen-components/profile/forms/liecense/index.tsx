@@ -7,7 +7,7 @@ import {
   View,
 } from "react-native";
 import FormHeader from "../form-header";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Calendar, DateData } from "react-native-calendars";
 import { UploadIcon } from "@/lib/assets/svg";
 import { CustomContinueButton } from "@/lib/ui/useable-components";
@@ -18,21 +18,59 @@ import { Ionicons } from "@expo/vector-icons";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 import { showMessage } from "react-native-flash-message";
+import { useMutation } from "@apollo/client";
+import { UPDATE_LICENSE } from "@/lib/apollo/mutations/rider.mutation";
+import { useUserContext } from "@/lib/context/global/user.context";
+import { RIDER_PROFILE } from "@/lib/apollo/queries";
+import { TRiderProfileBottomBarBit } from "@/lib/utils/types/rider";
 
-export default function DrivingLicenseForm() {
+export default function DrivingLicenseForm({
+  setIsFormOpened,
+}: {
+  setIsFormOpened: Dispatch<SetStateAction<TRiderProfileBottomBarBit>>;
+}) {
+  // Contexts
+  const { userId } = useUserContext();
+
+  // Local states
   // States
-  const [isCalendarVisible, setIsCalendarVisible] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
+  const [isLoading, setIsLoading] = useState({
+    isUploading: false,
+    isCalendarVisible: false,
+    isSubmitting: false,
+  });
   const [cloudinaryResponse, setCloudinaryResponse] =
     useState<ICloudinaryResponse | null>(null);
+  const [formData, setFormData] = useState({
+    expiryDate: "",
+    image: "",
+    number: "",
+  });
+  // Mutations
+  const [mutateLicense] = useMutation(UPDATE_LICENSE, {
+    onError: (error) => {
+      showMessage({
+        message: "Failed to update license",
+        type: "danger",
+      });
+      console.error("Failed to update license", error);
+    },
+    onCompleted: () => {
+      setIsLoading({
+        isCalendarVisible: false,
+        isSubmitting: false,
+        isUploading: false,
+      });
+    },
+    refetchQueries: [{ query: RIDER_PROFILE, variables: { id: userId } }],
+  });
 
-  const uriToBlob = async (uri: string) => {
-    const response = await fetch(uri);
-    return await response.blob();
-  };
   const pickImage = async () => {
     try {
-      setIsUploading(true);
+      setIsLoading((prev) => ({
+        ...prev,
+        isUploading: true,
+      }));
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: "images",
         allowsEditing: true,
@@ -41,8 +79,6 @@ export default function DrivingLicenseForm() {
       });
 
       if (!result.canceled) {
-        const imageBlob = await uriToBlob(result.assets[0].uri);
-        console.log("🚀 ~ pickImage ~ imageBlob:", imageBlob);
         const formData = new FormData();
         formData.append("file", {
           uri: result.assets[0].uri,
@@ -61,14 +97,21 @@ export default function DrivingLicenseForm() {
               .json()
               .then((data: ICloudinaryResponse) => {
                 setCloudinaryResponse(data);
+                setFormData((prev) => ({ ...prev, image: data.secure_url }));
               })
               .catch((err) => {
                 console.error(err);
-                setIsUploading(false);
+                setIsLoading((prev) => ({
+                  ...prev,
+                  isUploading: false,
+                }));
               }),
           )
           .catch((err) => console.error({ err }));
-        setIsUploading(false);
+        setIsLoading((prev) => ({
+          ...prev,
+          isUploading: false,
+        }));
       }
     } catch (error) {
       console.error(error);
@@ -77,28 +120,65 @@ export default function DrivingLicenseForm() {
         type: "danger",
       });
     } finally {
-      setIsUploading(false);
+      setIsLoading((prev) => ({
+        ...prev,
+        isUploading: false,
+      }));
     }
   };
 
-  const [formData, setFormData] = useState({
-    expiryDate: "",
-    image: "",
-    number: "",
-  });
   const handleInputChange = (name: string, value: string) => {
     setFormData({ ...formData, [name]: value });
   };
+
+  const handleSubmit = async () => {
+    try {
+      setIsLoading((prev) => ({
+        ...prev,
+        isSubmitting: true,
+      }));
+      if (!formData.expiryDate) {
+        return showMessage({
+          message: "Please select an expiry date",
+          type: "danger",
+        });
+      } else if (!formData.number) {
+        return showMessage({
+          message: "Please enter a license number",
+          type: "danger",
+        });
+      } else if (!formData.image) {
+        return showMessage({
+          message: "Please upload an image",
+          type: "danger",
+        });
+      }
+      await mutateLicense({
+        variables: {
+          updateRiderLicenseDetailsId: userId,
+          licenseDetails: formData,
+        },
+      });
+      setIsFormOpened(null);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading((prev) => ({
+        ...prev,
+        isSubmitting: false,
+      }));
+    }
+  };
   return (
     <View className="w-full">
-      {isCalendarVisible && (
+      {isLoading.isCalendarVisible && (
         <View
           style={{
-            top: -400,
+            top: 0,
             position: "absolute",
             width: "95%",
             gap: 10,
-            backgroundColor: "white",
+            backgroundColor: "transparent",
             padding: 8,
             marginLeft: 10,
             borderRadius: 12,
@@ -106,6 +186,7 @@ export default function DrivingLicenseForm() {
         >
           <Calendar
             initialDate={formData.expiryDate}
+            style={{ width: "100%", height: "80%" }}
             onDayPress={(day: DateData) =>
               handleInputChange("expiryDate", day.dateString)
             }
@@ -115,78 +196,94 @@ export default function DrivingLicenseForm() {
           />
           <CustomContinueButton
             title="Done"
-            onPress={() => setIsCalendarVisible(false)}
+            onPress={() =>
+              setIsLoading((prev) => ({
+                ...prev,
+                isCalendarVisible: false,
+              }))
+            }
           />
         </View>
       )}
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View className="flex flex-col justify-between w-full p-3 h-full mt-0">
-          <FormHeader title="Driving License" />
-          <View>
-            <View className="flex flex-col w-full my-2">
-              <Text>License No</Text>
-              <TextInput
-                value={formData.number}
-                onChangeText={(licenseNo) =>
-                  handleInputChange("number", licenseNo)
-                }
-                className="w-full rounded-md border border-gray-300 p-3 my-2"
-              />
-            </View>
-            <View className="flex flex-col w-full my-2">
-              <Text>License Expiry Date</Text>
-              <TouchableOpacity
-                onPress={() => setIsCalendarVisible(true)}
-                className="w-full rounded-md border border-gray-300 p-3 my-2"
-              >
-                <Text className="text-gray-400">
-                  {formData.expiryDate ?? new Date().toDateString()}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View className="flex flex-col w-full my-2">
-              <Text>Add License Document</Text>
-              {!cloudinaryResponse?.secure_url ? (
-                <TouchableOpacity
-                  className="w-full rounded-md border border-dashed border-gray-300 p-3 h-28 items-center justify-center"
-                  onPress={pickImage}
-                >
-                  {isUploading ? (
-                    <MotiView>
-                      <Skeleton width={90} height={20} colorMode="light" />
-                    </MotiView>
-                  ) : (
-                    <UploadIcon />
-                  )}
-                </TouchableOpacity>
-              ) : (
-                <View className="flex flex-row justify-between border border-gray-300 rounded-md p-4 my-2">
-                  <View className="flex flex-row gap-2">
-                    <Ionicons name="image" size={20} color="#3F51B5" />
-                    <Text className="text-[#3F51B5] border-b-2 border-b-[#3F51B5]">
-                      {cloudinaryResponse.original_filename}.
-                      {cloudinaryResponse.format}
-                    </Text>
-                  </View>
-                  <View className="flex flex-row">
-                    <Text>{cloudinaryResponse.bytes / 1000}KB</Text>
-                    <Link
-                      download={cloudinaryResponse.secure_url}
-                      href={cloudinaryResponse.secure_url}
-                      className="text-[#9CA3AF] text-xs"
-                    >
-                      <Ionicons size={18} name="download" color="#6B7280" />
-                    </Link>
-                  </View>
-                </View>
-              )}
-            </View>
+      {!isLoading.isCalendarVisible && (
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View className="flex flex-col justify-between w-full p-3 h-full mt-0 -z-10">
+            <FormHeader title="Driving License" />
             <View>
-              <CustomContinueButton title="Add" onPress={() => {}} />
+              <View className="flex flex-col w-full my-2">
+                <Text>License No</Text>
+                <TextInput
+                  value={formData.number}
+                  onChangeText={(licenseNo) =>
+                    handleInputChange("number", licenseNo)
+                  }
+                  className="w-full rounded-md border border-gray-300 p-3 my-2"
+                />
+              </View>
+              <View className="flex flex-col w-full my-2">
+                <Text>License Expiry Date</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsLoading((prev) => ({
+                      ...prev,
+                      isCalendarVisible: true,
+                    }));
+                    Keyboard.dismiss();
+                  }}
+                  className="w-full rounded-md border border-gray-300 p-3 my-2"
+                >
+                  <Text className="text-gray-400">
+                    {formData.expiryDate ?? new Date().toDateString()}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View className="flex flex-col w-full my-2">
+                <Text>Add License Document</Text>
+                {!cloudinaryResponse?.secure_url ? (
+                  <TouchableOpacity
+                    className="w-full rounded-md border border-dashed border-gray-300 p-3 h-28 items-center justify-center"
+                    onPress={pickImage}
+                  >
+                    {isLoading.isUploading ? (
+                      <MotiView>
+                        <Skeleton width={90} height={20} colorMode="light" />
+                      </MotiView>
+                    ) : (
+                      <UploadIcon />
+                    )}
+                  </TouchableOpacity>
+                ) : (
+                  <View className="flex flex-row justify-between border border-gray-300 rounded-md p-4 my-2">
+                    <View className="flex flex-row gap-2">
+                      <Ionicons name="image" size={20} color="#3F51B5" />
+                      <Text className="text-[#3F51B5] border-b-2 border-b-[#3F51B5]">
+                        {cloudinaryResponse.original_filename}.
+                        {cloudinaryResponse.format}
+                      </Text>
+                    </View>
+                    <View className="flex flex-row">
+                      <Text>{cloudinaryResponse.bytes / 1000}KB</Text>
+                      <Link
+                        download={cloudinaryResponse.secure_url}
+                        href={cloudinaryResponse.secure_url}
+                        className="text-[#9CA3AF] text-xs"
+                      >
+                        <Ionicons size={18} name="download" color="#6B7280" />
+                      </Link>
+                    </View>
+                  </View>
+                )}
+              </View>
+              <View>
+                <CustomContinueButton
+                  title={isLoading.isSubmitting ? "Please wait..." : "Add"}
+                  onPress={handleSubmit}
+                />
+              </View>
             </View>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      )}
     </View>
   );
 }

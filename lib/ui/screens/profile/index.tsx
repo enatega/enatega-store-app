@@ -1,6 +1,6 @@
 // Core
 import { SafeAreaView } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Components
 import ProfileHeader from "../../screen-components/profile/header";
@@ -11,10 +11,26 @@ import { TRiderProfileBottomBarBit } from "@/lib/utils/types/rider";
 import DrivingLicenseForm from "../../screen-components/profile/forms/liecense";
 import VehiclePlateForm from "../../screen-components/profile/forms/vehicle";
 import ReactNativeModal from "react-native-modal";
+import { Keyboard } from "react-native";
 
 export default function ComponentName() {
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [isFormOpened, setIsFormOpened] =
     useState<TRiderProfileBottomBarBit>(null);
+
+  // UseEffects
+  useEffect(() => {
+    const isOpened = Keyboard.addListener("keyboardWillShow", () => {
+      setIsKeyboardVisible(true);
+    });
+    const isClosed = Keyboard.addListener("keyboardWillHide", () => {
+      setIsKeyboardVisible(false);
+    });
+    return () => {
+      isOpened.remove();
+      isClosed.remove();
+    };
+  }, []);
   return (
     <SafeAreaView>
       <ProfileHeader />
@@ -31,7 +47,7 @@ export default function ComponentName() {
             setIsFormOpened(null);
           }}
           style={{
-            maxHeight: 390,
+            maxHeight: isFormOpened === "LICENSE_FORM" ? 420 : 350,
             width: "100%",
             height: "100%",
             backgroundColor: "#fff",
@@ -46,13 +62,24 @@ export default function ComponentName() {
               height: 2,
             },
             marginLeft: 0,
-            marginTop: 435,
+            marginTop:
+              isFormOpened === "LICENSE_FORM"
+                ? !isKeyboardVisible
+                  ? 405
+                  : 80
+                : !isKeyboardVisible
+                  ? 470
+                  : 140,
             shadowOpacity: 0.25,
             shadowRadius: 4,
           }}
         >
-          {isFormOpened === "LICENSE_FORM" && <DrivingLicenseForm />}
-          {isFormOpened === "VEHICLE_FORM" && <VehiclePlateForm />}
+          {isFormOpened === "LICENSE_FORM" && (
+            <DrivingLicenseForm setIsFormOpened={setIsFormOpened} />
+          )}
+          {isFormOpened === "VEHICLE_FORM" && (
+            <VehiclePlateForm setIsFormOpened={setIsFormOpened} />
+          )}
           {isFormOpened === null && <></>}
         </ReactNativeModal>
       )}
