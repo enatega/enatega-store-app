@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 import { useEffect, useState, useContext } from "react";
-import { View, Text, Dimensions, Platform } from "react-native";
+import { View, Text, Dimensions, Platform, StyleSheet } from "react-native";
 import { NetworkStatus } from "@apollo/client";
 import { FlatList } from "react-native-gesture-handler";
 
@@ -43,7 +43,7 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
     if (!assignedOrders) return;
 
     const _orders = assignedOrders?.filter(
-      (o: IOrder) => o.orderStatus === "ACCEPTED" && !o.rider && !o.isPickedUp
+      (o: IOrder) => o.orderStatus === "ACCEPTED" && !o.rider && !o.isPickedUp,
     );
 
     setOrders(_orders ?? []);
@@ -66,16 +66,16 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
 
   // Render
   return (
-    <View className="flex-1 bg-white pb-12">
-      {errorAssigned ?
+    <View className="pt-14 flex-1 bg-white pb-16" style={style.contaienr}>
+      {errorAssigned ? (
         <View className="flex-1 justify-center items-center">
           <Text className="text-2xl">Something went wrong</Text>
         </View>
-      : loadingAssigned ?
+      ) : loadingAssigned ? (
         <View className="flex-1">
           <Spinner />
         </View>
-      : orders?.length > 0 ?
+      ) : orders?.length > 0 ? (
         <FlatList
           className={`h-[${height}px] mb-[${marginBottom}px]`}
           keyExtractor={(item) => item._id}
@@ -91,24 +91,27 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
               <View
                 style={{
                   minHeight:
-                    height > 670 ?
-                      height - height * 0.5
-                    : height - height * 0.6,
+                    height > 670
+                      ? height - height * 0.5
+                      : height - height * 0.6,
                   justifyContent: "center",
                   alignItems: "center",
                 }}
               >
                 <WalletIcon height={100} width={100} />
-                {orders?.length === 0 ?
+                {orders?.length === 0 ? (
                   <Text className="font-[Inter] text-[18px] text-base font-[500] text-gray-600">
                     {NO_ORDER_PROMPT[route.key]}
                   </Text>
-                : <Text>Pull downto refresh</Text>}
+                ) : (
+                  <Text>Pull downto refresh</Text>
+                )}
               </View>
             );
           }}
         />
-      : <View
+      ) : (
+        <View
           style={{
             minHeight:
               height > 670 ? height - height * 0.5 : height - height * 0.6,
@@ -118,13 +121,21 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
         >
           <WalletIcon height={100} width={100} />
 
-          {orders?.length === 0 ?
+          {orders?.length === 0 ? (
             <Text className="font-[Inter] text-[18px] text-base font-[500] text-gray-600">
               {NO_ORDER_PROMPT[route.key]}
             </Text>
-          : <Text>Pull downto refresh</Text>}
+          ) : (
+            <Text>Pull downto refresh</Text>
+          )}
         </View>
-      }
+      )}
     </View>
   );
 }
+
+const style = StyleSheet.create({
+  contaienr: {
+    paddingBottom: Platform.OS === "android" ? 50 : 80,
+  },
+});
