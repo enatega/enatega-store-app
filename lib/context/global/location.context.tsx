@@ -8,7 +8,7 @@ import {
 } from "@/lib/utils/interfaces";
 
 const LocationContext = React.createContext<ILocationContextProps>(
-  {} as ILocationContextProps
+  {} as ILocationContextProps,
 );
 
 export const LocationProvider = ({ children }: ILocationProviderProps) => {
@@ -34,22 +34,27 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
 
   useEffect(() => {
     if (!locationPermission) return;
+
     const trackRiderLocation = async () => {
       if (!locationPermission) return;
+
       locationListener.current = await Location.watchPositionAsync(
         {
-          accuracy: Location.LocationAccuracy.BestForNavigation,
-          timeInterval: 10000,
+          accuracy: Location.Accuracy.BestForNavigation,
+          distanceInterval: 1,
+          timeInterval: 5000,
         },
         (location) => {
           setLocation({
             latitude: location.coords.latitude.toString(),
             longitude: location.coords.longitude.toString(),
           });
-        }
+        },
       );
     };
+
     trackRiderLocation();
+
     return () => {
       if (locationListener.current) {
         locationListener.current.remove();

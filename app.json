@@ -47,10 +47,8 @@
     },
     "android": {
       "versionCode": 38,
-      "permissions": [
-        "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION"
-      ],
+      "googleServicesFile": "./google-services.json",
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"

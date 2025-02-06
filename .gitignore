@@ -3,6 +3,10 @@
 # dependencies
 node_modules/
 
+# Secrets
+google-servicees.json
+google-service-account.json
+
 # Expo
 .expo/
 dist/

@@ -13,7 +13,7 @@ export interface ICloudinaryResponse {
   placeholder: false
   public_id: ExternalPathString
   resource_type: string
-  secure_url: string
+  secure_url: ExternalPathString
   signature: string
   tags: string[]
   type: string

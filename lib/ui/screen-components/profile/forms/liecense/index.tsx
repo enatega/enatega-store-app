@@ -15,10 +15,14 @@ import * as ImagePicker from "expo-image-picker";
 import { ICloudinaryResponse } from "@/lib/utils/interfaces/cloudinary.interface";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { MotiView } from "moti";
+import { Skeleton } from "moti/skeleton";
+import { showMessage } from "react-native-flash-message";
 
 export default function DrivingLicenseForm() {
   // States
   const [isCalendarVisible, setIsCalendarVisible] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [cloudinaryResponse, setCloudinaryResponse] =
     useState<ICloudinaryResponse | null>(null);
 
@@ -26,9 +30,9 @@ export default function DrivingLicenseForm() {
     const response = await fetch(uri);
     return await response.blob();
   };
-  console.log(process.env.EXPO_PUBLIC_CLOUDINARY_URL, "ENV URL");
   const pickImage = async () => {
     try {
+      setIsUploading(true);
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: "images",
         allowsEditing: true,
@@ -36,7 +40,6 @@ export default function DrivingLicenseForm() {
         quality: 1,
       });
 
-      console.log({ result });
       if (!result.canceled) {
         const imageBlob = await uriToBlob(result.assets[0].uri);
         console.log("🚀 ~ pickImage ~ imageBlob:", imageBlob);
@@ -47,10 +50,9 @@ export default function DrivingLicenseForm() {
           type: "image/jpeg",
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any);
-        formData.append("upload_preset", "rider_data");
-        formData.append("cloud_name", process.env.EXPO_PUBLIC_CLOUDINARY);
-        console.log(result.assets[0].uri);
-        await fetch(process.env.EXPO_PUBLIC_CLOUDINARY_URL, {
+        formData.append("upload_preset", process.env.CLOUDINARY_UPLOAD_PRESET);
+        formData.append("cloud_name", process.env.CLOUDINARY_CLOUD_NAME);
+        await fetch(process.env.CLOUDINARY_UPLOAD_URL, {
           method: "POST",
           body: formData,
         })
@@ -60,12 +62,22 @@ export default function DrivingLicenseForm() {
               .then((data: ICloudinaryResponse) => {
                 setCloudinaryResponse(data);
               })
-              .catch((err) => console.error(err)),
+              .catch((err) => {
+                console.error(err);
+                setIsUploading(false);
+              }),
           )
           .catch((err) => console.error({ err }));
+        setIsUploading(false);
       }
     } catch (error) {
       console.error(error);
+      return showMessage({
+        message: "Failed to upload image",
+        type: "danger",
+      });
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -118,14 +130,14 @@ export default function DrivingLicenseForm() {
                 onChangeText={(licenseNo) =>
                   handleInputChange("number", licenseNo)
                 }
-                className="w-full rounded-md border border-gray-300 p-3"
+                className="w-full rounded-md border border-gray-300 p-3 my-2"
               />
             </View>
             <View className="flex flex-col w-full my-2">
               <Text>License Expiry Date</Text>
               <TouchableOpacity
                 onPress={() => setIsCalendarVisible(true)}
-                className="w-full rounded-md border border-gray-300 p-3"
+                className="w-full rounded-md border border-gray-300 p-3 my-2"
               >
                 <Text className="text-gray-400">
                   {formData.expiryDate ?? new Date().toDateString()}
@@ -139,24 +151,31 @@ export default function DrivingLicenseForm() {
                   className="w-full rounded-md border border-dashed border-gray-300 p-3 h-28 items-center justify-center"
                   onPress={pickImage}
                 >
-                  <UploadIcon />
+                  {isUploading ? (
+                    <MotiView>
+                      <Skeleton width={90} height={20} colorMode="light" />
+                    </MotiView>
+                  ) : (
+                    <UploadIcon />
+                  )}
                 </TouchableOpacity>
               ) : (
-                <View className="flex flex-row justify-between border border-gray-300">
-                  <View className="flex flex-col">
-                    <Ionicons name="image" size={20} />
-                    <Text>
+                <View className="flex flex-row justify-between border border-gray-300 rounded-md p-4 my-2">
+                  <View className="flex flex-row gap-2">
+                    <Ionicons name="image" size={20} color="#3F51B5" />
+                    <Text className="text-[#3F51B5] border-b-2 border-b-[#3F51B5]">
                       {cloudinaryResponse.original_filename}.
                       {cloudinaryResponse.format}
                     </Text>
                   </View>
-                  <View className="flex flex-col">
+                  <View className="flex flex-row">
                     <Text>{cloudinaryResponse.bytes / 1000}KB</Text>
                     <Link
-                      download={cloudinaryResponse.public_id}
-                      href={cloudinaryResponse.public_id}
+                      download={cloudinaryResponse.secure_url}
+                      href={cloudinaryResponse.secure_url}
+                      className="text-[#9CA3AF] text-xs"
                     >
-                      <Ionicons size={18} name="download-sharp" />
+                      <Ionicons size={18} name="download" color="#6B7280" />
                     </Link>
                   </View>
                 </View>

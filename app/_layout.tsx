@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-import { useEffect } from "react";
+import { Appearance } from "react-native";
 import {
   DarkTheme,
   DefaultTheme,
@@ -7,7 +7,7 @@ import {
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-// import * as SplashScreen from "expo-splash-screen";
+import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 import { ApolloProvider } from "@apollo/client";
@@ -34,11 +34,12 @@ import "@/i18next";
 
 // Style
 import "../global.css";
+import { useEffect } from "react";
 
 initSentry();
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-// SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync();
 
 function RootLayout() {
   // Hooks
@@ -49,16 +50,18 @@ function RootLayout() {
   });
   const client = setupApollo();
 
-  // // Use Effect
-  // useEffect(() => {
-  //   if (loaded) {
-  //     SplashScreen.hideAsync();
-  //   }
-  // }, [loaded]);
+  // Use Effect
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
 
   if (!loaded) {
     return null;
   }
+
+  Appearance.setColorScheme("light"); // Forces light mode
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>

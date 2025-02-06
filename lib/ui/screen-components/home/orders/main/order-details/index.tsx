@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import {
   View,
   Text,
@@ -5,7 +6,8 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
-  Button,
+  Platform,
+  Animated,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomSheet, {
@@ -13,35 +15,40 @@ import BottomSheet, {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { useContext, useEffect, useRef, useState } from "react";
-import { IconSymbol } from "@/lib/ui/useable-components/IconSymbol";
-import { ConfigurationContext } from "@/lib/context/global/configuration.context";
-import AccordionItem from "@/lib/ui/useable-components/accordian";
-import useOrderDetail from "@/lib/hooks/useOrderDetails";
 import MapViewDirections from "react-native-maps-directions";
-import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import MapView, { LatLng, Marker, PROVIDER_GOOGLE } from "react-native-maps";
+
+// Methods
 import { linkToMapsApp } from "@/lib/utils/methods";
+
+// Constants
 import { MapStyles } from "@/lib/utils/constants";
 
+// Screen Components
 import ItemDetails from "@/lib/ui/screen-components/home/orders/main/item-details";
-import SpinnerComponent from "@/lib/ui/useable-components/spinner";
+
+// Hooks
+import useOrderDetail from "@/lib/hooks/useOrderDetails";
 import useDetails from "@/lib/hooks/useDetail";
 
-// Icons
-import RestIcon from "@/lib/assets/rest_icon.png";
-import HomeIcon from "@/lib/assets/home_icon.png";
-import RiderIcon from "@/lib/assets/rider_icon.png";
+// Context
+import { ConfigurationContext } from "@/lib/context/global/configuration.context";
+
+// UI Components
+import { IconSymbol } from "@/lib/ui/useable-components/IconSymbol";
+import AccordionItem from "@/lib/ui/useable-components/accordian";
 import WelldoneComponent from "@/lib/ui/useable-components/well-done";
+import SpinnerComponent from "@/lib/ui/useable-components/spinner";
+import { Easing } from "react-native-reanimated";
 
 const { height } = Dimensions.get("window");
 
 export default function OrderDetailScreen() {
-  // State
-  const [orderId, setOrderId] = useState("");
-
   // Ref
   const bottomSheetRef = useRef<BottomSheet>(null);
   // Context
   const configuration = useContext(ConfigurationContext);
+
   // Hook
   const {
     restaurantAddressPin,
@@ -61,14 +68,76 @@ export default function OrderDetailScreen() {
     loadingOrderStatus,
   } = useDetails(order);
 
+  // State
+  const [orderId, setOrderId] = useState("");
+  const [lineDashPhase, setLineDashPhase] = useState(0);
+  // Ref
+  const latitude = useRef(
+    new Animated.Value(locationPin.location.latitude),
+  ).current;
+  const longitude = useRef(
+    new Animated.Value(locationPin.location.longitude),
+  ).current;
+  const waveAnimation = useRef(new Animated.Value(0)).current; // Wave animation value
+
+  // Handler
+  const moveMarker = (newLocation: LatLng) => {
+    Animated.timing(latitude, {
+      toValue: newLocation.latitude,
+      duration: 2000,
+      useNativeDriver: false,
+    }).start();
+
+    Animated.timing(longitude, {
+      toValue: newLocation.longitude,
+      duration: 2000,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  // Use Effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const newLatitude = locationPin.location.latitude;
+      const newLongitude = locationPin.location.longitude;
+      moveMarker({ latitude: newLatitude, longitude: newLongitude });
+    }, 5000);
+
+    // Start wave animation
+    const animation = Animated.loop(
+      Animated.timing(waveAnimation, {
+        toValue: 1000,
+        duration: 10000,
+        useNativeDriver: true,
+        easing: Easing.linear,
+      }),
+    );
+
+    animation.start();
+
+    // Listen to the animated value change
+    const id = waveAnimation.addListener(({ value }) => {
+      setLineDashPhase(-Math.floor(value)); // Adjust this multiplier to control the dash speed
+    });
+
+    return () => {
+      waveAnimation.removeListener(id); // Clean up listener
+      animation.stop();
+      clearInterval(interval);
+    };
+  }, []);
+
   return (
     <>
-      <GestureHandlerRootView className="flex-1 bg-transparent">
+      <GestureHandlerRootView>
         <View
-          className="bg-transparent justify-center items-center"
-          style={{ height: height * 0.5, backgroundColor: "transparent" }}
+          className="justify-center items-center"
+          style={{
+            height: height * 0.5,
+            backgroundColor: "transparent",
+          }}
         >
-          {locationPin ?
+          {locationPin ? (
             <MapView
               style={{ height: "100%", width: "100%" }}
               showsUserLocation
@@ -80,7 +149,10 @@ export default function OrderDetailScreen() {
                 longitude: locationPin?.location?.longitude ?? 0.0,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
+                // latitudeDelta: 0.05,
+                // longitudeDelta: 0.05,
               }}
+              provider={Platform.OS === "android" ? PROVIDER_GOOGLE : undefined}
               customMapStyle={MapStyles}
             >
               {deliveryAddressPin?.location && (
@@ -90,11 +162,14 @@ export default function OrderDetailScreen() {
                   onPress={() => {
                     linkToMapsApp(
                       deliveryAddressPin.location,
-                      deliveryAddressPin.label
+                      deliveryAddressPin.label,
                     );
                   }}
                 >
-                  <Image source={HomeIcon} style={{ height: 35, width: 32 }} />
+                  <Image
+                    source={require("@/lib/assets/home_icon.png")}
+                    style={{ height: 35, width: 32 }}
+                  />
                 </Marker>
               )}
               {restaurantAddressPin?.location && (
@@ -104,68 +179,92 @@ export default function OrderDetailScreen() {
                   onPress={() => {
                     linkToMapsApp(
                       restaurantAddressPin.location,
-                      restaurantAddressPin.label
+                      restaurantAddressPin.label,
                     );
                   }}
                 >
-                  <Image source={RestIcon} style={{ height: 35, width: 32 }} />
+                  <Image
+                    source={require("@/lib/assets/rest_icon.png")}
+                    style={{ height: 35, width: 32 }}
+                  />
                 </Marker>
               )}
-              {locationPin?.location && (
-                <Marker
-                  coordinate={locationPin.location}
+              {/* {locationPin?.location && ( */}
+              {
+                <Marker.Animated
+                  coordinate={{ latitude, longitude }}
                   title="Rider"
+                  description="This is rider's location"
                   onPress={() => {
                     linkToMapsApp(locationPin.location, locationPin.label);
                   }}
                 >
-                  <Image source={RiderIcon} style={{ height: 35, width: 32 }} />
-                </Marker>
-              )}
-              {GOOGLE_MAPS_KEY &&
-                (order?.orderStatus === "ACCEPTED" ?
+                  <Image
+                    source={require("@/lib/assets/rider_icon.png")}
+                    style={{ height: 35, width: 32 }}
+                  />
+                </Marker.Animated>
+              }
+
+              {order?.orderStatus === "ACCEPTED" ||
+                (order?.orderStatus === "ASSIGNED" && (
                   <MapViewDirections
                     origin={locationPin.location}
                     destination={restaurantAddressPin.location}
                     apikey={GOOGLE_MAPS_KEY ?? ""}
-                    strokeWidth={4}
+                    strokeWidth={2}
                     strokeColor="black"
+                    lineDashPattern={[5, 5]} // Dashed pattern
+                    lineDashPhase={lineDashPhase} // Animated wave
                     onReady={(result) => {
                       setDistance(result?.distance);
                       setDuration(result?.duration);
                     }}
                   />
-                : order?.orderStatus === "PICKED" ?
+                ))}
+
+              {order?.orderStatus === "PICKED" && (
+                <MapViewDirections
+                  origin={locationPin.location}
+                  destination={deliveryAddressPin.location}
+                  apikey={GOOGLE_MAPS_KEY ?? ""}
+                  strokeWidth={2}
+                  strokeColor="black"
+                  lineDashPattern={[5, 5]} // Dashed pattern
+                  lineDashPhase={lineDashPhase} // Animated wave
+                  onReady={(result) => {
+                    setDistance(result.distance);
+                    setDuration(result.duration);
+                  }}
+                />
+              )}
+
+              {order?.orderStatus !== "ACCEPTED" &&
+                order?.orderStatus !== "PICKED" &&
+                order?.orderStatus !== "ASSIGNED" && (
                   <MapViewDirections
-                    origin={locationPin.location}
-                    destination={deliveryAddressPin.location}
-                    apikey={GOOGLE_MAPS_KEY ?? ""}
-                    strokeWidth={4}
-                    strokeColor="black"
-                    onReady={(result) => {
-                      setDistance(result.distance);
-                      setDuration(result.duration);
-                    }}
-                  />
-                : <MapViewDirections
                     origin={restaurantAddressPin.location}
                     destination={deliveryAddressPin.location}
                     apikey={GOOGLE_MAPS_KEY ?? ""}
-                    strokeWidth={4}
+                    strokeWidth={2}
                     strokeColor="black"
+                    lineDashPattern={[5, 5]} // Dashed pattern
+                    lineDashPhase={lineDashPhase} // Animated wave
                     onReady={(result) => {
                       setDistance(result?.distance);
                       setDuration(result?.duration);
                     }}
-                  />)}
+                  />
+                )}
             </MapView>
-          : <View className="flex-1 justify-center items-center gap-y-3">
+          ) : (
+            <View className="flex-1 justify-center items-center gap-y-3">
               <Text className="text-3xl">Map not loaded.</Text>
               <Text className="text-lg text-gray-600">
                 Please check for permissions.
               </Text>
             </View>
-          }
+          )}
         </View>
 
         <BottomSheet
@@ -265,12 +364,13 @@ export default function OrderDetailScreen() {
                     })
                   }
                 >
-                  {loadingOrderStatus ?
+                  {loadingOrderStatus ? (
                     <SpinnerComponent />
-                  : <Text className="text-center text-white text-lg font-medium">
+                  ) : (
+                    <Text className="text-center text-white text-lg font-medium">
                       Pick up
                     </Text>
-                  }
+                  )}
                 </TouchableOpacity>
               )}
 
@@ -283,12 +383,13 @@ export default function OrderDetailScreen() {
                     })
                   }
                 >
-                  {loadingOrderStatus ?
+                  {loadingOrderStatus ? (
                     <SpinnerComponent />
-                  : <Text className="text-center text-white text-lg font-medium">
+                  ) : (
+                    <Text className="text-center text-white text-lg font-medium">
                       Mark as Delivered
                     </Text>
-                  }
+                  )}
                 </TouchableOpacity>
               )}
 
@@ -301,12 +402,13 @@ export default function OrderDetailScreen() {
                     })
                   }
                 >
-                  {loadingAssignOrder ?
+                  {loadingAssignOrder ? (
                     <SpinnerComponent />
-                  : <Text className="text-center text-white text-lg font-medium">
+                  ) : (
+                    <Text className="text-center text-white text-lg font-medium">
                       Assign me
                     </Text>
-                  }
+                  )}
                 </TouchableOpacity>
               )}
             </BottomSheetScrollView>

@@ -39,7 +39,7 @@ const useOrderDetail = () => {
   }, [navigation]);
   useEffect(() => {
     if (!loadingAssigned) {
-      setOrder(assignedOrders.find((o) => o._id === orderID));
+      setOrder(assignedOrders?.find((o) => o._id === orderID));
     }
   }, [loadingAssigned, assignedOrders]);
   const deliveryAddressPin = {
