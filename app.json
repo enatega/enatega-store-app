@@ -34,6 +34,7 @@
     },
     "android": {
       "versionCode": 38,
+      "googleServicesFile": "./google-services.json",
       "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
       "config": {
         "googleMaps": {
