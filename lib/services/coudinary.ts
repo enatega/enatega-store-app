@@ -7,9 +7,8 @@ export const cloudinary_upload_options = {
 
 export const cld = new Cloudinary({
   cloud: { cloudName: process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME },
-  url: process.env.EXPO_PUBLIC_CLOUDINARY_URL,
+  url: {
+    secureDistribution:process.env.EXPO_PUBLICLOUDINARY_UPLOAD_URL,
+    secure: true,
+  }
 })
-console.log({
-    cloud: { cloudName: process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME },
-    url: process.env.EXPO_PUBLIC_CLOUDINARY_URL,
-  })
