@@ -42,3 +42,16 @@ export const UPDATE_VEHICLE = gql`
     }
   }
 `
+export const UPDATE_BUSINESS_DETAILS = gql`
+  mutation UpdateRiderBussinessDetails(
+    $bussinessDetails: BussinessDetailsInput
+    $updateRiderBussinessDetailsId: String!
+  ) {
+    updateRiderBussinessDetails(
+      bussinessDetails: $bussinessDetails
+      id: $updateRiderBussinessDetailsId
+    ) {
+      _id
+    }
+  }
+`

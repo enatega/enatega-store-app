@@ -65,7 +65,7 @@ export interface IRiderProfile {
     bankName: string
     accountName: string
     accountCode: string
-    accountNumber: number
+    accountNumber: string
   }
 }
 
