@@ -1,12 +1,13 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import * as Linking from "expo-linking";
+import { router } from "expo-router";
+import { useLayoutEffect } from "react";
 
 const index = () => {
-  return (
-    <View>
-      <Text>about us screen</Text>
-    </View>
-  )
-}
+  useLayoutEffect(() => {
+    router.replace("/(tabs)/home/orders/processing");
+    Linking.openURL("https://ninjascode.com");
+  }, []);
+  return <></>;
+};
 
-export default index
+export default index;
