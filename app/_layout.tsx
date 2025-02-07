@@ -94,10 +94,6 @@ function RootLayout() {
                         name="chat"
                         options={{ headerShown: false }}
                       />
-                      <Stack.Screen
-                        name="webview"
-                        options={{ headerShown: false }}
-                      />
                     </Stack>
 
                     <StatusBar style="auto" />

@@ -1,13 +1,15 @@
-import * as Linking from "expo-linking";
-import { router } from "expo-router";
-import { useLayoutEffect } from "react";
+// Core
+import { SafeAreaView } from "react-native-safe-area-context";
+import HelpMain from "../../screen-components/home/help/view/main";
+
+//
 
 const HelpScreen = () => {
-  useLayoutEffect(() => {
-    router.replace("/(tabs)/home/orders/processing");
-    Linking.openURL("https://ninjascode.com");
-  }, []);
-  return <></>;
+  return (
+    <SafeAreaView edges={["bottom", "right", "left"]} className="w-full h-full">
+      <HelpMain />
+    </SafeAreaView>
+  );
 };
 
 export default HelpScreen;
