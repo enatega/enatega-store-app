@@ -4,53 +4,53 @@ import {
   IRiderCurrentWithdrawRequestResponse,
   IRiderEarningsResponse,
   IRiderTransactionHistoryResponse,
-} from '@/lib/utils/interfaces/rider.interface'
-import { ILazyQueryResult } from '@/lib/utils/interfaces'
+} from "@/lib/utils/interfaces/rider.interface";
+import { ILazyQueryResult } from "@/lib/utils/interfaces";
 
 // Components
-import { CustomContinueButton } from '@/lib/ui/useable-components'
-import RecentTransaction from '../recent-transactions'
-import { FlashMessageComponent } from '@/lib/ui/useable-components/flash-message'
-import WithdrawModal from '../form'
+import { CustomContinueButton } from "@/lib/ui/useable-components";
+import RecentTransaction from "../recent-transactions";
+import { FlashMessageComponent } from "@/lib/ui/useable-components";
+import WithdrawModal from "../form";
 
 // Hooks
-import { useEffect, useState } from 'react'
-import { useLazyQueryQL } from '@/lib/hooks/useLazyQueryQL'
-import { useMutation } from '@apollo/client'
-import { useUserContext } from '@/lib/context/global/user.context'
+import { useEffect, useState } from "react";
+import { useLazyQueryQL } from "@/lib/hooks/useLazyQueryQL";
+import { useMutation } from "@apollo/client";
+import { useUserContext } from "@/lib/context/global/user.context";
 
 // GraphQL
-import { CREATE_WITHDRAW_REQUEST } from '@/lib/apollo/mutations/withdraw-request.mutation'
+import { CREATE_WITHDRAW_REQUEST } from "@/lib/apollo/mutations/withdraw-request.mutation";
 import {
   RIDER_BY_ID,
   RIDER_CURRENT_WITHDRAW_REQUEST,
   RIDER_EARNINGS,
   RIDER_TRANSACTIONS_HISTORY,
-} from '@/lib/apollo/queries'
-import { GraphQLError } from 'graphql'
+} from "@/lib/apollo/queries";
+import { GraphQLError } from "graphql";
 
 // Expo
-import { router } from 'expo-router'
+import { router } from "expo-router";
 
 // Core
-import { ScrollView, Alert } from 'react-native'
-import { Text, View } from 'react-native'
+import { ScrollView, Alert } from "react-native";
+import { Text, View } from "react-native";
 
 // Skeletons
-import { WalletScreenMainLoading } from '@/lib/ui/skeletons'
+import { WalletScreenMainLoading } from "@/lib/ui/skeletons";
 
 export default function WalletMain() {
   // States
-  const [isBottomModalOpen, setIsBottomModalOpen] = useState(false)
-  const [amountErrMsg, setAmountErrMsg] = useState('')
-  const { userId } = useUserContext()
+  const [isBottomModalOpen, setIsBottomModalOpen] = useState(false);
+  const [amountErrMsg, setAmountErrMsg] = useState("");
+  const { userId } = useUserContext();
 
   // Queries
   const { fetch: fetchRiderEarnings, loading: isRiderEarningsLoading } =
     useLazyQueryQL(RIDER_EARNINGS) as ILazyQueryResult<
       IRiderEarningsResponse | undefined,
       undefined
-    >
+    >;
 
   const {
     data: riderTransactionData,
@@ -60,16 +60,16 @@ export default function WalletMain() {
     RIDER_TRANSACTIONS_HISTORY,
     {},
     {
-      userType: 'RIDER',
+      userType: "RIDER",
       userId: userId,
     },
   ) as ILazyQueryResult<
     IRiderTransactionHistoryResponse | undefined,
     {
-      userType: string
-      userId: string
+      userType: string;
+      userId: string;
     }
-  >
+  >;
   const {
     data: riderProfileData,
     fetch: fetchRiderProfile,
@@ -80,7 +80,7 @@ export default function WalletMain() {
     {
       id: userId,
     },
-  ) as ILazyQueryResult<IRiderByIdResponse | undefined, { id: string }>
+  ) as ILazyQueryResult<IRiderByIdResponse | undefined, { id: string }>;
 
   const {
     data: riderCurrentWithdrawRequestData,
@@ -93,65 +93,70 @@ export default function WalletMain() {
   ) as ILazyQueryResult<
     IRiderCurrentWithdrawRequestResponse | undefined,
     {
-      riderId: string
+      riderId: string;
     }
-  >
+  >;
 
   // Mutaions
   const [createWithDrawRequest, { loading: createWithDrawRequestLoading }] =
     useMutation(CREATE_WITHDRAW_REQUEST, {
       onCompleted: () => {
         FlashMessageComponent({
-          message: 'Successfully created the withdraw request!',
-        })
-        setIsBottomModalOpen(false)
+          message: "Successfully created the withdraw request!",
+        });
+        setIsBottomModalOpen(false);
         // setIsModalVisible(true)
         router.push({
-          pathname: '/(tabs)/wallet/(routes)/success',
-        })
+          pathname: "/(tabs)/wallet/(routes)/success",
+        });
       },
       onError: (error) => {
-        Alert.alert('Warning', error.message)
+        Alert.alert("Warning", error.message, [
+          {
+            onPress: () => setIsBottomModalOpen(false),
+            text: "Okay",
+          },
+        ]);
         FlashMessageComponent({
           message:
             error.message ||
             error.graphQLErrors[0].message ||
             JSON.stringify(error) ||
-            'Something went wrong',
-        })
+            "Something went wrong",
+        });
       },
       refetchQueries: [
         { query: RIDER_BY_ID, variables: { id: userId } },
         { query: RIDER_EARNINGS, variables: { id: userId } },
       ],
-    })
+    });
 
   // Handlers
   async function handleFormSubmission(withdrawAmount: number) {
-    const currentAmount = riderProfileData?.rider.currentWalletAmount || 0
+    const currentAmount = riderProfileData?.rider.currentWalletAmount || 0;
     if (withdrawAmount > (currentAmount || 0)) {
       return setAmountErrMsg(
         `Please enter a valid amount. You have $${currentAmount} available.`,
-      )
-    } else if (withdrawAmount < 100) {
+      );
+    } else if (withdrawAmount < 10) {
       return setAmountErrMsg(
-        'The withdraw amount must be atleast 100 or greater.',
-      )
-    } else if (typeof withdrawAmount !== 'number') {
-      return setAmountErrMsg('Please enter a valid number.')
+        "The withdraw amount must be atleast 10 or greater.",
+      );
+    } else if (typeof withdrawAmount !== "number") {
+      return setAmountErrMsg("Please enter a valid number.");
     }
     try {
       await createWithDrawRequest({
         variables: {
           requestAmount: withdrawAmount,
         },
-      })
+      });
     } catch (error) {
-      const err = error as GraphQLError
-      console.log(error)
+      const err = error as GraphQLError;
+      console.log(error);
       FlashMessageComponent({
-        message: err.message || JSON.stringify(error) || 'Something went wrong',
-      })
+        message: err.message || JSON.stringify(error) || "Something went wrong",
+      });
     }
   }
   // Loading state
@@ -161,20 +166,20 @@ export default function WalletMain() {
     isRiderProfileLoading ||
     isRiderTransactionLoading ||
     isRiderCurrentWithdrawRequestLoading ||
-    !riderProfileData?.rider.currentWalletAmount
+    !riderProfileData?.rider.currentWalletAmount;
 
   // UseEffects
   useEffect(() => {
     if (userId) {
-      fetchRiderProfile()
-      fetchRiderEarnings()
-      fetchRiderTransactions()
+      fetchRiderProfile();
+      fetchRiderEarnings();
+      fetchRiderTransactions();
       fetchRiderCurrentWithdrawRequest({
         riderId: userId,
-      })
+      });
     }
-  }, [userId])
-  if (isLoading) return <WalletScreenMainLoading />
+  }, [userId]);
+  if (isLoading) return <WalletScreenMainLoading />;
   return (
     <View className="flex flex-col justify-between  w-[100%] h-full">
       {!isLoading && riderProfileData?.rider.currentWalletAmount && (
@@ -222,7 +227,7 @@ export default function WalletMain() {
         Recent Transactions
       </Text>
 
-      <ScrollView style={{ backgroundColor: 'white' }}>
+      <ScrollView style={{ backgroundColor: "white" }}>
         {riderTransactionData?.transactionHistory.data.map(
           (transaction, index) => {
             return (
@@ -234,7 +239,7 @@ export default function WalletMain() {
                   index
                 }
               />
-            )
+            );
           },
         )}
       </ScrollView>
@@ -249,5 +254,5 @@ export default function WalletMain() {
         withdrawRequestLoading={createWithDrawRequestLoading}
       />
     </View>
-  )
+  );
 }

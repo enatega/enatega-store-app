@@ -24,10 +24,8 @@ export default function HelpMain() {
       Linking.openURL(androidUrl);
     } else if (Platform.OS === "ios") {
       const iosUrl = `https://wa.me/${phoneNumber.replace("+", "")}`;
-      console.log("Attempting to open URL:", iosUrl);
       try {
         const supported = await Linking.canOpenURL(iosUrl);
-        console.log("Can open URL:", supported);
         if (supported) {
           await Linking.openURL(iosUrl);
         } else {
