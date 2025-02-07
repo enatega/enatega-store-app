@@ -43,6 +43,15 @@ export interface IRiderProfile {
   zone: Zone
   image: string | null
   phone: string
+  licenseDetails: {
+    expiryDate: string
+    image: string
+    number: number
+  }
+  vehicleDetails: {
+    image: string
+    number: string
+  }
   location: {
     coordinates: string[]
   }
@@ -56,7 +65,7 @@ export interface IRiderProfile {
     bankName: string
     accountName: string
     accountCode: string
-    accountNumber: number
+    accountNumber: string
   }
 }
 

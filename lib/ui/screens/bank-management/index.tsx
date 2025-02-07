@@ -1,11 +1,10 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-
+import { SafeAreaView } from 'react-native'
+import BankManagementMain from '../../screen-components/home/bank-management/view/main'
 const index = () => {
   return (
-    <View>
-      <Text>bank management screen</Text>
-    </View>
+    <SafeAreaView>
+      <BankManagementMain />
+    </SafeAreaView>
   )
 }
 

@@ -7,7 +7,7 @@ export const RIDER_BY_ID = gql`
       location {
         coordinates
       }
-      zone{
+      zone {
         _id
       }
       currentWalletAmount
@@ -60,43 +60,51 @@ export const RIDER_CURRENT_WITHDRAW_REQUEST = gql`
 `
 
 export const RIDER_PROFILE = gql`
- query rider($id:String!){
-  rider(id:$id){
-    accountNumber
-    assigned
-    available
-    _id
-    zone{
-      _id
-    }
-    bussinessDetails {
-      bankName
-      accountName
-      accountCode
+  query rider($id: String!) {
+    rider(id: $id) {
       accountNumber
-    }
-    createdAt
-    currentWalletAmount
-    email
-    image
-    isActive
-    location {
-      coordinates
-    }
-    name
-    password
-    phone
-    totalWalletAmount
-    updatedAt
-    username
-    withdrawnWalletAmount
+      assigned
+      available
+      _id
+      zone {
+        _id
+      }
+      bussinessDetails {
+        bankName
+        accountName
+        accountCode
+        accountNumber
+      }
+      createdAt
+      currentWalletAmount
+      email
+      image
+      isActive
+      location {
+        coordinates
+      }
+      name
+      password
+      phone
+      totalWalletAmount
+      updatedAt
+      username
+      withdrawnWalletAmount
       location {
         coordinates
       }
       isActive
+      licenseDetails {
+        expiryDate
+        image
+        number
+      }
+      vehicleDetails {
+        image
+        number
+      }
     }
   }
-
 `
 
 export const rider = gql`

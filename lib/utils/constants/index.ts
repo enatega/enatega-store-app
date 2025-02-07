@@ -5,3 +5,4 @@ export * from "./general";
 export * from "./map-styles";
 export * from "./strings";
 export * from "./languages";
+export * from "./faq";

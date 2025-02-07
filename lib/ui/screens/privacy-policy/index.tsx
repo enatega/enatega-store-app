@@ -1,12 +1,13 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import * as Linking from "expo-linking";
+import { useLayoutEffect } from "react";
+import { router } from "expo-router";
 
 const index = () => {
-  return (
-    <View>
-      <Text>privacy policy screen</Text>
-    </View>
-  )
-}
+  useLayoutEffect(() => {
+    router.replace("/(tabs)/home/orders/processing");
+    Linking.openURL("https://multivendor.enatega.com/#/privacy");
+  }, []);
+  return <></>;
+};
 
-export default index
+export default index;

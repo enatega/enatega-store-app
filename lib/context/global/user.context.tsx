@@ -86,19 +86,21 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     notifyOnNetworkStatusChange: true,
   })
 
-  let unsubscribeZoneOrder = null
-  let unsubscribeAssignOrder = null
+  let unsubscribeZoneOrder:unknown = null
+  let unsubscribeAssignOrder:unknown = null
 
   async function getUserId() {
     const id = await AsyncStorage.getItem('rider-id')
-    setUserId(id)
+    if(id){
+      setUserId(id)
+    }
   }
 
   const subscribeNewOrders = () => {
     try {
       const unsubAssignOrder = subscribeToMore({
         document: SUBSCRIPTION_ASSIGNED_RIDER,
-        variables: { riderId: dataProfile.rider._id },
+        variables: { riderId: dataProfile?.rider._id },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) return prev
           if (subscriptionData.data.subscriptionAssignRider.origin === 'new') {
@@ -164,56 +166,56 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     }
   }, [dataProfile])
 
+  const trackRiderLocation = async () => {
+    locationListener.current = await watchPositionAsync(
+      { accuracy: LocationAccuracy.BestForNavigation, timeInterval: 10000 },
+      async (location) => {
+        client.mutate({
+          mutation: UPDATE_LOCATION,
+          variables: {
+            latitude: location.coords.latitude.toString(),
+            longitude: location.coords.longitude.toString(),
+          },
+        })
+      },
+    )
+  }
   useEffect(() => {
-    const trackRiderLocation = async () => {
-      locationListener.current = await watchPositionAsync(
-        { accuracy: LocationAccuracy.BestForNavigation, timeInterval: 10000 },
-        async (location) => {
-          client.mutate({
-            mutation: UPDATE_LOCATION,
-            variables: {
-              latitude: location.coords.latitude.toString(),
-              longitude: location.coords.longitude.toString(),
-            },
-          })
-        },
-      )
-    }
     trackRiderLocation()
     return () => {
       if (locationListener.current) {
         locationListener?.current?.remove()
       }
     }
-  }, [locationPermission])
+  }, [])
 
   useEffect(() => {
     getUserId()
     refetchProfile({ id: userId })
   }, [])
-
-  useEffect(() => {
-    const trackRiderLocation = async () => {
-      locationListener.current = await watchPositionAsync(
-        { accuracy: LocationAccuracy.BestForNavigation, timeInterval: 10000 },
-        async (location) => {
-          client.mutate({
-            mutation: UPDATE_LOCATION,
-            variables: {
-              latitude: location.coords.latitude.toString(),
-              longitude: location.coords.longitude.toString(),
-            },
-          })
-        },
-      )
-    }
-    trackRiderLocation()
-    return () => {
-      if (locationListener.current) {
-        locationListener.current.remove()
-      }
-    }
-  }, [locationPermission])
+/*Why is this duplicated? */
+  // useEffect(() => {  
+  //   const trackRiderLocation = async () => {
+  //     locationListener.current = await watchPositionAsync(
+  //       { accuracy: LocationAccuracy.BestForNavigation, timeInterval: 10000 },
+  //       async (location) => {
+  //         client.mutate({
+  //           mutation: UPDATE_LOCATION,
+  //           variables: {
+  //             latitude: location.coords.latitude.toString(),
+  //             longitude: location.coords.longitude.toString(),
+  //           },
+  //         })
+  //       },
+  //     )
+  //   }
+  //   trackRiderLocation()
+  //   return () => {
+  //     if (locationListener.current) {
+  //       locationListener.current.remove()
+  //     }
+  //   }
+  // }, [])
 
   return (
     <UserContext.Provider

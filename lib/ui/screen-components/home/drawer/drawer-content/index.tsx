@@ -1,3 +1,4 @@
+// Core
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
@@ -17,7 +18,7 @@ import CustomDrawerHeader from "@/lib/ui/screen-components/home/drawer/drawer-he
 import { LogoutIcon, RightArrowIcon } from "@/lib/ui/useable-components/svg";
 
 export default function CustomDrawerContent(
-  props: DrawerContentComponentProps
+  props: DrawerContentComponentProps,
 ) {
   // Context
   const { logout } = useContext(AuthContext);
@@ -47,8 +48,9 @@ export default function CustomDrawerContent(
               onPress={() => props.navigation.navigate(route.name)}
               className="flex-row justify-between items-center px-4 py-3 border-b-[0.5px]"
               style={{
-                backgroundColor:
-                  isFocused ? Colors.light.lowOpacityPrimaryColor : "",
+                backgroundColor: isFocused
+                  ? Colors.light.lowOpacityPrimaryColor
+                  : "",
                 borderColor: Colors.light.borderLineColor,
               }}
             >
@@ -60,13 +62,13 @@ export default function CustomDrawerContent(
                     backgroundColor: Colors.light.sidebarIconBackground,
                   }}
                 >
-                  {options.drawerIcon ?
-                    options.drawerIcon({
-                      color: Colors.light.black,
-                      size: 16,
-                      focused: true,
-                    })
-                  : null}
+                  {options.drawerIcon
+                    ? options.drawerIcon({
+                        color: Colors.light.black,
+                        size: 16,
+                        focused: true,
+                      })
+                    : null}
                 </View>
                 <Text className="text-sm font-semibold">
                   {(options.drawerLabel as string) ?? route.name}

@@ -1,12 +1,15 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+// Core
+import { SafeAreaView } from "react-native-safe-area-context";
+import HelpMain from "../../screen-components/home/help/view/main";
 
-const index = () => {
+//
+
+const HelpScreen = () => {
   return (
-    <View>
-      <Text>help screen</Text>
-    </View>
-  )
-}
+    <SafeAreaView edges={["bottom", "right", "left"]} className="w-full h-full">
+      <HelpMain />
+    </SafeAreaView>
+  );
+};
 
-export default index
+export default HelpScreen;

@@ -14,7 +14,7 @@ export default function StackLayout() {
             : pathname.startsWith("/earnings/earnings-order-details")
               ? "Deliveries"
               : "Earnings",
-          headerBackTitle: "Earnings",
+          headerBackTitle: "",
           contentStyle: {
             backgroundColor: "white",
           },
@@ -29,7 +29,7 @@ export default function StackLayout() {
           options={{
             headerShown: true,
             headerTitle: "Earnings Order Details",
-            headerBackTitle: "Hi there",
+            headerBackTitle: "Earnings",
           }}
         />
         {/* <Stack.Screen
