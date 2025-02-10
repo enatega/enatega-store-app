@@ -7,7 +7,7 @@ import {
   View,
 } from "react-native";
 import FormHeader from "../form-header";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Calendar, DateData } from "react-native-calendars";
 import { UploadIcon } from "@/lib/assets/svg";
 import { CustomContinueButton } from "@/lib/ui/useable-components";
@@ -30,7 +30,7 @@ export default function DrivingLicenseForm({
   setIsFormOpened: Dispatch<SetStateAction<TRiderProfileBottomBarBit>>;
 }) {
   // Contexts
-  const { userId } = useUserContext();
+  const { userId, dataProfile } = useUserContext();
 
   // States
   const [isLoading, setIsLoading] = useState({
@@ -126,6 +126,7 @@ export default function DrivingLicenseForm({
     }
   };
 
+  // Handlers
   const handleInputChange = (name: string, value: string) => {
     setFormData({ ...formData, [name]: value });
   };
@@ -168,6 +169,16 @@ export default function DrivingLicenseForm({
       }));
     }
   };
+
+  useEffect(() => {
+    setFormData({
+      expiryDate: new Date(
+        dataProfile?.licenseDetails?.expiryDate ?? "",
+      ).toDateString(),
+      image: dataProfile?.licenseDetails?.image ?? "",
+      number: String(dataProfile?.licenseDetails?.number ?? ""),
+    });
+  }, []);
   return (
     <View className="w-full">
       {isLoading.isCalendarVisible && (
@@ -238,7 +249,7 @@ export default function DrivingLicenseForm({
               </View>
               <View className="flex flex-col w-full my-2">
                 <Text>Add License Document</Text>
-                {!cloudinaryResponse?.secure_url ? (
+                {!cloudinaryResponse?.secure_url || !formData.image ? (
                   <TouchableOpacity
                     className="w-full rounded-md border border-dashed border-gray-300 p-3 h-28 items-center justify-center"
                     onPress={pickImage}
@@ -256,15 +267,18 @@ export default function DrivingLicenseForm({
                     <View className="flex flex-row gap-2">
                       <Ionicons name="image" size={20} color="#3F51B5" />
                       <Text className="text-[#3F51B5] border-b-2 border-b-[#3F51B5]">
-                        {cloudinaryResponse.original_filename}.
-                        {cloudinaryResponse.format}
+                        {cloudinaryResponse?.original_filename ??
+                          !formData.image}
+                        .{cloudinaryResponse?.format ?? "image"}
                       </Text>
                     </View>
                     <View className="flex flex-row">
-                      <Text>{cloudinaryResponse.bytes / 1000}KB</Text>
+                      <Text>{(cloudinaryResponse.bytes ?? 0) / 1000}KB</Text>
                       <Link
-                        download={cloudinaryResponse.secure_url}
-                        href={cloudinaryResponse.secure_url}
+                        download={
+                          cloudinaryResponse.secure_url ?? formData.image
+                        }
+                        href={cloudinaryResponse.secure_url ?? !formData.image}
                         className="text-[#9CA3AF] text-xs"
                       >
                         <Ionicons size={18} name="download" color="#6B7280" />

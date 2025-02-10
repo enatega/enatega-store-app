@@ -17,13 +17,17 @@ export default function OtherDetailsSection() {
       <View className="flex flex-col gap-3 item-start justify-between w-full  bg-gray-200 h-20 p-4 rounded-md my-4">
         <Text>Password</Text>
         <View className="flex-1 h-12 text-base text-black">
-          <Text>{dataProfile?.password ?? "Password@123"}</Text>
+          <Text className="h-12">
+            {dataProfile?.password ?? "Password@123"}
+          </Text>
         </View>
       </View>
       <View className="flex flex-col gap-3 item-start justify-between w-full  bg-gray-200 h-20 p-4 rounded-md my-4">
         <Text>Phone</Text>
         <View className="flex-1 h-12 text-base text-black">
-          <Text>{dataProfile?.phone ?? "+324 234 328979"}</Text>
+          <Text className="h-12">
+            {dataProfile?.phone ?? "+324 234 328979"}
+          </Text>
         </View>
       </View>
     </View>
