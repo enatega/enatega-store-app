@@ -26,9 +26,6 @@ export default function BankManagementMain() {
 
   // Contexts
   const { userId, dataProfile } = useUserContext();
-  console.log("🚀 ~ BankManagementMain ~ dataProfile:", {
-    bussinessDetails: dataProfile?.bussinessDetails,
-  });
 
   // states
   const [isError, setIsError] = useState({
@@ -59,10 +56,6 @@ export default function BankManagementMain() {
           accountName: "",
           accountNumber: "",
           accountCode: "",
-        });
-        showMessage({
-          message: "Bank details updated successfully",
-          type: "success",
         });
         setIsError({
           field: "",
