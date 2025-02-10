@@ -11,7 +11,7 @@ import {
   RIDER_LOGIN,
 } from "../api/graphql/mutation/login";
 import { Href, router } from "expo-router";
-import { FlashMessageComponent } from "../ui/useable-components/flash-message";
+import { FlashMessageComponent } from "../ui/useable-components";
 import { IRiderLoginCompleteResponse } from "../utils/interfaces/auth.interface";
 import { ROUTES } from "../utils/constants";
 
@@ -51,8 +51,8 @@ const useLogin = () => {
       });
     }
   }
-  function onError(err:ApolloError) {
-    const error = err as ApolloError
+  function onError(err: ApolloError) {
+    const error = err as ApolloError;
     setIsLoading(false);
     FlashMessageComponent({
       message:
@@ -112,7 +112,7 @@ const useLogin = () => {
         await AsyncStorage.setItem("rider-id", data.userId);
       }
     } catch (err) {
-      const error = err as ApolloError
+      const error = err as ApolloError;
       FlashMessageComponent({
         message:
           error?.graphQLErrors[0]?.message ??

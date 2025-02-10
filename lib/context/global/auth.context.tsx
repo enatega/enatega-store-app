@@ -7,9 +7,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IAuthContext, IAuthProviderProps } from "@/lib/utils/interfaces";
 import { RIDER_TOKEN } from "@/lib/utils/constants";
 import { useRouter } from "expo-router";
+import { FlashMessageComponent } from "@/lib/ui/useable-components";
 
 export const AuthContext = React.createContext<IAuthContext>(
-  {} as IAuthContext
+  {} as IAuthContext,
 );
 
 export const AuthProvider: React.FC<IAuthProviderProps> = ({
@@ -38,10 +39,12 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
         client.clearStore();
         await AsyncStorage.removeItem(RIDER_TOKEN);
       }
-
       setToken("");
       router.replace("/login");
     } catch (e) {
+      FlashMessageComponent({
+        message: `Logout failed`,
+      });
       console.log("Logout Error: ", e);
     }
   };
