@@ -8,4 +8,6 @@ const { getSentryExpoConfig } = require("@sentry/react-native/metro");
 // const config = getDefaultConfig(__dirname);
 const config = getSentryExpoConfig(__dirname);
 
+// config.resolver.disableHierarchicalLookup = true;
+
 module.exports = withNativeWind(config, { input: "./global.css" });

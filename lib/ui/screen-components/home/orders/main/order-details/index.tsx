@@ -6,7 +6,6 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
-  Platform,
   Animated,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -16,13 +15,13 @@ import BottomSheet, {
 } from "@gorhom/bottom-sheet";
 import { useContext, useEffect, useRef, useState } from "react";
 import MapViewDirections from "react-native-maps-directions";
-import MapView, { LatLng, Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { LatLng, Marker } from "react-native-maps";
 
 // Methods
 import { linkToMapsApp } from "@/lib/utils/methods";
 
 // Constants
-import { MapStyles } from "@/lib/utils/constants";
+// import { MapStyles } from "@/lib/utils/constants";
 
 // Screen Components
 import ItemDetails from "@/lib/ui/screen-components/home/orders/main/item-details";
@@ -129,9 +128,8 @@ export default function OrderDetailScreen() {
 
   return (
     <>
-      <GestureHandlerRootView>
+      <GestureHandlerRootView className="flex-1">
         <View
-          className="justify-center items-center"
           style={{
             height: height * 0.5,
             backgroundColor: "transparent",
@@ -139,7 +137,7 @@ export default function OrderDetailScreen() {
         >
           {locationPin ? (
             <MapView
-              style={{ height: "100%", width: "100%" }}
+              style={styles.map}
               showsUserLocation
               zoomEnabled={true}
               zoomControlEnabled={true}
@@ -152,8 +150,9 @@ export default function OrderDetailScreen() {
                 // latitudeDelta: 0.05,
                 // longitudeDelta: 0.05,
               }}
-              provider={Platform.OS === "android" ? PROVIDER_GOOGLE : undefined}
-              customMapStyle={MapStyles}
+
+              // provider={Platform.OS === "android" ? PROVIDER_GOOGLE : undefined}
+              // customMapStyle={MapStyles}
             >
               {deliveryAddressPin?.location && (
                 <Marker
@@ -421,39 +420,12 @@ export default function OrderDetailScreen() {
 }
 
 const styles = StyleSheet.create({
+  map: {
+    height: "100%",
+    width: "100%",
+  },
   backgroundStyle: {
+    //zIndex: 0,
     backgroundColor: "transparent", // Change to your desired background color
-  },
-
-  container: {
-    backgroundColor: "white",
-  },
-  iconView: {
-    position: "absolute",
-  },
-  icon: {
-    position: "absolute",
-    backgroundColor: "black",
-    borderRadius: 5,
-    marginLeft: 15,
-    marginTop: 10,
-    overflow: "hidden",
-  },
-  spinner: {
-    display: "flex",
-    alignItems: "center",
-    alignSelf: "center",
-    justifyContent: "center",
-  },
-  loading: {
-    position: "absolute",
-    zIndex: 999,
-    elevation: 999,
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    alignItems: "center",
-    justifyContent: "center",
   },
 });

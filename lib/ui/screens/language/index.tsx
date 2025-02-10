@@ -1,12 +1,12 @@
-import { View } from 'react-native'
-import LanguageMain from '../../screen-components/home/language/view/main'
+import { View } from "react-native";
+import LanguageMain from "../../screen-components/home/language/view/main";
 
 const index = () => {
   return (
     <View>
-      <LanguageMain/>
+      <LanguageMain />
     </View>
-  )
-}
+  );
+};
 
-export default index
+export default index;

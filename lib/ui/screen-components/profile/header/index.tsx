@@ -1,15 +1,15 @@
 // Hooks
-import { useUserContext } from '@/lib/context/global/user.context'
+import { useUserContext } from "@/lib/context/global/user.context";
 
 // Constants
-import { Colors } from '@/lib/utils/constants'
+import { Colors } from "@/lib/utils/constants";
 
 // Core
-import { Text, View } from 'react-native'
+import { Text, View } from "react-native";
 
 export default function ProfileHeader() {
   // Hooks
-  const { dataProfile } = useUserContext()
+  const { dataProfile } = useUserContext();
   return (
     <View className="justify-between flex-row h-[130px] w-[55%] items-center p-4">
       <View
@@ -23,13 +23,13 @@ export default function ProfileHeader() {
           }}
         >
           {dataProfile?.name
-            .split(' ')[0]
+            .split(" ")[0]
             .substring(0, 1)
             .toUpperCase()
             .concat(
-              '',
-              dataProfile?.name.split(' ')[1].substring(0, 1).toUpperCase(),
-            ) ?? 'JS'}
+              "",
+              dataProfile?.name.split(" ")[1].substring(0, 1).toUpperCase(),
+            ) ?? "JS"}
         </Text>
       </View>
       <View>
@@ -39,7 +39,7 @@ export default function ProfileHeader() {
             color: Colors.light.black,
           }}
         >
-          {dataProfile?.name ?? 'rider name'}
+          {dataProfile?.name ?? "rider name"}
         </Text>
         <Text
           className="font-medium"
@@ -47,9 +47,9 @@ export default function ProfileHeader() {
             color: Colors.light.secondaryTextColor,
           }}
         >
-          {dataProfile?._id.substring(0, 9).toUpperCase() ?? 'rider id'}
+          {dataProfile?._id.substring(0, 9).toUpperCase() ?? "rider id"}
         </Text>
       </View>
     </View>
-  )
+  );
 }
