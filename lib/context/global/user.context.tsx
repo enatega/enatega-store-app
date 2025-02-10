@@ -1,39 +1,33 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import {
   requestForegroundPermissionsAsync,
   watchPositionAsync,
   LocationAccuracy,
   LocationSubscription,
-} from 'expo-location'
-import { QueryResult, useQuery } from '@apollo/client'
+} from "expo-location";
+import { QueryResult, useQuery } from "@apollo/client";
 // Interface
 import {
   IRiderProfileResponse,
   IUserContextProps,
   IUserProviderProps,
-} from '@/lib/utils/interfaces'
+} from "@/lib/utils/interfaces";
 // Context
-import { useLocationContext } from './location.context'
+// import { useLocationContext } from "./location.context";
 // API
-import { RIDER_ORDERS, RIDER_PROFILE } from '@/lib/apollo/queries'
-import { UPDATE_LOCATION } from '@/lib/apollo/mutations/rider.mutation'
+import { RIDER_ORDERS, RIDER_PROFILE } from "@/lib/apollo/queries";
+import { UPDATE_LOCATION } from "@/lib/apollo/mutations/rider.mutation";
 import {
   SUBSCRIPTION_ASSIGNED_RIDER,
   SUBSCRIPTION_ZONE_ORDERS,
-} from '@/lib/apollo/subscriptions'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+} from "@/lib/apollo/subscriptions";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   IRiderEarnings,
   IRiderEarningsArray,
-} from '@/lib/utils/interfaces/rider-earnings.interface'
+} from "@/lib/utils/interfaces/rider-earnings.interface";
 
-const UserContext = createContext<IUserContextProps>({} as IUserContextProps)
+const UserContext = createContext<IUserContextProps>({} as IUserContextProps);
 
 export const UserProvider = ({ children }: IUserProviderProps) => {
   // States
@@ -41,23 +35,23 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     IRiderEarnings & { bool: boolean }
   >({
     bool: false,
-    _id: '',
-    date: '',
+    _id: "",
+    date: "",
     earningsArray: [] as IRiderEarningsArray[],
     totalEarningsSum: 0,
     totalTipsSum: 0,
     totalDeliveries: 0,
-  })
+  });
   const [riderOrderEarnings, setRiderOrderEarnings] = useState<
     IRiderEarningsArray[]
-  >([] as IRiderEarningsArray[])
-  const [userId, setUserId] = useState('')
+  >([] as IRiderEarningsArray[]);
+  const [userId, setUserId] = useState("");
 
   // Refs
-  const locationListener = useRef<LocationSubscription>()
+  const locationListener = useRef<LocationSubscription>();
 
   // Context
-  const { locationPermission } = useLocationContext()
+  // const { locationPermission } = useLocationContext()
 
   const {
     loading: loadingProfile,
@@ -65,11 +59,11 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     data: dataProfile,
     refetch: refetchProfile,
   } = useQuery(RIDER_PROFILE, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: "network-only",
     variables: {
       id: userId,
     },
-  }) as QueryResult<IRiderProfileResponse | undefined, { id: string }>
+  }) as QueryResult<IRiderProfileResponse | undefined, { id: string }>;
 
   const {
     client,
@@ -82,17 +76,17 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   } = useQuery(RIDER_ORDERS, {
     // onCompleted,
     // onError: error2,
-    fetchPolicy: 'network-only',
+    fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
-  })
+  });
 
-  let unsubscribeZoneOrder:unknown = null
-  let unsubscribeAssignOrder:unknown = null
+  let unsubscribeZoneOrder: unknown = null;
+  let unsubscribeAssignOrder: unknown = null;
 
   async function getUserId() {
-    const id = await AsyncStorage.getItem('rider-id')
-    if(id){
-      setUserId(id)
+    const id = await AsyncStorage.getItem("rider-id");
+    if (id) {
+      setUserId(id);
     }
   }
 
@@ -102,16 +96,16 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         document: SUBSCRIPTION_ASSIGNED_RIDER,
         variables: { riderId: dataProfile?.rider._id },
         updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData.data) return prev
-          if (subscriptionData.data.subscriptionAssignRider.origin === 'new') {
+          if (!subscriptionData.data) return prev;
+          if (subscriptionData.data.subscriptionAssignRider.origin === "new") {
             return {
               riderOrders: [
                 subscriptionData.data.subscriptionAssignRider.order,
                 ...prev.riderOrders,
               ],
-            }
+            };
           } else if (
-            subscriptionData.data.subscriptionAssignRider.origin === 'remove'
+            subscriptionData.data.subscriptionAssignRider.origin === "remove"
           ) {
             return {
               riderOrders: [
@@ -121,50 +115,50 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
                     subscriptionData.data.subscriptionAssignRider.order._id,
                 ),
               ],
-            }
+            };
           }
-          return prev
+          return prev;
         },
-      })
+      });
       const unsubZoneOrder = subscribeToMore({
         document: SUBSCRIPTION_ZONE_ORDERS,
         variables: { zoneId: dataProfile?.rider?.zone?._id },
         updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData.data) return prev
+          if (!subscriptionData.data) return prev;
 
-          if (subscriptionData.data.subscriptionZoneOrders.origin === 'new') {
+          if (subscriptionData.data.subscriptionZoneOrders.origin === "new") {
             return {
               riderOrders: [
                 subscriptionData.data.subscriptionZoneOrders.order,
                 ...prev.riderOrders,
               ],
-            }
+            };
           }
-          return prev
+          return prev;
         },
-      })
-      return { unsubZoneOrder, unsubAssignOrder }
+      });
+      return { unsubZoneOrder, unsubAssignOrder };
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   // UseEffects
   useEffect(() => {
-    if (!dataProfile) return
+    if (!dataProfile) return;
     {
-      const { unsubZoneOrder, unsubAssignOrder } = subscribeNewOrders()
-      unsubscribeZoneOrder = unsubZoneOrder
-      unsubscribeAssignOrder = unsubAssignOrder
+      const { unsubZoneOrder, unsubAssignOrder } = subscribeNewOrders();
+      unsubscribeZoneOrder = unsubZoneOrder;
+      unsubscribeAssignOrder = unsubAssignOrder;
     }
     return () => {
       if (unsubscribeZoneOrder) {
-        unsubscribeZoneOrder()
+        unsubscribeZoneOrder();
       }
 
-      if (unsubscribeAssignOrder) unsubscribeAssignOrder()
-    }
-  }, [dataProfile])
+      if (unsubscribeAssignOrder) unsubscribeAssignOrder();
+    };
+  }, [dataProfile]);
 
   const trackRiderLocation = async () => {
     locationListener.current = await watchPositionAsync(
@@ -176,25 +170,25 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
             latitude: location.coords.latitude.toString(),
             longitude: location.coords.longitude.toString(),
           },
-        })
+        });
       },
-    )
-  }
+    );
+  };
   useEffect(() => {
-    trackRiderLocation()
+    trackRiderLocation();
     return () => {
       if (locationListener.current) {
-        locationListener?.current?.remove()
+        locationListener?.current?.remove();
       }
-    }
-  }, [])
+    };
+  }, []);
 
   useEffect(() => {
-    getUserId()
-    refetchProfile({ id: userId })
-  }, [])
-/*Why is this duplicated? */
-  // useEffect(() => {  
+    getUserId();
+    refetchProfile({ id: userId });
+  }, []);
+  /*Why is this duplicated? */
+  // useEffect(() => {
   //   const trackRiderLocation = async () => {
   //     locationListener.current = await watchPositionAsync(
   //       { accuracy: LocationAccuracy.BestForNavigation, timeInterval: 10000 },
@@ -239,8 +233,8 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     >
       {children}
     </UserContext.Provider>
-  )
-}
-export const UserConsumer = UserContext.Consumer
-export const useUserContext = () => useContext(UserContext)
-export default UserContext
+  );
+};
+export const UserConsumer = UserContext.Consumer;
+export const useUserContext = () => useContext(UserContext);
+export default UserContext;

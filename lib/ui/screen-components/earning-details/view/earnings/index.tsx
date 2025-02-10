@@ -1,13 +1,13 @@
 // Core
-import { ScrollView, Text } from 'react-native'
+import { ScrollView, Text } from "react-native";
 
 // Interfaces
-import { IRiderEarnings } from '@/lib/utils/interfaces/rider-earnings.interface'
-import { IRiderEarningsDetailProps } from '@/lib/utils/interfaces/earning.interface'
+import { IRiderEarnings } from "@/lib/utils/interfaces/rider-earnings.interface";
+import { IRiderEarningsDetailProps } from "@/lib/utils/interfaces/earning.interface";
 
 // Components
-import EarningStack from '../../../earnings/view/earnings-stack'
-import NoRecordFound from '@/lib/ui/useable-components/no-record-found'
+import EarningStack from "../../../earnings/view/earnings-stack";
+import NoRecordFound from "@/lib/ui/useable-components/no-record-found";
 
 export default function EarningsDetailStacks({
   riderEarningsData,
@@ -36,5 +36,5 @@ export default function EarningsDetailStacks({
           ),
         )}
     </ScrollView>
-  )
+  );
 }

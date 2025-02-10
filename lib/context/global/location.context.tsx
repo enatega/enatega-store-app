@@ -21,7 +21,9 @@ export const LocationProvider = ({ children }: ILocationProviderProps) => {
     if (status === "granted") {
       setLocationPermission(true);
     }
-    const currentLocation = await Location.getCurrentPositionAsync({});
+    const currentLocation = await Location.getCurrentPositionAsync({
+      accuracy: Location.Accuracy.BestForNavigation,
+    });
     if (currentLocation) {
       setLocation(currentLocation.coords as unknown as ICoodinates);
     }

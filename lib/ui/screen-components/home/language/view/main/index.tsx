@@ -2,21 +2,21 @@
 import {
   CustomContinueButton,
   CustomRadioButton,
-} from '@/lib/ui/useable-components'
-import { LANGUAGES } from '@/lib/utils/constants'
-import { changeLanguage } from 'i18next'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
+} from "@/lib/ui/useable-components";
+import { LANGUAGES } from "@/lib/utils/constants";
+import { changeLanguage } from "i18next";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 // Core
-import { Image, Text, View } from 'react-native'
+import { Image, Text, View } from "react-native";
 
 export default function LanguageMain() {
   // States
-  const [isSelected, setIsSelected] = useState('')
-  
+  const [isSelected, setIsSelected] = useState("");
+
   // Hooks
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   return (
     <View className="h-[85%] w-[90%] items-center justify-between mx-auto  p-4">
@@ -43,21 +43,21 @@ export default function LanguageMain() {
                 isSelected={lng.code === isSelected}
                 showLabel={false}
                 onPress={() => {
-                  setIsSelected(lng.code)
+                  setIsSelected(lng.code);
                 }}
               />
             </View>
           </View>
-        )
+        );
       })}
       <View>
         <CustomContinueButton
-          title={t('Update Language')}
+          title={t("Update Language")}
           onPress={() => {
-            changeLanguage(isSelected)
+            changeLanguage(isSelected);
           }}
         />
       </View>
     </View>
-  )
+  );
 }
