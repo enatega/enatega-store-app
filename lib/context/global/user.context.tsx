@@ -1,21 +1,19 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import {
   requestForegroundPermissionsAsync,
   watchPositionAsync,
   LocationAccuracy,
   LocationSubscription,
 } from "expo-location";
-import { useQuery } from "@apollo/client";
+import { QueryResult, useQuery } from "@apollo/client";
 // Interface
-import { IUserContextProps, IUserProviderProps } from "@/lib/utils/interfaces";
+import {
+  IRiderProfileResponse,
+  IUserContextProps,
+  IUserProviderProps,
+} from "@/lib/utils/interfaces";
 // Context
-import { useLocationContext } from "./location.context";
+// import { useLocationContext } from "./location.context";
 // API
 import { RIDER_ORDERS, RIDER_PROFILE } from "@/lib/apollo/queries";
 import { UPDATE_LOCATION } from "@/lib/apollo/mutations/rider.mutation";
@@ -53,21 +51,19 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   const locationListener = useRef<LocationSubscription>();
 
   // Context
-  const { locationPermission } = useLocationContext();
+  // const { locationPermission } = useLocationContext()
 
   const {
     loading: loadingProfile,
     error: errorProfile,
     data: dataProfile,
+    refetch: refetchProfile,
   } = useQuery(RIDER_PROFILE, {
     fetchPolicy: "network-only",
-    // onCompleted,
-    // pollInterval: 10000,
-    // onError: error1
     variables: {
       id: userId,
     },
-  });
+  }) as QueryResult<IRiderProfileResponse | undefined, { id: string }>;
 
   const {
     client,
@@ -82,22 +78,23 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     // onError: error2,
     fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
-    // pollInterval: 15000
   });
 
-  let unsubscribeZoneOrder = null;
-  let unsubscribeAssignOrder = null;
+  let unsubscribeZoneOrder: unknown = null;
+  let unsubscribeAssignOrder: unknown = null;
 
   async function getUserId() {
     const id = await AsyncStorage.getItem("rider-id");
-    setUserId(id);
+    if (id) {
+      setUserId(id);
+    }
   }
 
   const subscribeNewOrders = () => {
     try {
       const unsubAssignOrder = subscribeToMore({
         document: SUBSCRIPTION_ASSIGNED_RIDER,
-        variables: { riderId: dataProfile.rider._id },
+        variables: { riderId: dataProfile?.rider._id },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) return prev;
           if (subscriptionData.data.subscriptionAssignRider.origin === "new") {
@@ -115,7 +112,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
                 ...prev.riderOrders.filter(
                   (o) =>
                     o._id !==
-                    subscriptionData.data.subscriptionAssignRider.order._id
+                    subscriptionData.data.subscriptionAssignRider.order._id,
                 ),
               ],
             };
@@ -125,7 +122,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
       });
       const unsubZoneOrder = subscribeToMore({
         document: SUBSCRIPTION_ZONE_ORDERS,
-        variables: { zoneId: dataProfile.rider.zone._id },
+        variables: { zoneId: dataProfile?.rider?.zone?._id },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) return prev;
 
@@ -146,7 +143,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     }
   };
 
-  // Use Effect
+  // UseEffects
   useEffect(() => {
     if (!dataProfile) return;
     {
@@ -163,54 +160,56 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     };
   }, [dataProfile]);
 
+  const trackRiderLocation = async () => {
+    locationListener.current = await watchPositionAsync(
+      { accuracy: LocationAccuracy.BestForNavigation, timeInterval: 10000 },
+      async (location) => {
+        client.mutate({
+          mutation: UPDATE_LOCATION,
+          variables: {
+            latitude: location.coords.latitude.toString(),
+            longitude: location.coords.longitude.toString(),
+          },
+        });
+      },
+    );
+  };
   useEffect(() => {
-    const trackRiderLocation = async () => {
-      locationListener.current = await watchPositionAsync(
-        { accuracy: LocationAccuracy.BestForNavigation, timeInterval: 10000 },
-        async (location) => {
-          client.mutate({
-            mutation: UPDATE_LOCATION,
-            variables: {
-              latitude: location.coords.latitude.toString(),
-              longitude: location.coords.longitude.toString(),
-            },
-          });
-        }
-      );
-    };
     trackRiderLocation();
     return () => {
       if (locationListener.current) {
         locationListener?.current?.remove();
       }
     };
-  }, [locationPermission]);
-  useEffect(() => {
-    getUserId();
   }, []);
 
   useEffect(() => {
-    const trackRiderLocation = async () => {
-      locationListener.current = await watchPositionAsync(
-        { accuracy: LocationAccuracy.BestForNavigation, timeInterval: 10000 },
-        async (location) => {
-          client.mutate({
-            mutation: UPDATE_LOCATION,
-            variables: {
-              latitude: location.coords.latitude.toString(),
-              longitude: location.coords.longitude.toString(),
-            },
-          });
-        }
-      );
-    };
-    trackRiderLocation();
-    return () => {
-      if (locationListener.current) {
-        locationListener.current.remove();
-      }
-    };
-  }, [locationPermission]);
+    getUserId();
+    refetchProfile({ id: userId });
+  }, []);
+  /*Why is this duplicated? */
+  // useEffect(() => {
+  //   const trackRiderLocation = async () => {
+  //     locationListener.current = await watchPositionAsync(
+  //       { accuracy: LocationAccuracy.BestForNavigation, timeInterval: 10000 },
+  //       async (location) => {
+  //         client.mutate({
+  //           mutation: UPDATE_LOCATION,
+  //           variables: {
+  //             latitude: location.coords.latitude.toString(),
+  //             longitude: location.coords.longitude.toString(),
+  //           },
+  //         })
+  //       },
+  //     )
+  //   }
+  //   trackRiderLocation()
+  //   return () => {
+  //     if (locationListener.current) {
+  //       locationListener.current.remove()
+  //     }
+  //   }
+  // }, [])
 
   return (
     <UserContext.Provider
@@ -222,7 +221,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         userId,
         loadingProfile,
         errorProfile,
-        dataProfile,
+        dataProfile: dataProfile?.rider ?? null,
         loadingAssigned,
         errorAssigned,
         assignedOrders:

@@ -14,29 +14,29 @@ export default function StackLayout() {
             : pathname.startsWith("/earnings/earnings-order-details")
               ? "Deliveries"
               : "Earnings",
-          headerBackTitle: "Earnings",
+          headerBackTitle: "",
           contentStyle: {
             backgroundColor: "white",
           },
         }}
       >
         <Stack.Screen
-          name="/index"
+          name="index"
           options={{ headerShown: true, headerTitle: "Earnings Order Details" }}
         />
         <Stack.Screen
-          name="/(routes)/earnings-order-details"
+          name="(routes)"
           options={{
             headerShown: true,
             headerTitle: "Earnings Order Details",
-            headerBackTitle: "Hi there",
+            headerBackTitle: "Earnings",
           }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="/(routes)/earnings-details"
           options={{ headerShown: true, headerTitle: "Earning Details" }}
-        />
-      </Stack>
+        />*/}
+      </Stack> 
       <EarningBottomBar
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}

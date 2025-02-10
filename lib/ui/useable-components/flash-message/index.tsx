@@ -1,7 +1,9 @@
 import { showMessage } from "react-native-flash-message";
 import { IFlashMessageComponentProps } from "@/lib/utils/interfaces/flash-message.interface";
 
-export const FlashMessageComponent = (props: IFlashMessageComponentProps) => {
+export default function FlashMessageComponent(
+  props: IFlashMessageComponentProps,
+) {
   showMessage({
     message: props.message,
     backgroundColor: "rgba(52, 52, 52, .9)", // Dark semi-transparent background
@@ -11,4 +13,4 @@ export const FlashMessageComponent = (props: IFlashMessageComponentProps) => {
       minHeight: 50,
     },
   });
-};
+}

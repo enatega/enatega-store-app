@@ -4,6 +4,12 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { Colors } from "@/lib/utils/constants";
 import CustomSwitch from "@/lib/ui/useable-components/switch-button";
+import { useUserContext } from "@/lib/context/global/user.context";
+import { UPDATE_AVAILABILITY } from "@/lib/apollo/mutations/rider.mutation";
+import { MutationTuple, useMutation } from "@apollo/client";
+import { RIDER_PROFILE } from "@/lib/apollo/queries";
+import { showMessage } from "react-native-flash-message";
+import { IRiderProfile } from "@/lib/utils/interfaces";
 
 const CustomDrawerHeader = () => {
   // States
@@ -11,12 +17,30 @@ const CustomDrawerHeader = () => {
 
   // Hook
   const { t } = useTranslation();
+  const { dataProfile, userId } = useUserContext();
 
+  // Queries
+  const [toggleAvailablity, { loading }] = useMutation(UPDATE_AVAILABILITY, {
+    refetchQueries: [{ query: RIDER_PROFILE, variables: { id: userId } }],
+    onCompleted: () => {
+      if (dataProfile?.available) {
+        setIsEnabled(dataProfile?.available);
+      }
+    },
+    onError: (error) => {
+      showMessage({
+        message:
+          error.graphQLErrors[0].message ||
+          error?.networkError?.message ||
+          t("Unable to update availability"),
+      });
+    },
+  }) as MutationTuple<IRiderProfile | undefined, { id: string }>;
   return (
     <View className="w-full h-[130px] flex-row justify-between p-4">
       <View className="justify-between">
         <View
-          className="w-[54px] h-[54px] rounded-full items-center justify-center"
+          className="w-[54px] h-[54px] rounded-full items-center justify-center overflow-hidden"
           style={{ backgroundColor: Colors.light.white }}
         >
           <Text
@@ -25,7 +49,14 @@ const CustomDrawerHeader = () => {
               color: Colors.light.primary,
             }}
           >
-            JS
+            {dataProfile?.name
+              .split(" ")[0]
+              .substring(0, 1)
+              .toUpperCase()
+              .concat(
+                "",
+                dataProfile?.name.split(" ")[1].substring(0, 1).toUpperCase(),
+              ) ?? "JS"}
           </Text>
         </View>
         <View>
@@ -35,7 +66,7 @@ const CustomDrawerHeader = () => {
               color: Colors.light.black,
             }}
           >
-            rider name
+            {dataProfile?.name ?? "rider name"}
           </Text>
           <Text
             className="font-medium"
@@ -43,26 +74,27 @@ const CustomDrawerHeader = () => {
               color: Colors.light.secondaryTextColor,
             }}
           >
-            rider id
+            {dataProfile?._id.substring(0, 9).toUpperCase() ?? "rider id"}
           </Text>
         </View>
       </View>
 
-      <View className="items-end justify-end">
+      <View className="items-end justify-end gap-2">
         <Text
-          className="text-sm font-medium"
+          className="text-md"
           style={{ color: Colors.light.secondaryTextColor }}
         >
-          Availibility
+          Availability
         </Text>
         <CustomSwitch
-          value={isEnabled}
-          onToggle={() => {
-            setIsEnabled(!isEnabled);
-          }}
+          value={dataProfile?.available ?? isEnabled}
+          isDisabled={loading}
+          onToggle={async () =>
+            await toggleAvailablity({ variables: { id: userId ?? "" } })
+          }
         />
         <Text
-          className="text-sm font-medium"
+          className="text-xs font-medium"
           style={{ color: Colors.light.secondaryTextColor }}
         >
           {isEnabled ? t("available") : t("notAvailable")}

@@ -16,11 +16,18 @@ import { Colors } from "@/lib/utils/constants/colors";
 // Hooks
 import { useColorScheme } from "@/lib/hooks/useColorScheme";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const RootLayout = () => {
+
+  // States
   const [tabKey, setTabKey] = useState(1);
+
+  // Hooks
   const colorScheme = useColorScheme();
   const pathName = usePathname();
+  const {t} = useTranslation();
+
   useEffect(() => {
     if (pathName.startsWith("/wallet/success")) {
       setTabKey((prev) => prev + 1); // Force a re-render of the tab bar
@@ -65,7 +72,7 @@ const RootLayout = () => {
       <Tabs.Screen
         name="home"
         options={{
-          title: "Home",
+          title: t("Home"),
           tabBarIcon: ({ color }) => (
             // <IconSymbol size={28} name="home" color={color} />
             <HomeIcon color={color} width={25} height={25} />
@@ -75,7 +82,7 @@ const RootLayout = () => {
       <Tabs.Screen
         name="wallet"
         options={{
-          title: "Wallet",
+          title: t("Wallet"),
           tabBarIcon: ({ color }) => (
             <WalletIcon color={color} width={25} height={25} />
           ),
@@ -84,7 +91,7 @@ const RootLayout = () => {
       <Tabs.Screen
         name="earnings"
         options={{
-          title: "Earnings",
+          title: t("Earnings"),
           tabBarIcon: ({ color }) => (
             <CurrencyIcon color={color} width={25} height={25} />
           ),
@@ -93,7 +100,8 @@ const RootLayout = () => {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
+          title: t("Profile"),
+          headerShown:false,
           tabBarIcon: ({ color }) => (
             <PersonIcon color={color} width={25} height={25} />
           ),

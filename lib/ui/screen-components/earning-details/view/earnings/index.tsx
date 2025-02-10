@@ -1,5 +1,5 @@
 // Core
-import { ScrollView } from "react-native";
+import { ScrollView, Text } from "react-native";
 
 // Interfaces
 import { IRiderEarnings } from "@/lib/utils/interfaces/rider-earnings.interface";
@@ -16,8 +16,10 @@ export default function EarningsDetailStacks({
 }: IRiderEarningsDetailProps) {
   return (
     <ScrollView className="h-full border-t-2 border-t-gray-200 bg-white">
-      {riderEarningsData?.riderEarningsGraph?.earnings?.length === 0 &&
-        !isRiderEarningsLoading && <NoRecordFound />}
+      <Text>
+        {riderEarningsData?.riderEarningsGraph?.earnings?.length === 0 &&
+          !isRiderEarningsLoading && <NoRecordFound />}
+      </Text>
       {riderEarningsData?.riderEarningsGraph?.earnings?.length &&
         riderEarningsData?.riderEarningsGraph?.earnings?.map(
           (earning: IRiderEarnings, index) => (

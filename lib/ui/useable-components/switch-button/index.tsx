@@ -1,23 +1,23 @@
-import React from "react";
 import { View, Switch, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Colors } from "@/lib/utils/constants";
+import { CustomSwitchProps } from "@/lib/utils/interfaces/custom-input-switch";
 
-interface CustomSwitchProps {
-  value: boolean;
-  onToggle: (val: boolean) => void;
-}
-
-const CustomSwitch: React.FC<CustomSwitchProps> = ({ value, onToggle }) => {
+const CustomSwitch = ({ value, onToggle, isDisabled }: CustomSwitchProps) => {
   return (
     <TouchableOpacity
-      className="flex-row items-center"
+      disabled={isDisabled}
+      className={`flex-row items-center ${isDisabled && "opacity-35"}`}
       onPress={() => onToggle(!value)}
       activeOpacity={0.8}
     >
       <View
         className="w-16 h-8 rounded-full flex-row items-center px-1"
-        style={{ backgroundColor: value ? Colors.light.switchButtonColor : Colors.light.secondaryTextColor}}
+        style={{
+          backgroundColor: value
+            ? Colors.light.switchButtonColor
+            : Colors.light.secondaryTextColor,
+        }}
       >
         {value ? (
           <View className="ml-auto mr-[1px] bg-white rounded-full h-[20px] w-[20px]">

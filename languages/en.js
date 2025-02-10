@@ -211,5 +211,31 @@ export const en = {
   amountReq: 'Amount is required!',
   CustomerPhoneNumber: 'Customer phone number',
   CustomerName: 'Customer Name',
-  continue: 'Continue'
+  continue: 'Continue',
+  Wallet: "Wallet",
+  Home: "Home",
+  Earnings: "Earnings",
+  Profile: "Profile",
+  faq1: 'How do I place an order? ',
+  faq1Description:
+    "To place an order, simply browse through our menu, select the items you'd like to order, and proceed to checkout. You can choose your preferred payment method and delivery address before confirming your order.",
+  faq2: 'What are the delivery charges?',
+  faq2Description:
+    "Delivery charges vary depending on your location and the restaurant you're ordering from. You can view the delivery charges applicable to your order before finalizing it during the checkout process.",
+  faq3: 'Can I track my order?',
+  faq3Description:
+    "Yes, you can track your order in real-time from the moment it's confirmed to when it's out for delivery. You'll receive updates on the status of your order through notifications on the app.",
+  faq4: 'How long does delivery take?',
+  faq4Description:
+    "Delivery times may vary depending on factors such as the restaurant's preparation time, traffic conditions, and your location. However, we strive to deliver your order within a reasonable timeframe, typically ranging from 30 to 60 minutes.",
+  faq5: "Can I cancel my order after it's been placed?",
+  faq5Description:
+    'Yes you can cancel your order once it is placed. However, once the order has been prepared and sent out for delivery, you can no longer cancel the order. You may contact the restaurant directly for assistance.',
+  faq6: 'How can I provide feedback on my experience?',
+  faq6Description:
+    'You can provide feedback through the app by rating your order and leaving comments. You can also give a rating to the restaurant and leave a review.',
+  faq7: 'Can I order from multiple places at the same time?',
+  faq7Description:
+    'Unfortunately, you can’t choose from multiple restaurants within the same order. However, you can place separate orders from different restaurants at the same time.',
+
 }

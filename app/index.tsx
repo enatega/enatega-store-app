@@ -11,6 +11,7 @@ import { RIDER_ORDERS } from "@/lib/apollo/queries";
 import { RIDER_TOKEN, ROUTES } from "@/lib/utils/constants";
 // Service
 import setupApollo from "@/lib/apollo";
+import { IOrder } from "@/lib/utils/interfaces/order.interface";
 
 function App() {
   const client = setupApollo();
@@ -18,44 +19,43 @@ function App() {
   const { locationPermission } = useLocationContext();
   // Handler
   const init = async () => {
-    const token = await AsyncStorage.getItem(RIDER_TOKEN);
+    const token = await AsyncStorage.getItem(RIDER_TOKEN)
     if (token) {
       if (!locationPermission) {
-        router.navigate(ROUTES.location as Href);
-        return;
+        router.navigate(ROUTES.location as Href)
+        return
       }
 
-      router.navigate(ROUTES.home as Href);
-      return;
+      router.navigate(ROUTES.home as Href)
+      return
     }
-    router.navigate(ROUTES.login as Href);
-  };
+    router.navigate(ROUTES.login as Href)
+  }
 
   // Notification Handler
   const registerForPushNotification = async () => {
-    const { status: existingStatus } =
-      await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
+    const { status: existingStatus } = await Notifications.getPermissionsAsync()
+    let finalStatus = existingStatus
 
-    if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync()
+      finalStatus = status
     }
 
-    if (finalStatus === "granted") {
+    if (finalStatus === 'granted') {
       Notifications.setNotificationHandler({
         handleNotification: async () => {
           return {
             shouldShowAlert: false, // Prevent the app from closing
             shouldPlaySound: false,
             shouldSetBadge: false,
-          };
+          }
         },
-      });
+      })
     }
-  };
+  }
 
-  const handleNotification = useCallback(async (response) => {
+  const handleNotification = useCallback(async (response:Notifications.NotificationResponse) => {
     if (
       response &&
       response.notification &&
@@ -63,46 +63,44 @@ function App() {
       response.notification.request.content &&
       response.notification.request.content.data
     ) {
-      const { _id } = response.notification.request.content.data;
+      const { _id } = response.notification.request.content.data
       const { data } = await client.query({
         query: RIDER_ORDERS,
-        fetchPolicy: "network-only",
-      });
-      const order = data.riderOrders.find((o) => o._id === _id);
+        fetchPolicy: 'network-only',
+      })
+      const order = data.riderOrders.find((o:IOrder) => o._id === _id)
       const lastNotificationHandledId = await AsyncStorage.getItem(
-        "@lastNotificationHandledId"
-      );
-      if (lastNotificationHandledId === _id) return;
-      await AsyncStorage.setItem("@lastNotificationHandledId", _id);
-      navigationService.navigate("OrderDetail", {
-        itemId: _id,
-        order,
-      });
+        '@lastNotificationHandledId',
+      )
+      if (lastNotificationHandledId === _id) return
+      await AsyncStorage.setItem('@lastNotificationHandledId', _id)
+      router.navigate('/order-detail')
+      router.setParams({ itemId: _id, order })
     }
-  }, []);
+  }, [])
 
   // Use Effect
   useEffect(() => {
     const subscription =
-      Notifications.addNotificationResponseReceivedListener(handleNotification);
+      Notifications.addNotificationResponseReceivedListener(handleNotification)
 
-    return () => subscription.remove();
-  }, [handleNotification]);
+    return () => subscription.remove()
+  }, [handleNotification])
 
   useEffect(() => {
-    registerForPushNotification();
+    registerForPushNotification()
 
     // Register a notification handler that will be called when a notification is received.
     Notifications.setNotificationHandler({
-      handleNotification: async (notification) => {
+      handleNotification: async () => {
         return {
           shouldShowAlert: false, // Prevent the app from closing
           shouldPlaySound: false,
           shouldSetBadge: false,
-        };
+        }
       },
-    });
-  }, []);
+    })
+  }, [])
 
   useEffect(() => {
     init();
@@ -110,7 +108,7 @@ function App() {
 
   // return <Redirect href="/(tabs)/home/orders" />;
   // return <Redirect href="/login" />;
-  return <></>;
+  return <></>
 }
 
 export default App;

@@ -22,7 +22,6 @@ import { SignInSchema } from "@/lib/utils/schema";
 import useLogin from "@/lib/hooks/useLogin";
 // Interface
 import { ILoginInitialValues } from "@/lib/utils/interfaces";
-
 // const { height } = Dimensions.get("window")
 
 const initial: ILoginInitialValues = {

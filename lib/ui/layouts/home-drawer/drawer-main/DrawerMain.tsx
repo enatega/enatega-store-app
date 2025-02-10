@@ -16,6 +16,7 @@ export default function DrawerMain() {
   return (
     <Drawer
       drawerContent={CustomDrawerContent}
+      initialRouteName="orders"
       screenOptions={{
         drawerHideStatusBarOnOpen: true,
         drawerActiveBackgroundColor: Colors.light.lowOpacityPrimaryColor,
@@ -109,7 +110,7 @@ export default function DrawerMain() {
           ),
         }}
       />
-      <Drawer initialRouteName="/home/orders" />
+      {/* <Drawer /> */}
     </Drawer>
   );
 }

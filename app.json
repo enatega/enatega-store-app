@@ -29,6 +29,12 @@
           "project": "enatega-rider-app",
           "url": "https://sentry.io/"
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos for license, vehicle plate and profile image. Please allow these to continue using the app."
+        }
       ]
     ],
     "platforms": ["ios", "android"],
