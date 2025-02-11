@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "Enatega Multivendor Rider",
+    "name": "Enatega Multivendor Restaurant",
+    "slug": "enatega-multivendor-restaurant",
     "description": "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
-    "version": "1.1.30",
-    "slug": "food-delivery-rider-multivendor",
+    "version": "1.1.37",
     "orientation": "portrait",
     "icon": "./lib/assets/images/icon.png",
     "assetBundlePatterns": ["**/*"],
@@ -39,26 +39,18 @@
     "platforms": ["ios", "android"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.enatega.multirider",
-      "config": {
-        "googleMapsApiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
-      },
+      "bundleIdentifier": "multivendor.enatega.restaurant",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "$(PRODUCT_NAME) uses your location for features like finding orders nearby and tracking customer orders!",
-        "UIBackgroundModes": ["location", "fetch", "remote-notification"],
+        "UIBackgroundModes": ["remote-notification"],
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
-      "versionCode": 38,
+      "versionCode": 44,
       "googleServicesFile": "./google-services.json",
       "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
-        }
-      },
-      "package": "com.enatega.multirider",
+      "package": "multivendor.enatega.restaurant",
       "adaptiveIcon": {
         "foregroundImage": "./lib/assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -66,7 +58,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "9144a7fc-b205-464a-8fb6-64eb66fc8743"
+        "projectId": "6a94161f-f21b-4ad9-8a04-c95b54ef0116"
       }
     },
     "experiments": {
