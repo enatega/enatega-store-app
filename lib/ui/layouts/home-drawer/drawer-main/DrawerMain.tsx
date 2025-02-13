@@ -28,6 +28,9 @@ export default function DrawerMain() {
           borderRadius: 0,
           marginTop: 4,
         },
+        drawerStyle: {
+          zIndex: 9999999,
+        },
       }}
     >
       <Drawer.Screen
@@ -110,7 +113,6 @@ export default function DrawerMain() {
           ),
         }}
       />
-      {/* <Drawer /> */}
     </Drawer>
   );
 }

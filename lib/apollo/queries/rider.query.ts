@@ -17,15 +17,15 @@ export const RIDER_BY_ID = gql`
   }
 `
 
-export const RIDER_EARNINGS = gql`
-  query RiderEarnings {
+export const STORE_EARNINGS = gql`
+  query StoreEarnings {
     earnings {
       data {
         grandTotalEarnings {
-          riderTotal
+          restaurantTotal
         }
         earnings {
-          riderEarnings {
+          restaurantEarnings {
             deliveryFee
             tip
             totalEarnings
@@ -36,7 +36,7 @@ export const RIDER_EARNINGS = gql`
   }
 `
 
-export const RIDER_TRANSACTIONS_HISTORY = gql`
+export const STORE_TRANSACTIONS_HISTORY = gql`
   query TransactionHistory($userType: UserTypeEnum, $userId: String) {
     transactionHistory(userType: $userType, userId: $userId) {
       data {
@@ -48,9 +48,9 @@ export const RIDER_TRANSACTIONS_HISTORY = gql`
   }
 `
 
-export const RIDER_CURRENT_WITHDRAW_REQUEST = gql`
-  query RiderCurrentWithdrawRequest($riderId: String) {
-    riderCurrentWithdrawRequest(riderId: $riderId) {
+export const STORE_CURRENT_WITHDRAW_REQUEST = gql`
+  query RiderCurrentWithdrawRequest($storeId: String) {
+    riderCurrentWithdrawRequest(storeId: $storeId) {
       _id
       requestAmount
       status
@@ -60,37 +60,36 @@ export const RIDER_CURRENT_WITHDRAW_REQUEST = gql`
 `
 
 export const STORE_PROFILE = gql`
-  query Restaurant($id: String) {
-    restaurant(id: $id) {
-      _id
-      orderId
-      orderPrefix
-      name
-      image
-      address
-      location {
-        coordinates
-      }
-      deliveryTime
-      username
-      isAvailable
-      notificationToken
-      enableNotification
-      bussinessDetails {
-        bankName
-        accountNumber
-        accountName
-        accountCode
-      }
-      openingTimes {
-        day
-        times {
-          startTime
-          endTime
-        }
-      }
+  query Restaurant($restaurantId: String) {
+  restaurant(id: $restaurantId) {
+    _id
+    unique_restaurant_id
+    orderId
+    orderPrefix
+    name
+    image
+    logo
+    address
+    username
+    password
+    minimumOrder
+    isActive
+    isAvailable
+    slug
+    commissionRate
+    tax
+    notificationToken
+    enableNotification
+    shopType
+    phone
+    bussinessDetails {
+      bankName
+      accountNumber
+      accountName
+      accountCode
     }
   }
+}
 `
 
 export const rider = gql`

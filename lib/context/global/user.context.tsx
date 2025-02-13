@@ -51,9 +51,12 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   } = useQuery(STORE_PROFILE, {
     fetchPolicy: "network-only",
     variables: {
-      id: userId,
+      restaurantId: userId,
     },
-  }) as QueryResult<IStoreProfileResponse | undefined, { id: string }>;
+  }) as QueryResult<
+    IStoreProfileResponse | undefined,
+    { restaurantId: string }
+  >;
 
   const {
     // client,
@@ -175,8 +178,10 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
 
   useEffect(() => {
     getUserId();
-    refetchProfile({ id: userId });
-  }, []);
+    if (userId) {
+      refetchProfile({ restaurantId: userId });
+    }
+  }, [userId]);
   /*Why is this duplicated? */
   // useEffect(() => {
   //   const trackRiderLocation = async () => {

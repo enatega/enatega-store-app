@@ -70,6 +70,7 @@ export interface IStoreProfile {
   shopType: string
   tags: string
   phone: string
+  available: boolean
   bussinessDetails: {
     bankName: string
     accountNumber: string

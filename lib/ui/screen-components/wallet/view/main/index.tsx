@@ -23,9 +23,9 @@ import { useUserContext } from "@/lib/context/global/user.context";
 import { CREATE_WITHDRAW_REQUEST } from "@/lib/apollo/mutations/withdraw-request.mutation";
 import {
   RIDER_BY_ID,
-  RIDER_CURRENT_WITHDRAW_REQUEST,
-  RIDER_EARNINGS,
-  RIDER_TRANSACTIONS_HISTORY,
+  STORE_CURRENT_WITHDRAW_REQUEST,
+  STORE_EARNINGS,
+  STORE_TRANSACTIONS_HISTORY,
 } from "@/lib/apollo/queries";
 import { GraphQLError } from "graphql";
 
@@ -47,20 +47,20 @@ export default function WalletMain() {
 
   // Queries
   const { fetch: fetchRiderEarnings, loading: isRiderEarningsLoading } =
-    useLazyQueryQL(RIDER_EARNINGS) as ILazyQueryResult<
+    useLazyQueryQL(STORE_EARNINGS) as ILazyQueryResult<
       IRiderEarningsResponse | undefined,
       undefined
     >;
 
   const {
-    data: riderTransactionData,
+    data: storeTransactionData,
     fetch: fetchRiderTransactions,
     loading: isRiderTransactionLoading,
   } = useLazyQueryQL(
-    RIDER_TRANSACTIONS_HISTORY,
+    STORE_TRANSACTIONS_HISTORY,
     {},
     {
-      userType: "RIDER",
+      userType: "RESTAURANT",
       userId: userId,
     },
   ) as ILazyQueryResult<
@@ -83,11 +83,11 @@ export default function WalletMain() {
   ) as ILazyQueryResult<IRiderByIdResponse | undefined, { id: string }>;
 
   const {
-    data: riderCurrentWithdrawRequestData,
+    data: storeCurrentWithdrawRequestData,
     fetch: fetchRiderCurrentWithdrawRequest,
     loading: isRiderCurrentWithdrawRequestLoading,
   } = useLazyQueryQL(
-    RIDER_CURRENT_WITHDRAW_REQUEST,
+    STORE_CURRENT_WITHDRAW_REQUEST,
     {},
     { riderId: userId },
   ) as ILazyQueryResult<
@@ -96,7 +96,7 @@ export default function WalletMain() {
       riderId: string;
     }
   >;
-
+  console.log(storeTransactionData, storeCurrentWithdrawRequestData);
   // Mutaions
   const [createWithDrawRequest, { loading: createWithDrawRequestLoading }] =
     useMutation(CREATE_WITHDRAW_REQUEST, {
@@ -127,7 +127,7 @@ export default function WalletMain() {
       },
       refetchQueries: [
         { query: RIDER_BY_ID, variables: { id: userId } },
-        { query: RIDER_EARNINGS, variables: { id: userId } },
+        { query: STORE_EARNINGS, variables: { id: userId } },
       ],
     });
 
@@ -196,9 +196,9 @@ export default function WalletMain() {
           />
         </View>
       )}
-      {riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
+      {storeCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
         .requestAmount !== 0 &&
-        riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest && (
+        storeCurrentWithdrawRequestData?.riderCurrentWithdrawRequest && (
           <View>
             <Text className="font-bold text-lg bg-white p-5 mt-4">
               Pending Request
@@ -206,17 +206,17 @@ export default function WalletMain() {
             <RecentTransaction
               transaction={{
                 amountTransferred:
-                  riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
+                  storeCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
                     .requestAmount || 0,
                 status:
-                  riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
+                  storeCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
                     .status,
                 createdAt:
-                  riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
+                  storeCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
                     .createdAt,
               }}
               key={
-                riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
+                storeCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
                   .createdAt
               }
               isLast={false}
@@ -228,14 +228,14 @@ export default function WalletMain() {
       </Text>
 
       <ScrollView style={{ backgroundColor: "white" }}>
-        {riderTransactionData?.transactionHistory.data.map(
+        {storeTransactionData?.transactionHistory.data.map(
           (transaction, index) => {
             return (
               <RecentTransaction
                 transaction={transaction}
                 key={transaction.createdAt}
                 isLast={
-                  riderTransactionData?.transactionHistory.data.length - 1 ===
+                  storeTransactionData?.transactionHistory.data.length - 1 ===
                   index
                 }
               />

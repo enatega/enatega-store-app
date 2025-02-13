@@ -7,9 +7,9 @@ import CustomSwitch from "@/lib/ui/useable-components/switch-button";
 import { useUserContext } from "@/lib/context/global/user.context";
 import { UPDATE_AVAILABILITY } from "@/lib/apollo/mutations/rider.mutation";
 import { MutationTuple, useMutation } from "@apollo/client";
-import { RIDER_PROFILE } from "@/lib/apollo/queries";
+import { STORE_PROFILE } from "@/lib/apollo/queries";
 import { showMessage } from "react-native-flash-message";
-import { IRiderProfile } from "@/lib/utils/interfaces";
+import { IStoreProfile } from "@/lib/utils/interfaces";
 
 const CustomDrawerHeader = () => {
   // States
@@ -21,7 +21,9 @@ const CustomDrawerHeader = () => {
 
   // Queries
   const [toggleAvailablity, { loading }] = useMutation(UPDATE_AVAILABILITY, {
-    refetchQueries: [{ query: RIDER_PROFILE, variables: { id: userId } }],
+    refetchQueries: [
+      { query: STORE_PROFILE, variables: { restaurantId: userId } },
+    ],
     onCompleted: () => {
       if (dataProfile?.available) {
         setIsEnabled(dataProfile?.available);
@@ -30,14 +32,18 @@ const CustomDrawerHeader = () => {
     onError: (error) => {
       showMessage({
         message:
-          error.graphQLErrors[0].message ||
+          error?.graphQLErrors[0]?.message ||
+          error?.networkError?.message ||
           error?.networkError?.message ||
           t("Unable to update availability"),
       });
     },
-  }) as MutationTuple<IRiderProfile | undefined, { id: string }>;
+  }) as MutationTuple<IStoreProfile | undefined, { id: string }>;
   return (
-    <View className="w-full h-[130px] flex-row justify-between p-4">
+    <View
+      className="w-full -mt-6 h-[110px] flex-row justify-between p-4"
+      style={{ backgroundColor: Colors.light.primary }}
+    >
       <View className="justify-between">
         <View
           className="w-[54px] h-[54px] rounded-full items-center justify-center overflow-hidden"
@@ -66,7 +72,7 @@ const CustomDrawerHeader = () => {
               color: Colors.light.black,
             }}
           >
-            {dataProfile?.name ?? "rider name"}
+            {dataProfile?.name ?? t("store name")}
           </Text>
           <Text
             className="font-medium"
@@ -74,7 +80,7 @@ const CustomDrawerHeader = () => {
               color: Colors.light.secondaryTextColor,
             }}
           >
-            {dataProfile?._id.substring(0, 9).toUpperCase() ?? "rider id"}
+            {dataProfile?._id.substring(0, 9).toUpperCase() ?? t("store id")}
           </Text>
         </View>
       </View>

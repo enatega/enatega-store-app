@@ -18,18 +18,18 @@ import { ROUTES } from "../utils/constants";
 const useLogin = () => {
   const [creds, setCreds] = useState({ username: "", password: "" });
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  
   // Context
   const { setTokenAsync } = useContext(AuthContext);
-
+  
   // API
   const [login, { data: storeLoginData }] = useMutation(STORE_LOGIN, {
     onCompleted,
     onError,
   });
-
+  
   useQuery(DEFAULT_STORE_CREDS, { onCompleted, onError });
-
+  
   // Handlers
   async function onCompleted({
     restaurantLogin,
