@@ -32,13 +32,13 @@ const useLogin = () => {
 
   // Handlers
   async function onCompleted({
-    StoreLogin,
+    restaurantLogin,
     lastOrderCreds,
   }: IStoreLoginCompleteResponse) {
     setIsLoading(false);
-    if (StoreLogin) {
-      await AsyncStorage.setItem("store-id", StoreLogin.restaurantId);
-      await setTokenAsync(StoreLogin.token);
+    if (restaurantLogin) {
+      await AsyncStorage.setItem("store-id", restaurantLogin?.restaurantId);
+      await setTokenAsync(restaurantLogin?.token);
       router.replace(ROUTES.home as Href);
     } else if (
       lastOrderCreds &&
@@ -107,10 +107,8 @@ const useLogin = () => {
           notificationToken: notificationToken,
         },
       });
-      console.warn(storeLoginData.restaurantLogin?.restaurantId, data.restaurantLogin?.restaurantId ) 
       if  (storeLoginData.restaurantLogin?.restaurantId || data.restaurantLogin?.restaurantId ) {
-        await AsyncStorage.setItem("store-id", data.restaurantLogin?.restaurantId);
-        router.replace(ROUTES.home as Href);
+        await AsyncStorage.setItem("store-id", data.restaurantLogin?.restaurantId||storeLoginData.restaurantLogin?.restaurantId);
       }
     } catch (err) {
       const error = err as ApolloError

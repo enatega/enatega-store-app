@@ -1,26 +1,16 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
-import {
-  requestForegroundPermissionsAsync,
-  watchPositionAsync,
-  LocationAccuracy,
-  LocationSubscription,
-} from "expo-location";
+import { createContext, useContext, useEffect, useState } from "react";
+import { requestForegroundPermissionsAsync } from "expo-location";
 import { QueryResult, useQuery } from "@apollo/client";
 // Interface
 import {
-  IRiderProfileResponse,
+  IStoreProfileResponse,
   IUserContextProps,
   IUserProviderProps,
 } from "@/lib/utils/interfaces";
 // Context
 // import { useLocationContext } from "./location.context";
 // API
-import { RIDER_ORDERS, RIDER_PROFILE } from "@/lib/apollo/queries";
-import { UPDATE_LOCATION } from "@/lib/apollo/mutations/rider.mutation";
-import {
-  SUBSCRIPTION_ASSIGNED_RIDER,
-  SUBSCRIPTION_ZONE_ORDERS,
-} from "@/lib/apollo/subscriptions";
+import { STORE_ORDERS, STORE_PROFILE } from "@/lib/apollo/queries";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   IRiderEarnings,
@@ -42,13 +32,13 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     totalTipsSum: 0,
     totalDeliveries: 0,
   });
-  const [riderOrderEarnings, setRiderOrderEarnings] = useState<
-    IRiderEarningsArray[]
-  >([] as IRiderEarningsArray[]);
+  // const [riderOrderEarnings, setRiderOrderEarnings] = useState<
+  //   IRiderEarningsArray[]
+  // >([] as IRiderEarningsArray[]);
   const [userId, setUserId] = useState("");
 
   // Refs
-  const locationListener = useRef<LocationSubscription>();
+  // const locationListener = useRef<LocationSubscription>();
 
   // Context
   // const { locationPermission } = useLocationContext()
@@ -58,30 +48,30 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     error: errorProfile,
     data: dataProfile,
     refetch: refetchProfile,
-  } = useQuery(RIDER_PROFILE, {
+  } = useQuery(STORE_PROFILE, {
     fetchPolicy: "network-only",
     variables: {
       id: userId,
     },
-  }) as QueryResult<IRiderProfileResponse | undefined, { id: string }>;
+  }) as QueryResult<IStoreProfileResponse | undefined, { id: string }>;
 
   const {
-    client,
+    // client,
     loading: loadingAssigned,
     error: errorAssigned,
     data: dataAssigned,
     networkStatus: networkStatusAssigned,
-    subscribeToMore,
+    // subscribeToMore,
     refetch: refetchAssigned,
-  } = useQuery(RIDER_ORDERS, {
+  } = useQuery(STORE_ORDERS, {
     // onCompleted,
     // onError: error2,
     fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
   });
 
-  let unsubscribeZoneOrder: unknown = null;
-  let unsubscribeAssignOrder: unknown = null;
+  // let unsubscribeZoneOrder: unknown = null;
+  // let unsubscribeAssignOrder: unknown = null;
 
   async function getUserId() {
     const id = await AsyncStorage.getItem("store-id");
@@ -90,98 +80,98 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     }
   }
 
-  const subscribeNewOrders = () => {
-    try {
-      const unsubAssignOrder = subscribeToMore({
-        document: SUBSCRIPTION_ASSIGNED_RIDER,
-        variables: { riderId: dataProfile?.rider._id },
-        updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData.data) return prev;
-          if (subscriptionData.data.subscriptionAssignRider.origin === "new") {
-            return {
-              riderOrders: [
-                subscriptionData.data.subscriptionAssignRider.order,
-                ...prev.riderOrders,
-              ],
-            };
-          } else if (
-            subscriptionData.data.subscriptionAssignRider.origin === "remove"
-          ) {
-            return {
-              riderOrders: [
-                ...prev.riderOrders.filter(
-                  (o) =>
-                    o._id !==
-                    subscriptionData.data.subscriptionAssignRider.order._id,
-                ),
-              ],
-            };
-          }
-          return prev;
-        },
-      });
-      const unsubZoneOrder = subscribeToMore({
-        document: SUBSCRIPTION_ZONE_ORDERS,
-        variables: { zoneId: dataProfile?.rider?.zone?._id },
-        updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData.data) return prev;
+  // const subscribeNewOrders = () => {
+  //   try {
+  //     const unsubAssignOrder = subscribeToMore({
+  //       document: SUBSCRIPTION_ASSIGNED_RIDER,
+  //       variables: { riderId: dataProfile?.rider._id },
+  //       updateQuery: (prev, { subscriptionData }) => {
+  //         if (!subscriptionData.data) return prev;
+  //         if (subscriptionData.data.subscriptionAssignRider.origin === "new") {
+  //           return {
+  //             riderOrders: [
+  //               subscriptionData.data.subscriptionAssignRider.order,
+  //               ...prev.riderOrders,
+  //             ],
+  //           };
+  //         } else if (
+  //           subscriptionData.data.subscriptionAssignRider.origin === "remove"
+  //         ) {
+  //           return {
+  //             riderOrders: [
+  //               ...prev.riderOrders.filter(
+  //                 (o) =>
+  //                   o._id !==
+  //                   subscriptionData.data.subscriptionAssignRider.order._id,
+  //               ),
+  //             ],
+  //           };
+  //         }
+  //         return prev;
+  //       },
+  //     });
+  //     const unsubZoneOrder = subscribeToMore({
+  //       document: SUBSCRIPTION_ZONE_ORDERS,
+  //       variables: { zoneId: dataProfile?.rider?.zone?._id },
+  //       updateQuery: (prev, { subscriptionData }) => {
+  //         if (!subscriptionData.data) return prev;
 
-          if (subscriptionData.data.subscriptionZoneOrders.origin === "new") {
-            return {
-              riderOrders: [
-                subscriptionData.data.subscriptionZoneOrders.order,
-                ...prev.riderOrders,
-              ],
-            };
-          }
-          return prev;
-        },
-      });
-      return { unsubZoneOrder, unsubAssignOrder };
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //         if (subscriptionData.data.subscriptionZoneOrders.origin === "new") {
+  //           return {
+  //             riderOrders: [
+  //               subscriptionData.data.subscriptionZoneOrders.order,
+  //               ...prev.riderOrders,
+  //             ],
+  //           };
+  //         }
+  //         return prev;
+  //       },
+  //     });
+  //     return { unsubZoneOrder, unsubAssignOrder };
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   // UseEffects
-  useEffect(() => {
-    if (!dataProfile) return;
-    {
-      const { unsubZoneOrder, unsubAssignOrder } = subscribeNewOrders();
-      unsubscribeZoneOrder = unsubZoneOrder;
-      unsubscribeAssignOrder = unsubAssignOrder;
-    }
-    return () => {
-      if (unsubscribeZoneOrder) {
-        unsubscribeZoneOrder();
-      }
+  // useEffect(() => {
+  //   if (!dataProfile) return;
+  //   {
+  //     const { unsubZoneOrder, unsubAssignOrder } = subscribeNewOrders();
+  //     unsubscribeZoneOrder = unsubZoneOrder;
+  //     unsubscribeAssignOrder = unsubAssignOrder;
+  //   }
+  //   return () => {
+  //     if (unsubscribeZoneOrder) {
+  //       unsubscribeZoneOrder();
+  //     }
 
-      if (unsubscribeAssignOrder) unsubscribeAssignOrder();
-    };
-  }, [dataProfile]);
+  //     if (unsubscribeAssignOrder) unsubscribeAssignOrder();
+  //   };
+  // }, [dataProfile]);
 
-  const trackRiderLocation = async () => {
-    locationListener.current = await watchPositionAsync(
-      { accuracy: LocationAccuracy.BestForNavigation, timeInterval: 10000 },
-      async (location) => {
-        client.mutate({
-          mutation: UPDATE_LOCATION,
-          variables: {
-            latitude: location.coords.latitude.toString(),
-            longitude: location.coords.longitude.toString(),
-          },
-        });
-      },
-    );
-  };
-  useEffect(() => {
-    trackRiderLocation();
-    return () => {
-      if (locationListener.current) {
-        locationListener?.current?.remove();
-      }
-    };
-  }, []);
+  // const trackRiderLocation = async () => {
+  //   locationListener.current = await watchPositionAsync(
+  //     { accuracy: LocationAccuracy.BestForNavigation, timeInterval: 10000 },
+  //     async (location) => {
+  //       client.mutate({
+  //         mutation: UPDATE_LOCATION,
+  //         variables: {
+  //           latitude: location.coords.latitude.toString(),
+  //           longitude: location.coords.longitude.toString(),
+  //         },
+  //       });
+  //     },
+  //   );
+  // };
+  // useEffect(() => {
+  //   trackRiderLocation();
+  //   return () => {
+  //     if (locationListener.current) {
+  //       locationListener?.current?.remove();
+  //     }
+  //   };
+  // }, []);
 
   useEffect(() => {
     getUserId();
@@ -215,17 +205,17 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     <UserContext.Provider
       value={{
         modalVisible,
-        riderOrderEarnings,
+        // riderOrderEarnings,
         setModalVisible,
-        setRiderOrderEarnings,
+        // setRiderOrderEarnings,
         userId,
         loadingProfile,
         errorProfile,
-        dataProfile: dataProfile?.rider ?? null,
+        dataProfile: dataProfile?.restaurant ?? null,
         loadingAssigned,
         errorAssigned,
         assignedOrders:
-          loadingAssigned || errorAssigned ? [] : dataAssigned.riderOrders,
+          loadingAssigned || errorAssigned ? [] : dataAssigned.restaurantOrders,
         refetchAssigned,
         networkStatusAssigned,
         requestForegroundPermissionsAsync,

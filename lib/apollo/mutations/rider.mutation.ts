@@ -43,15 +43,19 @@ export const UPDATE_VEHICLE = gql`
   }
 `
 export const UPDATE_BUSINESS_DETAILS = gql`
-  mutation UpdateRiderBussinessDetails(
+  mutation UpdateRestaurantBussinessDetails(
+    $updateRestaurantBussinessDetailsId: String!
     $bussinessDetails: BussinessDetailsInput
-    $updateRiderBussinessDetailsId: String!
   ) {
-    updateRiderBussinessDetails(
+    updateRestaurantBussinessDetails(
+      id: $updateRestaurantBussinessDetailsId
       bussinessDetails: $bussinessDetails
-      id: $updateRiderBussinessDetailsId
     ) {
-      _id
+      success
+      message
+      data {
+        _id
+      }
     }
   }
 `

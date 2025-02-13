@@ -9,7 +9,7 @@ import { LocationPermissionResponse } from 'expo-location'
 export interface IUserContextProps {
   loadingProfile: boolean
   errorProfile: ApolloError | undefined
-  dataProfile: IRiderProfile | null
+  dataProfile: IStoreProfile | null
   userId: string | null
   loadingAssigned: boolean
   errorAssigned: ApolloError | undefined
@@ -29,48 +29,57 @@ interface Zone {
   _id: string
 }
 
-export interface IRiderProfile {
+export interface IStoreProfile {
   __typename: string
   _id: string
-  accountNumber: string | null
-  available: boolean
-  currentWalletAmount: number
-  email: string | null
+  unique_restaurant_id: string
+  orderId: number
+  orderPrefix: string
   name: string
-  totalWalletAmount: number
-  username: string
-  withdrawnWalletAmount: number
-  zone: Zone
-  image: string | null
-  phone: string
-  licenseDetails: {
-    expiryDate: string
-    image: string
-    number: number
-  }
-  vehicleDetails: {
-    image: string
-    number: string
-  }
+  image: string
+  logo: string
+  address: string
   location: {
-    coordinates: string[]
+    coordinates: string
   }
-  isAvailable: boolean
+  zone: Zone
+  username: string
   password: string
-  isActive: boolean
-  createdAt: string
-  updatedAt: string
-  assigned: string[]
+  minimumOrder: number
+  sections: string
+  rating: number
+  isActive: string
+  isAvailable: string
+  openingTimes: {
+    day: string
+  }
+  slug: string
+  stripeDetailsSubmitted: string
+  commissionRate: string
+  owner: {
+    email: string
+    _id: string
+  }
+  deliveryBounds: {
+    coordinates: string
+  }
+  deliveryTime: string
+  tax: number
+  notificationToken: string
+  enableNotification: string
+  shopType: string
+  tags: string
+  phone: string
   bussinessDetails: {
     bankName: string
+    accountNumber: string
     accountName: string
     accountCode: string
-    accountNumber: string
   }
 }
 
-export interface IRiderProfileResponse {
-  rider: IRiderProfile
+export interface IStoreProfileResponse {
+  restaurant: IStoreProfile
 }
 
 export interface Order {
@@ -148,7 +157,7 @@ export interface Order {
   }
 }
 
-export interface IRidersOnCompletedResponsee {
-  rider: IRiderProfile
+export interface IStoreOnCompletedResponsee {
+  restaurant: IStoreProfile
   assignedOrders: Order[]
 }

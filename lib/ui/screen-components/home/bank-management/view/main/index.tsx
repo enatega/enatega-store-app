@@ -1,6 +1,6 @@
 // Components
 import { UPDATE_BUSINESS_DETAILS } from "@/lib/apollo/mutations/rider.mutation";
-import { RIDER_PROFILE } from "@/lib/apollo/queries";
+import { STORE_PROFILE } from "@/lib/apollo/queries";
 import { useUserContext } from "@/lib/context/global/user.context";
 import { CustomContinueButton } from "@/lib/ui/useable-components";
 
@@ -8,7 +8,7 @@ import { CustomContinueButton } from "@/lib/ui/useable-components";
 import { useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert } from "react-native";
+import { Alert, KeyboardAvoidingView, ScrollView } from "react-native";
 
 // Core
 import {
@@ -38,7 +38,27 @@ export default function BankManagementMain() {
     accountNumber: "",
     accountCode: "",
   });
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardVisible(false);
+      },
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
   // Mutations
   const [mutateBankDetails, { loading: areBankDetailsLoading }] = useMutation(
     UPDATE_BUSINESS_DETAILS,
@@ -62,7 +82,7 @@ export default function BankManagementMain() {
           message: "",
         });
       },
-      refetchQueries: [{ query: RIDER_PROFILE, variables: { id: userId } }],
+      refetchQueries: [{ query: STORE_PROFILE, variables: { id: userId } }],
     },
   );
 
@@ -111,7 +131,7 @@ export default function BankManagementMain() {
       }
       await mutateBankDetails({
         variables: {
-          updateRiderBussinessDetailsId: userId,
+          updateRestaurantBussinessDetailsId: userId,
           bussinessDetails: {
             bankName: formData.bankName,
             accountName: formData.accountName,
@@ -146,67 +166,76 @@ export default function BankManagementMain() {
       });
     }
   }, [dataProfile?.bussinessDetails, areBankDetailsLoading]);
+  console.log(
+    "🚀 ~ BankManagementMain ~ dataProfile?.bussinessDetails:",
+    dataProfile?.bussinessDetails,
+  );
   return (
     <View>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View className="flex flex-col justify-between items-center w-full h-[75%] my-6 px-4">
-          <View className="flex flex-col w-full items-start justify-start gap-2">
-            <Text className="text-lg font-normal">Bank Name</Text>
-            <TextInput
-              className={`min-w-[100%] rounded-md border ${isError.field === "bankName" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
-              value={formData.bankName}
-              placeholder="Swiss Bank"
-              onChangeText={(val) => {
-                setIsError({ field: "", message: "" });
-                handleChange("bankName", val);
-              }}
-            />
-          </View>
-          <View className="flex flex-col w-full items-start justify-start gap-2">
-            <Text className="text-lg font-normal">
-              {t("Account holder name")}
-            </Text>
-            <TextInput
-              className={`min-w-[100%] rounded-md border ${isError.field === "accountName" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
-              value={formData.accountName}
-              placeholder="Micheal Kim"
-              onChangeText={(val) => {
-                setIsError({ field: "", message: "" });
-                handleChange("accountName", val);
-              }}
-            />
-          </View>
-          <View className="flex flex-col w-full items-start justify-start gap-2">
-            <Text className="text-lg font-normal">IBAN / Swift / BSB</Text>
-            <TextInput
-              className={`min-w-[100%] rounded-md border ${isError.field === "accountCode" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
-              value={formData.accountCode}
-              placeholder="PK33"
-              onChangeText={(val) => {
-                setIsError({ field: "", message: "" });
-                handleChange("accountCode", val);
-              }}
-            />
-          </View>
-          <View className="flex flex-col w-full items-start justify-start gap-2">
-            <Text className="text-lg font-normal">Account Number</Text>
-            <TextInput
-              className={`min-w-[100%] rounded-md border ${isError.field === "accountNumber" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
-              value={formData.accountNumber}
-              placeholder="7838246824682346"
-              onChangeText={(val) => {
-                setIsError({ field: "", message: "" });
-                handleChange("accountNumber", val);
-              }}
-            />
-          </View>
-          <View>
-            <CustomContinueButton
-              title={areBankDetailsLoading ? "Please wait..." : "Confirm"}
-              onPress={handleSubmit}
-            />
-          </View>
-        </View>
+        <KeyboardAvoidingView>
+          <ScrollView
+            scrollEnabled={keyboardVisible}
+            contentContainerClassName={`flex flex-col justify-between items-center w-full ${keyboardVisible ? "h-full" : "h-[85%]"} my-6 px-4`}
+          >
+            <View className="flex flex-col w-full items-start justify-start gap-2">
+              <Text className="text-lg font-normal">{t("Bank Name")}</Text>
+              <TextInput
+                className={`min-w-[100%] rounded-md border ${isError.field === "bankName" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
+                value={formData.bankName}
+                placeholder="Swiss Bank"
+                onChangeText={(val) => {
+                  setIsError({ field: "", message: "" });
+                  handleChange("bankName", val);
+                }}
+              />
+            </View>
+            <View className="flex flex-col w-full items-start justify-start gap-2">
+              <Text className="text-lg font-normal">
+                {t("Account holder name")}
+              </Text>
+              <TextInput
+                className={`min-w-[100%] rounded-md border ${isError.field === "accountName" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
+                value={formData.accountName}
+                placeholder="Micheal Kim"
+                onChangeText={(val) => {
+                  setIsError({ field: "", message: "" });
+                  handleChange("accountName", val);
+                }}
+              />
+            </View>
+            <View className="flex flex-col w-full items-start justify-start gap-2">
+              <Text className="text-lg font-normal">IBAN / Swift / BSB</Text>
+              <TextInput
+                className={`min-w-[100%] rounded-md border ${isError.field === "accountCode" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
+                value={formData.accountCode}
+                placeholder="PK33"
+                onChangeText={(val) => {
+                  setIsError({ field: "", message: "" });
+                  handleChange("accountCode", val);
+                }}
+              />
+            </View>
+            <View className="flex flex-col w-full items-start justify-start gap-2">
+              <Text className="text-lg font-normal">{t("Account Number")}</Text>
+              <TextInput
+                className={`min-w-[100%] rounded-md border ${isError.field === "accountNumber" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
+                value={formData.accountNumber}
+                placeholder="7838246824682346"
+                onChangeText={(val) => {
+                  setIsError({ field: "", message: "" });
+                  handleChange("accountNumber", val);
+                }}
+              />
+            </View>
+            <View>
+              <CustomContinueButton
+                title={areBankDetailsLoading ? "Please wait..." : "Confirm"}
+                onPress={handleSubmit}
+              />
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
     </View>
   );
