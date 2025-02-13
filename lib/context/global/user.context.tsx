@@ -84,7 +84,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   let unsubscribeAssignOrder: unknown = null;
 
   async function getUserId() {
-    const id = await AsyncStorage.getItem("rider-id");
+    const id = await AsyncStorage.getItem("store-id");
     if (id) {
       setUserId(id);
     }

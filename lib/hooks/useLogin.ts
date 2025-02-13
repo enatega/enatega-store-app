@@ -7,12 +7,12 @@ import { useContext, useState } from "react";
 
 import { AuthContext } from "../context/global/auth.context";
 import {
-  DEFAULT_RIDER_CREDS,
-  RIDER_LOGIN,
+  DEFAULT_STORE_CREDS,
+  STORE_LOGIN,
 } from "../api/graphql/mutation/login";
 import { Href, router } from "expo-router";
-import { FlashMessageComponent } from "../ui/useable-components/flash-message";
-import { IRiderLoginCompleteResponse } from "../utils/interfaces/auth.interface";
+import { FlashMessageComponent } from "../ui/useable-components";
+import { IStoreLoginCompleteResponse } from "../utils/interfaces/auth.interface";
 import { ROUTES } from "../utils/constants";
 
 const useLogin = () => {
@@ -23,31 +23,31 @@ const useLogin = () => {
   const { setTokenAsync } = useContext(AuthContext);
 
   // API
-  const [login, { data: riderLoginData }] = useMutation(RIDER_LOGIN, {
+  const [login, { data: storeLoginData }] = useMutation(STORE_LOGIN, {
     onCompleted,
     onError,
   });
 
-  useQuery(DEFAULT_RIDER_CREDS, { onCompleted, onError });
+  useQuery(DEFAULT_STORE_CREDS, { onCompleted, onError });
 
   // Handlers
   async function onCompleted({
-    riderLogin,
+    StoreLogin,
     lastOrderCreds,
-  }: IRiderLoginCompleteResponse) {
+  }: IStoreLoginCompleteResponse) {
     setIsLoading(false);
-    if (riderLogin) {
-      await AsyncStorage.setItem("rider-id", riderLogin.userId);
-      await setTokenAsync(riderLogin.token);
+    if (StoreLogin) {
+      await AsyncStorage.setItem("store-id", StoreLogin.restaurantId);
+      await setTokenAsync(StoreLogin.token);
       router.replace(ROUTES.home as Href);
     } else if (
       lastOrderCreds &&
-      lastOrderCreds?.riderUsername &&
-      lastOrderCreds?.riderPassword
+      lastOrderCreds?.restaurantUsername &&
+      lastOrderCreds?.restaurantPassword
     ) {
       setCreds({
-        username: lastOrderCreds?.riderUsername,
-        password: lastOrderCreds?.riderPassword,
+        username: lastOrderCreds?.restaurantUsername,
+        password: lastOrderCreds?.restaurantPassword,
       });
     }
   }
@@ -64,7 +64,7 @@ const useLogin = () => {
   const onLogin = async (username: string, password: string) => {
     try {
       setIsLoading(true);
-      // Get notification permissions
+      // Get notification permisssions
       const settings = await Notifications.getPermissionsAsync();
       let notificationPermissions = { ...settings };
 
@@ -81,7 +81,7 @@ const useLogin = () => {
             allowBadge: true,
             allowSound: true,
             //   allowAnnouncements: true
-          },
+          }
         });
       }
 
@@ -107,9 +107,10 @@ const useLogin = () => {
           notificationToken: notificationToken,
         },
       });
-
-      if (riderLoginData?.userId) {
-        await AsyncStorage.setItem("rider-id", data.userId);
+      console.warn(storeLoginData.restaurantLogin?.restaurantId, data.restaurantLogin?.restaurantId ) 
+      if  (storeLoginData.restaurantLogin?.restaurantId || data.restaurantLogin?.restaurantId ) {
+        await AsyncStorage.setItem("store-id", data.restaurantLogin?.restaurantId);
+        router.replace(ROUTES.home as Href);
       }
     } catch (err) {
       const error = err as ApolloError

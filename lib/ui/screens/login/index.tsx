@@ -22,6 +22,7 @@ import { SignInSchema } from "@/lib/utils/schema";
 import useLogin from "@/lib/hooks/useLogin";
 // Interface
 import { ILoginInitialValues } from "@/lib/utils/interfaces";
+import { useTranslation } from "react-i18next";
 // const { height } = Dimensions.get("window")
 
 const initial: ILoginInitialValues = {
@@ -35,6 +36,7 @@ const LoginScreen = () => {
   const [initialValues, setInitialValues] = useState(initial);
 
   // Hooks
+  const { t } = useTranslation();
   const { onLogin, creds, isLogging } = useLogin();
 
   // Handlers
@@ -81,10 +83,10 @@ const LoginScreen = () => {
 
                   {/* Title */}
                   <Text className="text-center text-xl font-semibold  text-black">
-                    Enter Your Credentials to login
+                    {t("Enter Your Credentials to login")}
                   </Text>
                   <Text className="text-center text-sm text-gray-500 mb-5">
-                    We'll check if you have an account
+                    {t("We'll check if you have an account")}
                   </Text>
 
                   {/* Email Input */}
@@ -92,7 +94,7 @@ const LoginScreen = () => {
                   <View className="flex-row items-center border border-gray-300 rounded-lg px-3 bg-white mb-[-4]">
                     <TextInput
                       className="flex-1 h-12 text-base text-black"
-                      placeholder="Email"
+                      placeholder={t("Email")}
                       keyboardType="email-address"
                       value={values.username}
                       onChangeText={handleChange("username")}
@@ -109,7 +111,7 @@ const LoginScreen = () => {
                   <View className="flex-row items-center border border-gray-300 rounded-lg px-3 bg-white mb-[-4]">
                     <TextInput
                       className="flex-1 h-12 text-base text-black"
-                      placeholder="Password"
+                      placeholder={t("Password")}
                       secureTextEntry={!passwordVisible}
                       value={values.password}
                       onChangeText={handleChange("password")}
@@ -141,7 +143,7 @@ const LoginScreen = () => {
                       <SpinnerComponent />
                     ) : (
                       <Text className="text-center text-white text-lg font-medium">
-                        Login
+                        {t("Login")}
                       </Text>
                     )}
                   </TouchableOpacity>
