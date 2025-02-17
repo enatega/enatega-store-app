@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { requestForegroundPermissionsAsync } from "expo-location";
 import { QueryResult, useQuery } from "@apollo/client";
 // Interface
@@ -57,6 +63,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     IStoreProfileResponse | undefined,
     { restaurantId: string }
   >;
+  console.log("🚀 ~ UserProvider ~ loadingProfile:", { dataProfile });
 
   const {
     // client,
@@ -65,7 +72,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     data: dataAssigned,
     networkStatus: networkStatusAssigned,
     // subscribeToMore,
-    refetch: refetchAssigned,
+    // refetch: refetchAssigned,
   } = useQuery(STORE_ORDERS, {
     // onCompleted,
     // onError: error2,
@@ -76,12 +83,13 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   // let unsubscribeZoneOrder: unknown = null;
   // let unsubscribeAssignOrder: unknown = null;
 
-  async function getUserId() {
+  const getUserId = useCallback(async () => {
     const id = await AsyncStorage.getItem("store-id");
+    console.log("🚀 ~ getUserId ~ id:", { id });
     if (id) {
       setUserId(id);
     }
-  }
+  }, [userId, refetchProfile]);
 
   // const subscribeNewOrders = () => {
   //   try {
@@ -178,10 +186,14 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
 
   useEffect(() => {
     getUserId();
+  }, [getUserId]);
+
+  console.log({ userId });
+  useEffect(() => {
     if (userId) {
       refetchProfile({ restaurantId: userId });
     }
-  }, [userId]);
+  }, [userId, refetchProfile]);
   /*Why is this duplicated? */
   // useEffect(() => {
   //   const trackRiderLocation = async () => {
@@ -221,7 +233,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         errorAssigned,
         assignedOrders:
           loadingAssigned || errorAssigned ? [] : dataAssigned.restaurantOrders,
-        refetchAssigned,
+        // refetchAssigned,
         networkStatusAssigned,
         requestForegroundPermissionsAsync,
       }}

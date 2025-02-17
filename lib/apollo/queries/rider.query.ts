@@ -1,40 +1,43 @@
-import { gql } from '@apollo/client'
+import { gql } from "@apollo/client";
 
-export const RIDER_BY_ID = gql`
-  query Rider($id: String) {
-    rider(id: $id) {
-      _id
-      location {
-        coordinates
-      }
+export const STORE_BY_ID = gql`
+  query Restaurant($restaurantId: String) {
+    restaurant(id: $restaurantId) {
       zone {
         _id
       }
-      currentWalletAmount
+      location {
+        coordinates
+      }
       totalWalletAmount
       withdrawnWalletAmount
+      currentWalletAmount
+      bussinessDetails {
+        bankName
+        accountNumber
+        accountName
+        accountCode
+      }
     }
   }
-`
+`;
 
 export const STORE_EARNINGS = gql`
   query StoreEarnings {
     earnings {
       data {
         grandTotalEarnings {
-          restaurantTotal
+          storeTotal
         }
         earnings {
-          restaurantEarnings {
-            deliveryFee
-            tip
+          storeEarnings {
             totalEarnings
           }
         }
       }
     }
   }
-`
+`;
 
 export const STORE_TRANSACTIONS_HISTORY = gql`
   query TransactionHistory($userType: UserTypeEnum, $userId: String) {
@@ -46,51 +49,54 @@ export const STORE_TRANSACTIONS_HISTORY = gql`
       }
     }
   }
-`
+`;
 
 export const STORE_CURRENT_WITHDRAW_REQUEST = gql`
   query RiderCurrentWithdrawRequest($storeId: String) {
-    riderCurrentWithdrawRequest(storeId: $storeId) {
+    storeCurrentWithdrawRequest(storeId: $storeId) {
       _id
       requestAmount
       status
       createdAt
     }
   }
-`
+`;
 
 export const STORE_PROFILE = gql`
   query Restaurant($restaurantId: String) {
-  restaurant(id: $restaurantId) {
-    _id
-    unique_restaurant_id
-    orderId
-    orderPrefix
-    name
-    image
-    logo
-    address
-    username
-    password
-    minimumOrder
-    isActive
-    isAvailable
-    slug
-    commissionRate
-    tax
-    notificationToken
-    enableNotification
-    shopType
-    phone
-    bussinessDetails {
-      bankName
-      accountNumber
-      accountName
-      accountCode
+    restaurant(id: $restaurantId) {
+      _id
+      unique_restaurant_id
+      orderId
+      orderPrefix
+      name
+      image
+      logo
+      address
+      username
+      password
+      minimumOrder
+      isActive
+      isAvailable
+      slug
+      commissionRate
+      tax
+      notificationToken
+      enableNotification
+      shopType
+      phone
+      totalWalletAmount
+      withdrawnWalletAmount
+      currentWalletAmount
+      bussinessDetails {
+        bankName
+        accountNumber
+        accountName
+        accountCode
+      }
     }
   }
-}
-`
+`;
 
 export const rider = gql`
   query Rider($id: String) {
@@ -101,46 +107,50 @@ export const rider = gql`
       }
     }
   }
-`
+`;
 
 export const STORE_ORDERS = gql`
-query Orders{
-    restaurantOrders{
+  query Orders {
+    restaurantOrders {
       _id
       orderId
       id
-      restaurant{
+      restaurant {
         _id
-        
+
         name
         image
         address
-        location{coordinates}
+        location {
+          coordinates
+        }
       }
-      deliveryAddress{
-        location{coordinates}
+      deliveryAddress {
+        location {
+          coordinates
+        }
         deliveryAddress
         details
         label
       }
-      items{
+      items {
         _id
         id
         title
         description
         image
         quantity
-        variation{
+        variation {
           _id
           id
           title
           price
           discounted
         }
-        addons{
+        addons {
           _id
           id
-          options{
+          options {
             _id
             id
             title
@@ -157,7 +167,7 @@ query Orders{
         createdAt
         updatedAt
       }
-      user{
+      user {
         _id
         name
         phone
@@ -182,12 +192,12 @@ query Orders{
       acceptedAt
       isRinged
       instructions
-      rider{
+      rider {
         _id
         name
         username
         available
       }
     }
-}
-`
+  }
+`;

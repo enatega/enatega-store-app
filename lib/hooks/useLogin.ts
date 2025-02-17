@@ -18,18 +18,18 @@ import { ROUTES } from "../utils/constants";
 const useLogin = () => {
   const [creds, setCreds] = useState({ username: "", password: "" });
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  
+
   // Context
   const { setTokenAsync } = useContext(AuthContext);
-  
+
   // API
   const [login, { data: storeLoginData }] = useMutation(STORE_LOGIN, {
     onCompleted,
     onError,
   });
-  
+
   useQuery(DEFAULT_STORE_CREDS, { onCompleted, onError });
-  
+
   // Handlers
   async function onCompleted({
     restaurantLogin,
@@ -51,8 +51,8 @@ const useLogin = () => {
       });
     }
   }
-  function onError(err:ApolloError) {
-    const error = err as ApolloError
+  function onError(err: ApolloError) {
+    const error = err as ApolloError;
     setIsLoading(false);
     FlashMessageComponent({
       message:
@@ -81,7 +81,7 @@ const useLogin = () => {
             allowBadge: true,
             allowSound: true,
             //   allowAnnouncements: true
-          }
+          },
         });
       }
 
@@ -107,11 +107,18 @@ const useLogin = () => {
           notificationToken: notificationToken,
         },
       });
-      if  (storeLoginData.restaurantLogin?.restaurantId || data.restaurantLogin?.restaurantId ) {
-        await AsyncStorage.setItem("store-id", data.restaurantLogin?.restaurantId||storeLoginData.restaurantLogin?.restaurantId);
+      if (
+        storeLoginData.restaurantLogin?.restaurantId ||
+        data.restaurantLogin?.restaurantId
+      ) {
+        await AsyncStorage.setItem(
+          "store-id",
+          data.restaurantLogin?.restaurantId ||
+            storeLoginData.restaurantLogin?.restaurantId,
+        );
       }
     } catch (err) {
-      const error = err as ApolloError
+      const error = err as ApolloError;
       FlashMessageComponent({
         message:
           error?.graphQLErrors[0]?.message ??

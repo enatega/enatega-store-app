@@ -28,8 +28,10 @@ export default function DrawerMain() {
           borderRadius: 0,
           marginTop: 4,
         },
+
         drawerStyle: {
-          zIndex: 9999999,
+          position: "absolute",
+          zIndex: 9,
         },
       }}
     >

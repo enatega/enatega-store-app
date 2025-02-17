@@ -24,7 +24,7 @@ const LocationPermissions = () => {
             await Linking.openSettings();
           },
         },
-      ]
+      ],
     );
     const { status } = await Location.getForegroundPermissionsAsync();
     if (status === "granted") {

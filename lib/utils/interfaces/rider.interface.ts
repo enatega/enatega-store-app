@@ -1,50 +1,50 @@
-import { IRiderProfile } from './user.interface'
+import { IStoreProfile } from "./user.interface";
 
-export interface IRiderEarningsResponse {
+export interface IStoreEarningsResponse {
   earnings: {
     data: {
       grandTotalEarnings: {
-        riderTotal: number
-      }
+        storeTotal: number;
+      };
       earnings: {
-        riderEarnings: {
-          deliveryFee: number
-          tip: number
-          totalEarnings: number
-        }
-      }
-    }
-  }
+        storeEarnings: {
+          deliveryFee: number;
+          tip: number;
+          totalEarnings: number;
+        };
+      };
+    };
+  };
 }
 
-export interface IRiderTransaction {
-  status: string
-  amountTransferred: number
-  createdAt: string
+export interface IStoreTransaction {
+  status: string;
+  amountTransferred: number;
+  createdAt: string;
 }
 
-export interface IRiderTransactionHistoryResponse {
+export interface IStoreTransactionHistoryResponse {
   transactionHistory: {
-    data: IRiderTransaction[]
-  }
+    data: IStoreTransaction[];
+  };
 }
 
-export interface IRiderByIdResponse {
-  rider: IRiderProfile
+export interface IStoreByIdResponse {
+  restaurant: IStoreProfile;
 }
 
-export interface IRiderCurrentWithdrawRequestResponse {
-  riderCurrentWithdrawRequest: {
-    _id: string
-    requestAmount: number
-    status: string
-    createdAt: string
-  }
+export interface IStoreCurrentWithdrawRequestResponse {
+  storeCurrentWithdrawRequest: {
+    _id: string;
+    requestAmount: number;
+    status: string;
+    createdAt: string;
+  };
 }
 
-export interface IRiderCurrentWithdrawRequest {
-  _id: string
-  requestAmount: number
-  status: string
-  createdAt: string
+export interface IStoreCurrentWithdrawRequest {
+  _id: string;
+  requestAmount: number;
+  status: string;
+  createdAt: string;
 }

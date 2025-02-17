@@ -31,7 +31,7 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
     loadingAssigned,
     errorAssigned,
     assignedOrders,
-    refetchAssigned,
+    // refetchAssigned,
     networkStatusAssigned,
   } = useContext(UserContext);
 
@@ -45,7 +45,7 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
 
     const _orders = assignedOrders?.filter(
       (o: IOrder) =>
-        ["PICKED", "ASSIGNED"].includes(o.orderStatus) && !o.isPickedUp
+        ["PICKED", "ASSIGNED"].includes(o.orderStatus) && !o.isPickedUp,
     );
 
     setOrders(_orders ?? []);
@@ -59,7 +59,7 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
   useEffect(() => {
     // Trigger refetch when orders length changes
     if (orders?.length === 0) {
-      refetchAssigned();
+      // refetchAssigned();
     }
   }, [orders?.length]);
 
@@ -69,22 +69,22 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
   // Render
   return (
     <View className="pt-14 flex-1 bg-white pb-16" style={style.contaienr}>
-      {errorAssigned ?
+      {errorAssigned ? (
         <View className="flex-1 justify-center items-center">
           <Text className="text-2xl">Something went wrong</Text>
         </View>
-      : loadingAssigned ?
+      ) : loadingAssigned ? (
         <View className="flex-1">
           <Spinner />
         </View>
-      : orders?.length > 0 ?
+      ) : orders?.length > 0 ? (
         <FlatList
           className={`h-[${height}px] mb-[${marginBottom}px]`}
           keyExtractor={(item) => item._id}
           data={orders}
           showsVerticalScrollIndicator={false}
           refreshing={networkStatusAssigned === NetworkStatus.loading}
-          onRefresh={refetchAssigned}
+          // onRefresh={refetchAssigned}
           renderItem={({ item }: { item: IOrder }) => (
             <Order tab={route.key as ORDER_TYPE} order={item} key={item._id} />
           )}
@@ -93,25 +93,28 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
               <View
                 style={{
                   minHeight:
-                    height > 670 ?
-                      height - height * 0.5
-                    : height - height * 0.6,
+                    height > 670
+                      ? height - height * 0.5
+                      : height - height * 0.6,
                   justifyContent: "center",
                   alignItems: "center",
                 }}
               >
                 <WalletIcon height={100} width={100} />
 
-                {orders?.length === 0 ?
+                {orders?.length === 0 ? (
                   <Text className="font-[Inter] text-[18px] text-base font-[500] text-gray-600">
                     {NO_ORDER_PROMPT[route.key]}
                   </Text>
-                : <Text>Pull downto refresh</Text>}
+                ) : (
+                  <Text>Pull downto refresh</Text>
+                )}
               </View>
             );
           }}
         />
-      : <View
+      ) : (
+        <View
           style={{
             minHeight:
               height > 670 ? height - height * 0.5 : height - height * 0.6,
@@ -121,13 +124,15 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
         >
           <WalletIcon height={100} width={100} />
 
-          {orders?.length === 0 ?
+          {orders?.length === 0 ? (
             <Text className="font-[Inter] text-[18px] text-base font-[500] text-gray-600">
               {NO_ORDER_PROMPT[route.key]}
             </Text>
-          : <Text>Pull down to refresh</Text>}
+          ) : (
+            <Text>Pull down to refresh</Text>
+          )}
         </View>
-      }
+      )}
     </View>
   );
 }

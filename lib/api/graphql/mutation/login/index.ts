@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from "@apollo/client";
 
 export const STORE_LOGIN = gql`
   mutation RestaurantLogin($username: String!, $password: String!) {
@@ -7,7 +7,7 @@ export const STORE_LOGIN = gql`
       restaurantId
     }
   }
-`
+`;
 
 export const DEFAULT_STORE_CREDS = gql`
   query LastOrderCreds {
@@ -16,4 +16,4 @@ export const DEFAULT_STORE_CREDS = gql`
       restaurantPassword
     }
   }
-`
+`;

@@ -1,5 +1,5 @@
 // Interfaces
-import { IRiderTransaction } from "@/lib/utils/interfaces/rider.interface";
+import { IStoreTransaction } from "@/lib/utils/interfaces/rider.interface";
 
 // Icons
 import { Ionicons } from "@expo/vector-icons";
@@ -11,11 +11,11 @@ export default function RecentTransaction({
   transaction,
   isLast,
 }: {
-  transaction: IRiderTransaction;
+  transaction: IStoreTransaction;
   isLast: boolean;
 }) {
   // Constants
-  const date = new Date(transaction.createdAt);
+  const date = new Date(transaction?.createdAt);
   return (
     <View
       className={`flex flex-row justify-between p-4 w-full ${isLast && "mb-24"}`}
@@ -24,35 +24,35 @@ export default function RecentTransaction({
         <Ionicons
           size={20}
           name={
-            transaction.status === "TRANSFERRED"
+            transaction?.status === "TRANSFERRED"
               ? "cash-outline"
-              : transaction.status === "PAID"
+              : transaction?.status === "PAID"
                 ? "cash-sharp"
-                : transaction.status === "CANCELLED"
+                : transaction?.status === "CANCELLED"
                   ? "remove-circle-outline"
                   : "arrow-down-circle"
           }
           color={
-            transaction.status === "TRANSFERRED"
+            transaction?.status === "TRANSFERRED"
               ? "#90E36D"
-              : transaction.status === "PAID"
+              : transaction?.status === "PAID"
                 ? "orange"
-                : transaction.status === "CANCELLED"
+                : transaction?.status === "CANCELLED"
                   ? "red"
-                  : transaction.status === "REQUESTED"
+                  : transaction?.status === "REQUESTED"
                     ? "#0EA5E9"
                     : "arrow-down-circle"
           }
         />
         <View className="flex flex-col justify-between gap-1">
-          <Text className="font-semibold">{transaction.status}</Text>
+          <Text className="font-semibold">{transaction?.status}</Text>
           <Text>{date.toDateString()}</Text>
         </View>
       </View>
       <Text
         className="font-bold text-md"
         style={{
-          color: transaction.status === "REQUESTED" ? "#0EA5E9" : "black",
+          color: transaction?.status === "REQUESTED" ? "#0EA5E9" : "black",
         }}
       >
         ${transaction?.amountTransferred}

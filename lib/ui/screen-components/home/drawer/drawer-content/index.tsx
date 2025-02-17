@@ -31,6 +31,8 @@ export default function CustomDrawerContent(
         paddingBottom: 0,
         paddingStart: 0,
         paddingEnd: 0,
+        zIndex: 9999,
+        position: "relative",
       }}
     >
       <CustomDrawerHeader />

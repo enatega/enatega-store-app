@@ -42,13 +42,17 @@ export interface IEarningDetailsMainProps {
   setDateFilter: Dispatch<SetStateAction<IDateFilter>>;
 }
 export interface IEarningsDateFilterProps {
-  handleFilterSubmit: ()=>Promise<void>;
-  isFiltering:boolean
+  handleFilterSubmit: () => Promise<void>;
+  isFiltering: boolean;
   isDateFilterVisible: boolean;
   setIsDateFilterVisible: Dispatch<SetStateAction<boolean>>;
-  refetchDeafult:(variables?: Partial<{
-    riderId: string;
-    startDate?: string;
-    endDate?: string;
-}> | undefined) => Promise<ApolloQueryResult<IRiderEarningsResponse | undefined>>
+  refetchDeafult: (
+    variables?:
+      | Partial<{
+          riderId: string;
+          startDate?: string;
+          endDate?: string;
+        }>
+      | undefined,
+  ) => Promise<ApolloQueryResult<IRiderEarningsResponse | undefined>>;
 }

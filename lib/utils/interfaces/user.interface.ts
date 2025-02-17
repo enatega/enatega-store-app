@@ -1,164 +1,174 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import { Dispatch, SetStateAction } from 'react'
-import { IGlobalProviderProps } from './global.interface'
-import { IRiderEarnings, IRiderEarningsArray } from './rider-earnings.interface'
-import { ApolloError, NetworkStatus } from '@apollo/client'
-import { IOrder } from './order.interface'
-import { LocationPermissionResponse } from 'expo-location'
+import { Dispatch, SetStateAction } from "react";
+import { IGlobalProviderProps } from "./global.interface";
+import {
+  IRiderEarnings,
+  IRiderEarningsArray,
+} from "./rider-earnings.interface";
+import { ApolloError, NetworkStatus } from "@apollo/client";
+import { IOrder } from "./order.interface";
+import { LocationPermissionResponse } from "expo-location";
 
 export interface IUserContextProps {
-  loadingProfile: boolean
-  errorProfile: ApolloError | undefined
-  dataProfile: IStoreProfile | null
-  userId: string | null
-  loadingAssigned: boolean
-  errorAssigned: ApolloError | undefined
-  assignedOrders: IOrder[] | null
-  refetchAssigned: () => void
-  networkStatusAssigned: NetworkStatus
-  requestForegroundPermissionsAsync: () => Promise<LocationPermissionResponse>
-  modalVisible: IRiderEarnings & { bool: boolean }
-  setModalVisible: Dispatch<SetStateAction<IRiderEarnings & { bool: boolean }>>
-  riderOrderEarnings: IRiderEarningsArray[]
-  setRiderOrderEarnings: Dispatch<SetStateAction<IRiderEarningsArray[]>>
+  loadingProfile?: boolean;
+  errorProfile?: ApolloError | undefined;
+  dataProfile?: IStoreProfile | null;
+  userId?: string | null;
+  loadingAssigned?: boolean;
+  errorAssigned?: ApolloError | undefined;
+  assignedOrders?: IOrder[] | null;
+  refetchAssigned?: () => void;
+  networkStatusAssigned?: NetworkStatus;
+  requestForegroundPermissionsAsync?: () => Promise<LocationPermissionResponse>;
+  modalVisible?: IRiderEarnings & { bool: boolean };
+  setModalVisible?: Dispatch<
+    SetStateAction<IRiderEarnings & { bool: boolean }>
+  >;
+  riderOrderEarnings?: IRiderEarningsArray[];
+  setRiderOrderEarnings?: Dispatch<SetStateAction<IRiderEarningsArray[]>>;
 }
 export interface IUserProviderProps extends IGlobalProviderProps {}
 
 interface Zone {
-  __typename: string
-  _id: string
+  __typename: string;
+  _id: string;
 }
 
 export interface IStoreProfile {
-  __typename: string
-  _id: string
-  unique_restaurant_id: string
-  orderId: number
-  orderPrefix: string
-  name: string
-  image: string
-  logo: string
-  address: string
+  __typename: string;
+  _id: string;
+  unique_restaurant_id: string;
+  orderId: number;
+  orderPrefix: string;
+  name: string;
+  image: string;
+  logo: string;
+  address: string;
   location: {
-    coordinates: string
-  }
-  zone: Zone
-  username: string
-  password: string
-  minimumOrder: number
-  sections: string
-  rating: number
-  isActive: string
-  isAvailable: string
+    coordinates: string;
+  };
+  zone: Zone;
+  username: string;
+  password: string;
+  minimumOrder: number;
+  sections: string;
+  rating: number;
+  isActive: string;
+  isAvailable: string;
   openingTimes: {
-    day: string
-  }
-  slug: string
-  stripeDetailsSubmitted: string
-  commissionRate: string
+    day: string;
+  };
+  slug: string;
+  stripeDetailsSubmitted: string;
+  commissionRate: string;
   owner: {
-    email: string
-    _id: string
-  }
+    email: string;
+    _id: string;
+  };
   deliveryBounds: {
-    coordinates: string
-  }
-  deliveryTime: string
-  tax: number
-  notificationToken: string
-  enableNotification: string
-  shopType: string
-  tags: string
-  phone: string
-  available: boolean
+    coordinates: string;
+  };
+  deliveryTime: string;
+  tax: number;
+  notificationToken: string;
+  enableNotification: string;
+  shopType: string;
+  tags: string;
+  phone: string;
+  available: boolean;
+
+  currentWalletAmount: number;
+  totalWalletAmount: number;
+  withdrawnWalletAmount: number;
+
   bussinessDetails: {
-    bankName: string
-    accountNumber: string
-    accountName: string
-    accountCode: string
-  }
+    bankName: string;
+    accountNumber: string;
+    accountName: string;
+    accountCode: string;
+  };
 }
 
 export interface IStoreProfileResponse {
-  restaurant: IStoreProfile
+  restaurant: IStoreProfile;
 }
 
 export interface Order {
-  _id: string
-  orderId: string
-  createdAt: string
-  acceptedAt?: string
-  pickedAt?: string
-  assignedAt?: string
-  isPickedUp: boolean
-  deliveredAt?: string
-  expectedTime?: string
-  deliveryCharges: number
+  _id: string;
+  orderId: string;
+  createdAt: string;
+  acceptedAt?: string;
+  pickedAt?: string;
+  assignedAt?: string;
+  isPickedUp: boolean;
+  deliveredAt?: string;
+  expectedTime?: string;
+  deliveryCharges: number;
   restaurant: {
-    _id: string
-    name: string
-    address: string
+    _id: string;
+    name: string;
+    address: string;
     location: {
-      coordinates: [number, number]
-    }
-  }
+      coordinates: [number, number];
+    };
+  };
   deliveryAddress: {
     location: {
-      coordinates: [number, number]
-    }
-    deliveryAddress: string
-    label?: string
-    details?: string
-  }
+      coordinates: [number, number];
+    };
+    deliveryAddress: string;
+    label?: string;
+    details?: string;
+  };
   items: {
-    _id: string
-    title: string
-    food: string
-    description?: string
-    quantity: number
+    _id: string;
+    title: string;
+    food: string;
+    description?: string;
+    quantity: number;
     variation: {
-      _id: string
-      title: string
-      price: number
-    }
+      _id: string;
+      title: string;
+      price: number;
+    };
     addons?: {
-      _id: string
-      title: string
-      description?: string
-      quantityMinimum: number
-      quantityMaximum: number
+      _id: string;
+      title: string;
+      description?: string;
+      quantityMinimum: number;
+      quantityMaximum: number;
       options: {
-        _id: string
-        title: string
-        price: number
-      }[]
-    }[]
-    isActive: boolean
-    createdAt: string
-  }[]
+        _id: string;
+        title: string;
+        price: number;
+      }[];
+    }[];
+    isActive: boolean;
+    createdAt: string;
+  }[];
   user: {
-    _id: string
-    name: string
-    phone: string
-  }
-  paymentMethod: string
-  paidAmount: number
-  orderAmount: number
-  paymentStatus: string
-  orderStatus: string
-  tipping: number
-  taxationAmount: number
-  reason?: string
-  isRiderRinged: boolean
-  preparationTime?: string
+    _id: string;
+    name: string;
+    phone: string;
+  };
+  paymentMethod: string;
+  paidAmount: number;
+  orderAmount: number;
+  paymentStatus: string;
+  orderStatus: string;
+  tipping: number;
+  taxationAmount: number;
+  reason?: string;
+  isRiderRinged: boolean;
+  preparationTime?: string;
   rider?: {
-    _id: string
-    name: string
-    username: string
-  }
+    _id: string;
+    name: string;
+    username: string;
+  };
 }
 
 export interface IStoreOnCompletedResponsee {
-  restaurant: IStoreProfile
-  assignedOrders: Order[]
+  restaurant: IStoreProfile;
+  assignedOrders: Order[];
 }

@@ -1,34 +1,34 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import { NormalizedCacheObject } from '@apollo/client'
-import { ApolloClient } from '@apollo/client'
-import { IGlobalProviderProps } from './global.interface'
+import { NormalizedCacheObject } from "@apollo/client";
+import { ApolloClient } from "@apollo/client";
+import { IGlobalProviderProps } from "./global.interface";
 
 export interface ILoginInitialValues {
-  username: string
-  password: string
+  username: string;
+  password: string;
 }
 
 export interface IAuthContext {
-  token: string
-  setTokenAsync: (token: string) => Promise<void>
-  logout: () => void
+  token: string;
+  setTokenAsync: (token: string) => Promise<void>;
+  logout: () => void;
 }
 
 export interface IAuthProviderProps extends IGlobalProviderProps {
-  client: ApolloClient<NormalizedCacheObject>
+  client: ApolloClient<NormalizedCacheObject>;
 }
 
 interface IStoreLoginResponse {
-  token: string
-  restaurantId: string
+  token: string;
+  restaurantId: string;
 }
 
 interface IStoreDefaultCredsResponse {
-  restaurantUsername: string
-  restaurantPassword: string
+  restaurantUsername: string;
+  restaurantPassword: string;
 }
 
 export interface IStoreLoginCompleteResponse {
-  restaurantLogin: IStoreLoginResponse
-  lastOrderCreds: IStoreDefaultCredsResponse
+  restaurantLogin: IStoreLoginResponse;
+  lastOrderCreds: IStoreDefaultCredsResponse;
 }

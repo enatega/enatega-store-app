@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from "@apollo/client";
 
 export const UPDATE_LOCATION = gql`
   mutation UpdateRiderLocation($latitude: String!, $longitude: String!) {
@@ -6,7 +6,7 @@ export const UPDATE_LOCATION = gql`
       _id
     }
   }
-`
+`;
 
 export const UPDATE_AVAILABILITY = gql`
   mutation ToggleStore($restaurantId: String) {
@@ -14,7 +14,7 @@ export const UPDATE_AVAILABILITY = gql`
       _id
     }
   }
-`
+`;
 
 export const UPDATE_LICENSE = gql`
   mutation UpdateRiderLicenseDetails(
@@ -28,7 +28,7 @@ export const UPDATE_LICENSE = gql`
       _id
     }
   }
-`
+`;
 export const UPDATE_VEHICLE = gql`
   mutation UpdateRiderVehicleDetails(
     $updateRiderVehicleDetailsId: String!
@@ -41,7 +41,7 @@ export const UPDATE_VEHICLE = gql`
       _id
     }
   }
-`
+`;
 export const UPDATE_BUSINESS_DETAILS = gql`
   mutation UpdateRestaurantBussinessDetails(
     $updateRestaurantBussinessDetailsId: String!
@@ -58,4 +58,4 @@ export const UPDATE_BUSINESS_DETAILS = gql`
       }
     }
   }
-`
+`;
