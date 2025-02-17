@@ -3,7 +3,6 @@ import {
   IStoreByIdResponse,
   IStoreCurrentWithdrawRequestResponse,
   IStoreEarningsResponse,
-  IStoreTransaction,
   IStoreTransactionHistoryResponse,
 } from "@/lib/utils/interfaces/rider.interface";
 import { ILazyQueryResult } from "@/lib/utils/interfaces";
@@ -37,7 +36,7 @@ import { GraphQLError } from "graphql";
 import { router } from "expo-router";
 
 // Core
-import { Alert, ScrollView } from "react-native";
+import { Alert, FlatList } from "react-native";
 import { Text, View } from "react-native";
 
 // Skeletons
@@ -219,19 +218,15 @@ export default function WalletMain() {
   if (isLoading) return <WalletScreenMainLoading />;
   else
     return (
-      <View className="flex flex-col justify-between  w-[100%] h-[100%]">
-        {!isLoading &&
-        (storeProfileData?.restaurant?.currentWalletAmount !== null ||
-          undefined) ? (
-          <View className="flex flex-column gap-4 items-center bg-[#F3F4F6]">
+      <View className="flex flex-col justify-between items-center  w-[100%] h-[100%]">
+        {storeProfileData?.restaurant ? (
+          <View className="flex-1 flex flex-column gap-4 items-center bg-[#F3F4F6]">
             <Text className="text-[18px] text-[#4B5563] font-[600] mt-12">
               {t("Current Balance")}
             </Text>
             <Text className="font-semibold text-[32px]">
               $
-              {String(
-                storeProfileData?.restaurant?.currentWalletAmount ?? "$0",
-              )}
+              {String(storeProfileData?.restaurant?.currentWalletAmount ?? "0")}
             </Text>
             <CustomContinueButton
               title={t("Withdraw Now")}
@@ -239,66 +234,66 @@ export default function WalletMain() {
             />
           </View>
         ) : (
-          <NoRecordFound msg="Your wallet is currently empty" />
+          <NoRecordFound msg={t("Your wallet is currently empty")} />
         )}
-        {storeCurrentWithdrawRequestData?.storeCurrentWithdrawRequest
-          ?.requestAmount !== 0 &&
-          storeCurrentWithdrawRequestData?.storeCurrentWithdrawRequest && (
-            <View className="w-full h-full">
-              <Text className="font-bold text-lg bg-white p-5 mt-4">
-                {t("Pending Request")}
-              </Text>
-              <RecentTransaction
-                transaction={{
-                  amountTransferred:
-                    storeCurrentWithdrawRequestData?.storeCurrentWithdrawRequest
-                      ?.requestAmount || 0,
-                  status:
-                    storeCurrentWithdrawRequestData?.storeCurrentWithdrawRequest
-                      ?.status,
-                  createdAt:
-                    storeCurrentWithdrawRequestData?.storeCurrentWithdrawRequest
-                      ?.createdAt,
-                }}
-                key={
+        {storeCurrentWithdrawRequestData?.storeCurrentWithdrawRequest && (
+          <View className="w-full h-full flex-1">
+            <Text className="font-bold text-lg bg-white p-5 mt-4">
+              {t("Pending Request")}
+            </Text>
+            <RecentTransaction
+              transaction={{
+                amountTransferred:
                   storeCurrentWithdrawRequestData?.storeCurrentWithdrawRequest
-                    ?.createdAt
-                }
-                isLast={false}
-              />
-            </View>
-          )}
-        <View>
-          <Text className="font-bold text-lg bg-white p-5 mt-4">
-            {t("Recent Transactions")}
-          </Text>
+                    ?.requestAmount || 0,
+                status:
+                  storeCurrentWithdrawRequestData?.storeCurrentWithdrawRequest
+                    ?.status,
+                createdAt:
+                  storeCurrentWithdrawRequestData?.storeCurrentWithdrawRequest
+                    ?.createdAt,
+              }}
+              key={
+                storeCurrentWithdrawRequestData?.storeCurrentWithdrawRequest
+                  ?.createdAt
+              }
+              isLast={false}
+            />
+          </View>
+        )}
 
-          <ScrollView>
-            {storeTransactionData?.transactionHistory?.data.length === 0 &&
-            !isLoading ? (
-              <NoRecordFound />
-            ) : (
-              storeTransactionData?.transactionHistory.data.map(
-                (transaction: IStoreTransaction, index: number) => {
-                  console.warn("🚀 ~ WalletMain ~ transaction:", {
-                    transaction,
-                  });
-                  return (
-                    <RecentTransaction
-                      transaction={transaction}
-                      key={transaction.createdAt}
-                      isLast={
-                        storeTransactionData?.transactionHistory.data.length -
-                          1 ===
-                        index
-                      }
-                    />
-                  );
-                },
-              )
-            )}
-          </ScrollView>
-        </View>
+        {storeTransactionData && (
+          <FlatList
+            className="w-full h-full flex-1 basis-32 -mt-12"
+            ListHeaderComponent={() => {
+              return (
+                <Text className="font-bold text-lg bg-white p-5">
+                  {t("Recent Transactions")}
+                </Text>
+              );
+            }}
+            data={storeTransactionData?.transactionHistory?.data}
+            ListEmptyComponent={<NoRecordFound />}
+            renderItem={({ item, index }) => {
+              if (storeTransactionData?.transactionHistory?.data) {
+                return (
+                  <RecentTransaction
+                    transaction={item}
+                    isLast={
+                      storeTransactionData?.transactionHistory?.data?.length -
+                        1 ===
+                      index
+                    }
+                    key={`transaction_${index}#`}
+                  />
+                );
+              } else {
+                return <NoRecordFound />;
+              }
+            }}
+          />
+        )}
+
         <WithdrawModal
           isBottomModalOpen={isBottomModalOpen}
           setIsBottomModalOpen={setIsBottomModalOpen}

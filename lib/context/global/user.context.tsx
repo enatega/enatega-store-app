@@ -85,11 +85,10 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
 
   const getUserId = useCallback(async () => {
     const id = await AsyncStorage.getItem("store-id");
-    console.log("🚀 ~ getUserId ~ id:", { id });
     if (id) {
       setUserId(id);
     }
-  }, [userId, refetchProfile]);
+  }, [userId]);
 
   // const subscribeNewOrders = () => {
   //   try {
@@ -186,14 +185,14 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
 
   useEffect(() => {
     getUserId();
-  }, [getUserId]);
+  }, [userId]);
 
   console.log({ userId });
   useEffect(() => {
     if (userId) {
       refetchProfile({ restaurantId: userId });
     }
-  }, [userId, refetchProfile]);
+  }, [userId]);
   /*Why is this duplicated? */
   // useEffect(() => {
   //   const trackRiderLocation = async () => {

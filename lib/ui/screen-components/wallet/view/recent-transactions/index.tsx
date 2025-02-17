@@ -3,6 +3,7 @@ import { IStoreTransaction } from "@/lib/utils/interfaces/rider.interface";
 
 // Icons
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 
 // Core
 import { Text, View } from "react-native";
@@ -16,6 +17,10 @@ export default function RecentTransaction({
 }) {
   // Constants
   const date = new Date(transaction?.createdAt);
+
+  // Hooks
+  const { t } = useTranslation();
+
   return (
     <View
       className={`flex flex-row justify-between p-4 w-full ${isLast && "mb-24"}`}
@@ -45,8 +50,10 @@ export default function RecentTransaction({
           }
         />
         <View className="flex flex-col justify-between gap-1">
-          <Text className="font-semibold">{transaction?.status}</Text>
-          <Text>{date.toDateString()}</Text>
+          <Text className="font-semibold">
+            {t(String(transaction?.status))}
+          </Text>
+          <Text>{String(date.toDateString())}</Text>
         </View>
       </View>
       <Text
