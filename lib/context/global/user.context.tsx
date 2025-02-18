@@ -35,9 +35,11 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     date: "",
     earningsArray: [] as IStoreEarningsArray[],
     totalEarningsSum: 0,
-    totalTipsSum: 0,
     totalDeliveries: 0,
   });
+  const [storeOrderEarnings, setStoreOrderEarnings] = useState<
+    IStoreEarningsArray[]
+  >([]);
   const [userId, setUserId] = useState("");
 
   const {
@@ -54,10 +56,6 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     IStoreProfileResponse | undefined,
     { restaurantId: string }
   >;
-  console.log("🚀 ~ UserProvider ~ userId:", userId);
-  console.log("🚀 ~ UserProvider ~ loadingProfile:", {
-    dataProfile: dataProfile?.restaurant,
-  });
 
   const {
     loading: loadingAssigned,
@@ -71,7 +69,6 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   async function fetchProfile() {
     try {
       if (userId) {
-        console.log("🚀 ~ fetchProfile ~ userId:", userId);
         await refetchProfile({ restaurantId: userId });
       }
     } catch (error) {
@@ -97,9 +94,9 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     <UserContext.Provider
       value={{
         modalVisible,
-        // riderOrderEarnings,
+        storeOrderEarnings,
         setModalVisible,
-        // setRiderOrderEarnings,
+        setStoreOrderEarnings,
         userId,
         loadingProfile,
         errorProfile,

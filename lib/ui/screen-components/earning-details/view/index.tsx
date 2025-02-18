@@ -4,15 +4,17 @@ import { View } from "react-native";
 // Interfaces
 import {
   IEarningDetailsMainProps,
-  IRiderEarningsResponse,
+  IStoreEarningsResponse,
 } from "@/lib/utils/interfaces/rider-earnings.interface";
 
 // Hooks
 import { useUserContext } from "@/lib/context/global/user.context";
 import { QueryResult, useQuery } from "@apollo/client";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 // GraphQL
-import { RIDER_EARNINGS_GRAPH } from "@/lib/apollo/queries/earnings.query";
+import { STORE_EARNINGS_GRAPH } from "@/lib/apollo/queries/earnings.query";
 
 // Components
 import EarningDetailsHeader from "../header";
@@ -21,13 +23,17 @@ import EarningsDetailStacks from "./earnings";
 // Skeletons
 import { EarningsSummaryMainLoading } from "@/lib/ui/skeletons";
 import EarningDetailsDateFilter from "../date-filter";
+
+// React Native Flash Message
 import { showMessage } from "react-native-flash-message";
-import { useState } from "react";
 
 export default function EarningDetailsMain({
   dateFilter,
   setDateFilter,
 }: IEarningDetailsMainProps) {
+  // Hooks
+  const { t } = useTranslation();
+
   // States
   const [isFiltering, setIsFiltering] = useState(false);
   const [isDateFilterVisible, setIsDateFilterVisible] = useState(false);
@@ -37,10 +43,10 @@ export default function EarningDetailsMain({
 
   // Queries
   const {
-    loading: isRiderEarningsLoading,
-    data: riderEarningsData,
+    loading: isStoreEarningsLoading,
+    data: storeEarningsData,
     refetch: fetchRiderEarnings,
-  } = useQuery(RIDER_EARNINGS_GRAPH, {
+  } = useQuery(STORE_EARNINGS_GRAPH, {
     onError: (err) => {
       console.error(err);
       showMessage({
@@ -56,7 +62,7 @@ export default function EarningDetailsMain({
       riderId: userId ?? "",
     },
   }) as QueryResult<
-    IRiderEarningsResponse | undefined,
+    IStoreEarningsResponse | undefined,
     { riderId: string; startDate?: string; endDate?: string }
   >;
 
@@ -66,26 +72,26 @@ export default function EarningDetailsMain({
     // Validation
     if (!dateFilter.startDate) {
       return showMessage({
-        message: "Please select a start date",
+        message: t("Please select a start date"),
         type: "danger",
         duration: 1000,
       });
     } else if (!dateFilter.endDate) {
       return showMessage({
-        message: "Please select an end date",
+        message: t("Please select an end date"),
         type: "danger",
         duration: 1000,
       });
     } else if (new Date(dateFilter.startDate) > new Date(dateFilter.endDate)) {
       return showMessage({
-        message: "Start date cannot be after end date",
+        message: t("Start date cannot be after end date"),
         type: "danger",
         duration: 1000,
       });
     }
     if (!userId) {
       return showMessage({
-        message: "Please log in to view your earnings",
+        message: t("Please log in to view your earnings"),
         type: "danger",
         duration: 1000,
       });
@@ -102,7 +108,7 @@ export default function EarningDetailsMain({
     setIsDateFilterVisible(false);
   }
   // If loading
-  if (isRiderEarningsLoading || isFiltering)
+  if (isStoreEarningsLoading || isFiltering)
     return <EarningsSummaryMainLoading />;
   return (
     <View>
@@ -110,15 +116,15 @@ export default function EarningDetailsMain({
         dateFilter={dateFilter}
         setDateFilter={setDateFilter}
         handleFilterSubmit={handleDateFilterSubmit}
-        isFiltering={isRiderEarningsLoading || isFiltering}
+        isFiltering={isStoreEarningsLoading || isFiltering}
         isDateFilterVisible={isDateFilterVisible}
         setIsDateFilterVisible={setIsDateFilterVisible}
         refetchDeafult={fetchRiderEarnings}
       />
       <EarningDetailsHeader />
       <EarningsDetailStacks
-        isRiderEarningsLoading={isRiderEarningsLoading}
-        riderEarningsData={riderEarningsData}
+        isStoreEarningsLoading={isStoreEarningsLoading}
+        storeEarningsData={storeEarningsData}
         setModalVisible={setModalVisible}
       />
     </View>

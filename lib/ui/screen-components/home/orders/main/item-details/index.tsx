@@ -1,9 +1,16 @@
+// Contexts
 import { ConfigurationContext } from "@/lib/context/global/configuration.context";
+
+// Hooks
 import { useContext, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+
+// Core
 import { View, Text } from "react-native";
 
 const ItemDetails = ({ orderData: order }) => {
-  // Context
+  // Hooks
+  const { t } = useTranslation();
   const configuration = useContext(ConfigurationContext);
 
   if (!order) return null;
@@ -18,10 +25,10 @@ const ItemDetails = ({ orderData: order }) => {
     <View className="pb-4">
       <View className="flex-1 flex-row justify-between items-center">
         <Text className="font-[Inter] text-[11px] text-base font-[500] text-gray-600">
-          ITEMS AND QUANTITY
+          {t("ITEMS AND QUANTITY")}
         </Text>
         <Text className="font-[Inter] text-[11px] text-base font-[500] text-gray-600">
-          PRICE
+          {t("PRICE")}
         </Text>
       </View>
 
@@ -70,7 +77,7 @@ const ItemDetails = ({ orderData: order }) => {
       {/* Order Amount */}
       <View className="flex-1 flex-row justify-between mb-4">
         <Text className="font-[Inter] text-[16px] text-base font-[500] text-gray-600">
-          Total
+          {t("Total")}
         </Text>
         <View className="flex-row gap-x-1">
           <Text className="font-[Inter] font-semibold text-left text-gray-900">

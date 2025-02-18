@@ -21,10 +21,10 @@ export interface IUserContextProps {
   refetchAssigned?: () => void;
   networkStatusAssigned?: NetworkStatus;
   requestForegroundPermissionsAsync?: () => Promise<LocationPermissionResponse>;
-  modalVisible?: IStoreEarnings & { bool: boolean };
+  modalVisible: IStoreEarnings & { bool: boolean };
   setModalVisible: Dispatch<SetStateAction<IStoreEarnings & { bool: boolean }>>;
-  riderOrderEarnings?: IStoreEarningsArray[];
-  setRiderOrderEarnings?: Dispatch<SetStateAction<IStoreEarningsArray[]>>;
+  storeOrderEarnings?: IStoreEarningsArray[];
+  setStoreOrderEarnings: Dispatch<SetStateAction<IStoreEarningsArray[]>>;
 }
 export interface IUserProviderProps extends IGlobalProviderProps {}
 

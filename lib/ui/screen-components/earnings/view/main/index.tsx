@@ -19,6 +19,7 @@ import { STORE_EARNINGS_GRAPH } from "@/lib/apollo/queries/earnings.query";
 
 // Hooks
 import { QueryResult, useQuery } from "@apollo/client";
+import { useTranslation } from "react-i18next";
 
 // Expo
 import { router } from "expo-router";
@@ -29,9 +30,11 @@ import { EarningScreenMainLoading } from "@/lib/ui/skeletons";
 // Components
 import EarningStack from "../earnings-stack";
 import EarningsBarChart from "../../bar-chart";
+import { NoRecordFound } from "@/lib/ui/useable-components";
 
 export default function EarningsMain() {
-  // Contexts
+  // Hooks
+  const { t } = useTranslation();
   const { userId, setModalVisible } = useUserContext();
 
   // Queries
@@ -43,7 +46,6 @@ export default function EarningsMain() {
       },
     },
   ) as QueryResult<IStoreEarningsResponse | undefined, { storeId: string }>;
-  console.log("🚀 ~ EarningsMain ~ storeEarningsData:", { storeEarningsData });
 
   const barData: barDataItem[] =
     storeEarningsData?.storeEarningsGraph.earnings
@@ -79,7 +81,9 @@ export default function EarningsMain() {
         frontColor="#8fe36e"
       />
       <View className="flex flex-row justify-between w-full px-4 py-4">
-        <Text className="text-xl text-black font-bold">Recent Activity</Text>
+        <Text className="text-xl text-black font-bold">
+          {t("Recent Activity")}
+        </Text>
         <TouchableOpacity
           onPress={() => {
             setModalVisible({
@@ -96,16 +100,14 @@ export default function EarningsMain() {
             );
           }}
         >
-          <Text className="text-sm text-[#3B82F6] font-bold">See More</Text>
+          <Text className="text-sm text-[#3B82F6] font-bold">
+            {t("See More")}
+          </Text>
         </TouchableOpacity>
       </View>
       <View>
         {storeEarningsData?.storeEarningsGraph?.earnings?.length === 0 &&
-          !isStoreEarningsLoading && (
-            <Text className="block mx-auto font-bold text-center w-full my-12">
-              No record found.
-            </Text>
-          )}
+          !isStoreEarningsLoading && <NoRecordFound />}
         {storeEarningsData?.storeEarningsGraph?.earnings?.length &&
           storeEarningsData?.storeEarningsGraph?.earnings
             ?.slice(0, 4)

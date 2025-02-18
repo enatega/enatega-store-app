@@ -9,6 +9,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 // Expo
 import { router } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 // Core
 import { Text, TouchableOpacity, View } from "react-native";
@@ -19,12 +20,14 @@ import ReactNativeModal from "react-native-modal";
 export default function EarningBottomBar({
   totalEarnings,
   totalDeliveries,
-  totalTips,
   modalVisible,
   setModalVisible,
 }: IEarningBottomProps) {
+  // Hooks
+  const { t } = useTranslation();
+
   // Contexts
-  const { setRiderOrderEarnings } = useUserContext();
+  const { setStoreOrderEarnings } = useUserContext();
   return (
     <ReactNativeModal
       animationIn={"slideInUp"}
@@ -37,7 +40,6 @@ export default function EarningBottomBar({
           date: "",
           earningsArray: [],
           totalEarningsSum: 0,
-          totalTipsSum: 0,
           totalDeliveries: 0,
         });
       }}
@@ -63,7 +65,7 @@ export default function EarningBottomBar({
       }}
     >
       <Text className="font-bold text-xl w-full py-5 text-center">
-        Earnings
+        {t("Earnings")}
       </Text>
       <Ionicons
         name="close-circle-outline"
@@ -76,44 +78,40 @@ export default function EarningBottomBar({
             date: "",
             earningsArray: [],
             totalEarningsSum: 0,
-            totalTipsSum: 0,
             totalDeliveries: 0,
           });
         }}
       />
       <View className="flex flex-col justify-between h-[65%] w-full">
         <View className="flex flex-row justify-between items-center flex-2 bg-gray-100 p-5">
-          <Text className="font-bold">Total Earning</Text>
+          <Text className="font-bold">{t("Total Earning")}</Text>
           <Text>${totalEarnings}</Text>
         </View>
-        <View className="flex flex-row justify-between items-center flex-2 p-5">
-          <Text className="font-bold text-md">Tips</Text>
-          <Text className="font-bold text-md">${totalTips}</Text>
-        </View>
+
         <View className="flex flex-row justify-between p-5 ">
           <Text className="text-md text-[#3B82F6] font-bold">
-            Deliveries({totalDeliveries})
+            {t("Deliveries")}({totalDeliveries})
           </Text>
           <TouchableOpacity
             className="flex flex-row gap-2 items-center flex-2"
             onPress={() => {
               router.push({
-                pathname: "/(tabs)/earnings/(routes)/earnings-order-details",
+                pathname:
+                  "/(protected)/(tabs)/earnings/(routes)/earnings-order-details",
               });
-              setRiderOrderEarnings(modalVisible.earningsArray);
+              setStoreOrderEarnings(modalVisible.earningsArray);
               setModalVisible({
                 bool: false,
                 _id: "",
                 date: "",
                 earningsArray: [],
                 totalEarningsSum: 0,
-                totalTipsSum: 0,
                 totalDeliveries: 0,
               });
             }}
           >
             <Text className="text-md text-[#3B82F6] font-bold">
-              ${totalEarnings - totalTips}{" "}
+              ${totalEarnings}
             </Text>
             <Ionicons name="arrow-forward" size={23} />
           </TouchableOpacity>
