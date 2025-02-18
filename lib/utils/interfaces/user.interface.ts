@@ -5,10 +5,10 @@ import {
   IStoreEarnings,
   IStoreEarningsArray,
 } from "./rider-earnings.interface";
+import { TWeekDays } from "../types/restaurant";
 import { ApolloError, NetworkStatus } from "@apollo/client";
 import { IOrder } from "./order.interface";
 import { LocationPermissionResponse } from "expo-location";
-import { WorkSchedule } from "./work-schedule.interface";
 
 export interface IUserContextProps {
   loadingProfile?: boolean;
@@ -56,9 +56,7 @@ export interface IStoreProfile {
   rating: number;
   isActive: string;
   isAvailable: string;
-  openingTimes: {
-    day: string;
-  };
+  openingTimes: ITimingResponseGQL[];
   slug: string;
   stripeDetailsSubmitted: string;
   commissionRate: string;
@@ -88,7 +86,26 @@ export interface IStoreProfile {
     accountName: string;
     accountCode: string;
   };
-  workSchedule: WorkSchedule[];
+}
+
+export interface ITimeSlot {
+  startTime: string | null;
+  endTime: string | null;
+}
+
+export interface ITimingForm {
+  day: TWeekDays;
+  times: ITimeSlot[];
+}
+
+export interface ITimeSlotResponseGQL {
+  startTime: string[];
+  endTime: string[];
+}
+
+export interface ITimingResponseGQL {
+  day: TWeekDays;
+  times: ITimeSlotResponseGQL[];
 }
 
 export interface IStoreProfileResponse {

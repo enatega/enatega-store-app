@@ -99,7 +99,7 @@ const CustomDrawerHeader = () => {
           className="text-md"
           style={{ color: Colors.light.secondaryTextColor }}
         >
-          Availability
+          {t("Availability")}
         </Text>
         <CustomSwitch
           value={dataProfile?.available ?? isEnabled}

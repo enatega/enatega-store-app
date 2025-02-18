@@ -63,7 +63,7 @@ export const STORE_CURRENT_WITHDRAW_REQUEST = gql`
 `;
 
 export const STORE_PROFILE = gql`
-  query Restaurant($restaurantId: String) {
+  query Restaurant($restaurantId: String!) {
     restaurant(id: $restaurantId) {
       _id
       unique_restaurant_id
@@ -85,6 +85,13 @@ export const STORE_PROFILE = gql`
       enableNotification
       shopType
       phone
+      openingTimes {
+        day
+        times {
+          startTime
+          endTime
+        }
+      }
       totalWalletAmount
       withdrawnWalletAmount
       currentWalletAmount

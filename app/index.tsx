@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // Context
 import { useLocationContext } from "@/lib/context/global/location.context";
 // API
-import { RIDER_ORDERS } from "@/lib/apollo/queries";
+import { STORE_ORDERS } from "@/lib/apollo/queries";
 // Constant
 import { RIDER_TOKEN, ROUTES } from "@/lib/utils/constants";
 // Service
@@ -67,7 +67,7 @@ function App() {
       ) {
         const { _id } = response.notification.request.content.data;
         const { data } = await client.query({
-          query: RIDER_ORDERS,
+          query: STORE_ORDERS,
           fetchPolicy: "network-only",
         });
         const order = data.riderOrders.find((o: IOrder) => o._id === _id);

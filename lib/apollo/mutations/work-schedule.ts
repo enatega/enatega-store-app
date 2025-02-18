@@ -1,26 +1,12 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client'
 
 export const UPDATE_WORK_SCHEDULE = gql`
-  mutation UpdateWorkSchedule(
-    $riderId: String!
-    $workSchedule: [DayScheduleInput!]!
-    $timeZone: String!
+  mutation UpdateTimings(
+    $updateTimingsId: String!
+    $openingTimes: [TimingsInput]
   ) {
-    updateWorkSchedule(
-      riderId: $riderId
-      workSchedule: $workSchedule
-      timeZone: $timeZone
-    ) {
+    updateTimings(id: $updateTimingsId, openingTimes: $openingTimes) {
       _id
-      timeZone
-      workSchedule {
-        day
-        enabled
-        slots {
-          startTime
-          endTime
-        }
-      }
     }
   }
-`;
+`

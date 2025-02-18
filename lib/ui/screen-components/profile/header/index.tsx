@@ -1,5 +1,6 @@
 // Hooks
 import { useUserContext } from "@/lib/context/global/user.context";
+import { useTranslation } from "react-i18next";
 
 // Constants
 import { Colors } from "@/lib/utils/constants";
@@ -9,6 +10,7 @@ import { Image, ImageBackground, Text, View } from "react-native";
 
 export default function ProfileHeader() {
   // Hooks
+  const { t } = useTranslation();
   const { dataProfile } = useUserContext();
   console.log({ logo: dataProfile?.logo });
   return (
@@ -68,7 +70,7 @@ export default function ProfileHeader() {
               textShadowRadius: 15,
             }}
           >
-            {dataProfile?.name ?? "store name"}
+            {dataProfile?.name ?? t("store name")}
           </Text>
           <Text
             className="font-medium"
@@ -76,7 +78,7 @@ export default function ProfileHeader() {
               color: Colors.light.secondaryTextColor,
             }}
           >
-            {dataProfile?._id.substring(0, 9).toUpperCase() ?? "store id"}
+            {dataProfile?._id.substring(0, 9).toUpperCase() ?? t("store id")}
           </Text>
         </View>
       </View>

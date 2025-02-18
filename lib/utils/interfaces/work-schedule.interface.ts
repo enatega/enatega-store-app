@@ -1,14 +1,13 @@
+import { TWeekDays } from "../types/restaurant";
+
 export interface WorkSchedule {
-    day: string;
-    enabled: boolean;
-    slots: TimeSlot[];
-    __typename: string;
+    day: TWeekDays;
+    times: TimeSlot[]
   }
 
   export interface TimeSlot {
-    startTime: string;
-    endTime: string;
-    __typename: string;
+    startTime: string[];
+    endTime: string[];
   }
 
   

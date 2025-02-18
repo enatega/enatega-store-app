@@ -4,7 +4,7 @@ import { FlashMessageComponent } from "@/lib/ui/useable-components";
 import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 
 import { ApolloError, useMutation } from "@apollo/client";
-import { TimeSlot, WorkSchedule } from "@/lib/utils/interfaces";
+import { WorkSchedule } from "@/lib/utils/interfaces";
 
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -20,17 +20,19 @@ import {
   StyleSheet,
 } from "react-native";
 import { Switch } from "react-native-switch";
+import { TWeekDays } from "@/lib/utils/types/restaurant";
+import { STORE_PROFILE } from "@/lib/apollo/queries";
 
 const { width } = Dimensions.get("window");
 
-const daysOfWeek = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
+const daysOfWeek: TWeekDays[] = [
+  "MON",
+  "TUE",
+  "WED",
+  "THU",
+  "FRI",
+  "SAT",
+  "SUN",
 ];
 
 // Generate 24-hour time slots (every 15 minutes)
@@ -56,7 +58,7 @@ export default function WorkScheduleMain() {
     slotIndex: number;
     type: "start" | "end";
   } | null>(null);
-  const [timeZone, setTimeZone] = useState("");
+  //   const [timeZone, setTimeZone] = useState('')
 
   // Animation refs
   const fadeAnim = useRef(new Animated.Value(0)).current; // Opacity
@@ -67,37 +69,50 @@ export default function WorkScheduleMain() {
   const { dataProfile } = useUserContext();
 
   // API Hook
-  const [updateSchedule, { loading: isUpatingSchedule }] =
-    useMutation(UPDATE_WORK_SCHEDULE);
-
+  const [updateSchedule, { loading: isUpatingSchedule }] = useMutation(
+    UPDATE_WORK_SCHEDULE,
+    {
+      refetchQueries: [
+        {
+          query: STORE_PROFILE,
+          variables: { id: dataProfile?._id },
+        },
+      ],
+    },
+  );
   // Handler
   const onHandlerSubmit = async () => {
     try {
+      // Check for overlapping slots
       const overlapping_day = hasOverlappingSlots(schedule ?? []);
-
       if (overlapping_day) {
         FlashMessageComponent({
-          message: `${overlapping_day} has overlapping slots.`,
+          message: `${t(overlapping_day)} ${t("has overlapping slots")}.`,
         });
         return;
       }
 
-      // eslint-disable-next-line unused-imports/no-unused-vars
-      const cleaned_work_schedule = schedule?.map(({ __typename, ...day }) => ({
-        ...day,
-        slots: day.slots.map((slot) => {
-          // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
-          const { __typename: slot_timename, ...cleanSlot } = slot;
-          return cleanSlot;
-        }),
-      }));
+      // Clean the work schedule before submitting
+      const cleanedWorkSchedule =
+        schedule?.map(({ ...day }) => ({
+          ...day,
+          times: day.times
+            .filter((time) => time.startTime && time.endTime) // Ensure there are no empty slots
+            .map(({ ...cleanSlot }) => cleanSlot),
+        })) ?? [];
 
+      // Ensure there is valid data to send
+      if (
+        !cleanedWorkSchedule.length ||
+        cleanedWorkSchedule.every((day) => !day.times.length)
+      ) {
+        FlashMessageComponent({ message: t("No valid slots to submit") });
+        return;
+      }
+
+      const scheduleInput = transformSchedule(cleanedWorkSchedule);
       await updateSchedule({
-        variables: {
-          riderId: dataProfile?._id,
-          workSchedule: cleaned_work_schedule,
-          timeZone,
-        },
+        variables: scheduleInput,
         onCompleted: () => {
           FlashMessageComponent({
             message: t("Work Schedule has been updated successfully"),
@@ -110,7 +125,6 @@ export default function WorkScheduleMain() {
           });
         },
       });
-      // eslint-disable-next-line unused-imports/no-unused-vars
     } catch (err) {
       const error = err as ApolloError;
       FlashMessageComponent({
@@ -122,86 +136,81 @@ export default function WorkScheduleMain() {
   // Handlers
   const toggleDay = (index: number) => {
     const updatedSchedule = [...(schedule ?? [])];
-    updatedSchedule[index].enabled = !updatedSchedule[index].enabled;
+    // If times array is empty, add default time slot
+    if (updatedSchedule[index].times.length === 0) {
+      updatedSchedule[index].times = [
+        {
+          startTime: ["09", "00"],
+          endTime: ["17", "00"],
+        },
+      ];
+    } else {
+      // If times exist, clear them
+      updatedSchedule[index].times = [];
+    }
     setSchedule(updatedSchedule);
   };
 
-  // const updateTime = (
-  //   dayIndex: number,
-  //   slotIndex: number,
-  //   type: "startTime" | "endTime",
-  //   value: string
-  // ) => {
-  //   const updatedSchedule = [...schedule];
-  //   updatedSchedule[dayIndex].slots[slotIndex][type] = value;
-  //   setSchedule(updatedSchedule);
-  //   closeDropdown(); // Close dropdown after selection
-  // };
+  function transformSchedule(schedule: WorkSchedule[] | undefined) {
+    if (!schedule) return { updateTimingsId: null, openingTimes: [] };
 
-  // const updateTime = (
-  //   dayIndex: number,
-  //   slotIndex: number,
-  //   type: "startTime" | "endTime",
-  //   value: string,
-  // ) => {
-  //   const updatedSchedule = JSON.parse(JSON.stringify(schedule));
+    return {
+      updateTimingsId: dataProfile?._id || null,
+      openingTimes: schedule.map((daySchedule) => ({
+        day: daySchedule.day.toUpperCase().substring(0, 3) || null,
+        times:
+          daySchedule.times.length === 0
+            ? []
+            : daySchedule.times.map((slot) => {
+                // Ensure we're working with string format first
+                const startTimeStr = Array.isArray(slot.startTime)
+                  ? slot.startTime.join(":")
+                  : slot.startTime;
+                const endTimeStr = Array.isArray(slot.endTime)
+                  ? slot.endTime.join(":")
+                  : slot.endTime;
 
-  //   // Get the current slot
-  //   const slot = updatedSchedule[dayIndex].slots[slotIndex];
+                // Ensure proper splitting of hours and minutes
+                const [startHours = "00", startMinutes = "00"] =
+                  startTimeStr.split(":");
+                const [endHours = "00", endMinutes = "00"] =
+                  endTimeStr.split(":");
 
-  //   // Helper function to convert time string (HH:mm) to minutes
-  //   const timeToMinutes = (time: string) => {
-  //     const [hours, minutes] = time.split(":").map(Number);
-  //     return hours * 60 + minutes;
-  //   };
+                return {
+                  startTime: [startHours, startMinutes],
+                  endTime: [endHours, endMinutes],
+                };
+              }),
+      })),
+    };
+  }
 
-  //   if (type === "startTime") {
-  //     // If updating startTime, ensure it doesn't exceed endTime
-  //     if (slot.endTime && timeToMinutes(value) >= timeToMinutes(slot.endTime)) {
-  //       FlashMessageComponent({
-  //         message: "Start time must be earlier than end time.",
-  //       });
-  //       return;
-  //     }
-  //   } else if (type === "endTime") {
-  //     // If updating endTime, ensure it's greater than startTime
-  //     if (
-  //       slot.startTime &&
-  //       timeToMinutes(value) <= timeToMinutes(slot.startTime)
-  //     ) {
-  //       FlashMessageComponent({
-  //         message: "End time must be greater than start time.",
-  //       });
-  //       return;
-  //     }
-  //   }
+  // Helper function to convert time string (HH:mm) to minutes
+  const timeToMinutes = (time: string | string[]) => {
+    if (Array.isArray(time)) {
+      time = time[0]; // Take the first element of the array
+    }
 
-  //   // Update the slot value
-  //   updatedSchedule[dayIndex].slots[slotIndex][type] = value;
-  //   setSchedule(updatedSchedule);
-  //   closeDropdown(); // Close dropdown after selection
-  // };
+    const [hours, minutes] = time.split(":").map(Number);
+    return hours * 60 + minutes;
+  };
 
   const hasOverlappingSlots = (schedule: WorkSchedule[]): string => {
-    // Helper function to convert time string (HH:mm) to minutes
-    const timeToMinutes = (time: string) => {
-      const [hours, minutes] = time.split(":").map(Number);
-      return hours * 60 + minutes;
-    };
-
     for (const daySchedule of schedule) {
-      if (!daySchedule.enabled) continue; // Skip disabled days
+      if (daySchedule.times.length === 0) continue; // Skip days with no times
 
-      const slots = daySchedule.slots;
+      const times = daySchedule.times;
 
       // Sort slots by start time to ensure proper order
-      const sortedSlots = [...slots].sort(
-        (a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime),
+      const sortedSlots = [...times].sort(
+        (a, b) =>
+          timeToMinutes(a.startTime.join(":")) -
+          timeToMinutes(b.startTime.join(":")),
       );
 
       for (let i = 0; i < sortedSlots.length - 1; i++) {
-        const currentEnd = timeToMinutes(sortedSlots[i].endTime);
-        const nextStart = timeToMinutes(sortedSlots[i + 1].startTime);
+        const currentEnd = timeToMinutes(sortedSlots[i].endTime.join(":"));
+        const nextStart = timeToMinutes(sortedSlots[i + 1].startTime.join(":"));
 
         // If the next slot starts before the current one ends, there's an overlap
         if (nextStart < currentEnd) {
@@ -219,79 +228,95 @@ export default function WorkScheduleMain() {
     type: "startTime" | "endTime",
     value: string,
   ) => {
-    const updatedSchedule = JSON.parse(JSON.stringify(schedule));
+    let updatedSchedule;
+    let slot;
+    if (schedule?.length) {
+      updatedSchedule = [...schedule];
+      slot = updatedSchedule[dayIndex].times[slotIndex];
 
-    // Get the current slot
-    const slot = updatedSchedule[dayIndex].slots[slotIndex];
+      // Ensure proper splitting of the new time value
+      const [hours = "00", minutes = "00"] = value.split(":");
 
-    // Helper function to convert time string (HH:mm) to minutes
-    const timeToMinutes = (time: string) => {
-      const [hours, minutes] = time.split(":").map(Number);
-      return hours * 60 + minutes;
-    };
+      // Validate start and end times
+      const newTime = timeToMinutes(value);
 
-    const newTime = timeToMinutes(value);
-
-    if (type === "startTime") {
-      // Ensure new startTime is before endTime
-      if (slot.endTime && newTime >= timeToMinutes(slot.endTime)) {
-        FlashMessageComponent({
-          message: "Start time must be earlier than end time",
-        });
-        return;
-      }
-    } else if (type === "endTime") {
-      // Ensure new endTime is after startTime
-      if (slot.startTime && newTime <= timeToMinutes(slot.startTime)) {
-        FlashMessageComponent({
-          message: "End time must be greater than start time",
-        });
-        return;
-      }
-    }
-
-    // Check for overlaps with other slots in the same day
-    const isOverlapping = updatedSchedule[dayIndex].slots.some(
-      (otherSlot: TimeSlot, idx: number) => {
-        if (idx === slotIndex) return false; // Skip checking the current slot
-
-        const otherStart = timeToMinutes(otherSlot.startTime);
-        const otherEnd = timeToMinutes(otherSlot.endTime);
-
-        if (type === "startTime") {
-          return newTime < otherEnd && newTime >= otherStart;
-        } else {
-          return newTime > otherStart && newTime <= otherEnd;
+      if (type === "startTime") {
+        const endTimeStr = Array.isArray(slot.endTime)
+          ? `${slot.endTime[0] || "00"}:${slot.endTime[1] || "00"}`
+          : slot.endTime;
+        if (slot?.endTime && newTime >= timeToMinutes(endTimeStr)) {
+          FlashMessageComponent({
+            message: "Start time must be earlier than end time",
+          });
+          return;
         }
-      },
-    );
+      } else if (type === "endTime") {
+        const startTimeStr = Array.isArray(slot.startTime)
+          ? `${slot.startTime[0] || "00"}:${slot.startTime[1] || "00"}`
+          : slot.startTime;
+        if (slot?.startTime && newTime <= timeToMinutes(startTimeStr)) {
+          FlashMessageComponent({
+            message: "End time must be greater than start time",
+          });
+          return;
+        }
+      }
 
-    if (isOverlapping) {
-      FlashMessageComponent({
-        message: "Time slot overlaps with another existing slot.",
-      });
-      return;
+      // Check for overlapping slots
+      const isOverlapping = updatedSchedule[dayIndex].times.some(
+        (otherSlot, idx) => {
+          if (idx === slotIndex) return false;
+
+          const otherStart = timeToMinutes(
+            Array.isArray(otherSlot.startTime)
+              ? `${otherSlot.startTime[0] || "00"}:${otherSlot.startTime[1] || "00"}`
+              : otherSlot.startTime,
+          );
+          const otherEnd = timeToMinutes(
+            Array.isArray(otherSlot.endTime)
+              ? `${otherSlot.endTime[0] || "00"}:${otherSlot.endTime[1] || "00"}`
+              : otherSlot.endTime,
+          );
+
+          if (type === "startTime") {
+            return newTime < otherEnd && newTime >= otherStart;
+          } else {
+            return newTime > otherStart && newTime <= otherEnd;
+          }
+        },
+      );
+
+      if (isOverlapping) {
+        FlashMessageComponent({
+          message: t("Time slot overlaps with another existing slot"),
+        });
+        return;
+      }
+
+      // Update the time value as an array [HH, MM]
+      if (type === "startTime") {
+        updatedSchedule[dayIndex].times[slotIndex].startTime = [hours, minutes];
+      } else {
+        updatedSchedule[dayIndex].times[slotIndex].endTime = [hours, minutes];
+      }
+
+      setSchedule(updatedSchedule);
+      closeDropdown();
     }
-
-    // Update the slot value
-    updatedSchedule[dayIndex].slots[slotIndex][type] = value;
-    setSchedule(updatedSchedule);
-    closeDropdown(); // Close dropdown after selection
   };
 
   const addSlot = (dayIndex: number) => {
     const updatedSchedule = schedule ? [...schedule] : [];
-    updatedSchedule[dayIndex].slots.push({
-      startTime: "09:00",
-      endTime: "23:45",
-      __typename: "TimeSlot",
+    updatedSchedule[dayIndex].times.push({
+      startTime: ["09", "00"], // Properly initialize with hours and minutes
+      endTime: ["17", "00"], // Properly initialize with hours and minutes
     });
     setSchedule(updatedSchedule);
   };
 
   const removeSlot = (dayIndex: number, slotIndex: number) => {
     const updatedSchedule = schedule ? [...schedule] : [];
-    updatedSchedule[dayIndex].slots.splice(slotIndex, 1);
+    updatedSchedule[dayIndex].times.splice(slotIndex, 1);
     setSchedule(updatedSchedule);
   };
 
@@ -333,20 +358,37 @@ export default function WorkScheduleMain() {
   }, [dropdown]);
 
   useEffect(() => {
-    setSchedule(
-      (dataProfile?.workSchedule?.length ?? 0) > 0
-        ? JSON.parse(JSON.stringify(dataProfile?.workSchedule))
-        : daysOfWeek.map((day) => ({
-            day,
-            enabled: false,
-            slots: [{ startTime: "09:00", endTime: "17:00" }],
-          })),
-    );
+    if (dataProfile?.openingTimes) {
+      const timings = dataProfile.openingTimes;
 
-    // Auto-detect user's time zone on first render
-    const detectedTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    setTimeZone(detectedTimeZone);
-  }, []);
+      setSchedule(
+        timings.map((daySchedule) => ({
+          day: daySchedule.day || null,
+          times: daySchedule.times?.length
+            ? daySchedule.times.map((slot) => {
+                const [startHours = "09", startMinutes = "00"] =
+                  slot.startTime || [];
+                const [endHours = "17", endMinutes = "00"] = slot.endTime || [];
+
+                return {
+                  startTime: [startHours, startMinutes],
+                  endTime: [endHours, endMinutes],
+                };
+              })
+            : [], // Keep empty array when no times
+          __typename: "OpeningTimes",
+        })),
+      );
+    } else {
+      setSchedule(
+        daysOfWeek.map((day) => ({
+          day,
+          times: [], // Initialize with empty times array
+          __typename: "OpeningTimes",
+        })),
+      );
+    }
+  }, [dataProfile?.openingTimes]);
 
   return (
     <TouchableWithoutFeedback onPress={closeDropdown}>
@@ -355,13 +397,14 @@ export default function WorkScheduleMain() {
           <FlatList
             data={schedule}
             keyExtractor={(item) => item.day}
+            scrollEnabled={true}
             renderItem={({ item, index }) => (
               <View className="bg-gray-200 border border-gray-300 p-4 mb-3 rounded-lg">
                 {/* Day Header with Toggle */}
                 <View className="flex-row justify-between items-center">
                   <Text className="text-lg font-bold">{t(item.day)}</Text>
                   <Switch
-                    value={item.enabled}
+                    value={item.times.some((t) => !!t)}
                     onValueChange={() => toggleDay(index)}
                     activeText={""}
                     inActiveText={""}
@@ -374,9 +417,9 @@ export default function WorkScheduleMain() {
                 </View>
 
                 {/* Time Slots */}
-                {item.enabled && (
+                {item.times.some((t) => !!t) && (
                   <View className="mt-2">
-                    {item.slots.map((slot, slotIndex) => {
+                    {item.times.map((slot, slotIndex) => {
                       const isStartTapped =
                         dropdown?.dayIndex === index &&
                         dropdown?.slotIndex === slotIndex &&
@@ -406,7 +449,7 @@ export default function WorkScheduleMain() {
                             }
                           >
                             <Text className="text-center">
-                              {slot.startTime}
+                              {slot.startTime.join(":")}
                             </Text>
                           </TouchableOpacity>
 
@@ -424,11 +467,13 @@ export default function WorkScheduleMain() {
                             className="w-[40%] bg-white p-2 rounded-md"
                             style={isEndTapped ? style.tappedSlot : style.slot}
                           >
-                            <Text className="text-center">{slot.endTime}</Text>
+                            <Text className="text-center">
+                              {slot.endTime.join(":")}
+                            </Text>
                           </TouchableOpacity>
 
                           {/* Remove Slot Button */}
-                          {item.slots.length > 1 && slotIndex !== 0 && (
+                          {item.times.length > 1 && slotIndex !== 0 && (
                             <TouchableOpacity
                               onPress={() => removeSlot(index, slotIndex)}
                               className="w-8 h-8 justify-center items-center border border-red-600 rounded-full"

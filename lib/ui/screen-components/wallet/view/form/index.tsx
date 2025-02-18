@@ -10,6 +10,7 @@ import { useState } from "react";
 
 // Components
 import { CustomContinueButton } from "@/lib/ui/useable-components";
+import { useTranslation } from "react-i18next";
 
 export default function WithdrawModal({
   isBottomModalOpen,
@@ -23,6 +24,9 @@ export default function WithdrawModal({
   // States
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [ModalMarginTop, setModalMargintTop] = useState(480);
+
+  // Hooks
+  const { t } = useTranslation();
 
   // Handlers
   function handleTextChange(val: string) {
@@ -59,11 +63,13 @@ export default function WithdrawModal({
     >
       <View className="flex flex-col justify-between h-[75%] p-2 items-center w-full">
         <View className="flex flex-row justify-between w-full  border-b-gray-300 border-b">
-          <Text className="font-bold text-lg py-2">Available Amount</Text>
+          <Text className="font-bold text-lg py-2">
+            {t("Available Amount")}
+          </Text>
           <Text className="font-bold text-lg">${currentTotal}</Text>
         </View>
         <View className=" flex flex-col gap-3 w-full">
-          <Text className="font-bold text-lg">Enter Amount</Text>
+          <Text className="font-bold text-lg">{t("Enter Amount")}</Text>
           <TextInput
             value={withdrawAmount}
             onChangeText={(val) => handleTextChange(val)}
@@ -82,7 +88,7 @@ export default function WithdrawModal({
         <View>
           <CustomContinueButton
             title={
-              !withdrawRequestLoading ? "Confirm Withdraw" : "Please wait..."
+              !withdrawRequestLoading ? t("Confirm Withdraw") : t("Please wait")
             }
             disabled={withdrawRequestLoading}
             onPress={() =>

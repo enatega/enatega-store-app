@@ -30,7 +30,7 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
     loadingAssigned,
     errorAssigned,
     assignedOrders,
-    refetchAssigned,
+    // refetchAssigned,
     networkStatusAssigned,
   } = useContext(UserContext);
 
@@ -82,7 +82,7 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
           data={orders}
           showsVerticalScrollIndicator={false}
           refreshing={networkStatusAssigned === NetworkStatus.loading}
-          onRefresh={refetchAssigned}
+          // onRefresh={refetchAssigned}
           renderItem={({ item }: { item: IOrder }) => (
             <Order tab={route.key as ORDER_TYPE} order={item} key={item._id} />
           )}
