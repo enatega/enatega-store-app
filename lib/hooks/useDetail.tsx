@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 
 import { useQuery, useMutation, useSubscription } from "@apollo/client";
-import { FlashMessageComponent } from "../ui/useable-components/flash-message";
+import { FlashMessageComponent } from "../ui/useable-components";
 import { IOrder } from "../utils/interfaces/order.interface";
 import { SUBSCRIPTION_ORDERS } from "../apollo/subscriptions";
 import { GET_CONFIGURATION } from "../api/graphql/query/configuration";

@@ -3,7 +3,10 @@
     "development": {
       "developmentClient": true,
       "channel": "development",
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
     },
     "staging": {
       "developmentClient": false,
@@ -11,8 +14,12 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "SENTRY_AUTH_TOKEN": "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"
       }
     },
+   
     "production": {
       "channel": "production"
     }
@@ -25,7 +32,7 @@
       },
       "ios": {
         "appleId": "sharan.gohar@icloud.com",
-        "ascAppId": "1526674511",
+        "ascAppId": "1526672537",
         "appleTeamId": "GDFK7MVY6P"
       }
     }
@@ -34,3 +41,5 @@
     "version": ">= 0.43.0"
   }
 }
+
+ 
