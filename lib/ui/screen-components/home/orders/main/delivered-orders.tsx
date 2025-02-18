@@ -54,7 +54,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
   useEffect(() => {
     // Trigger refetch when orders length changes
     if (orders?.length === 0) {
-      refetchAssigned();
+      // refetchAssigned();
     }
   }, [orders?.length]);
 

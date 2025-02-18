@@ -1,42 +1,45 @@
-import { gql } from '@apollo/client'
+import { gql } from "@apollo/client";
 
-export const RIDER_BY_ID = gql`
-  query Rider($id: String) {
-    rider(id: $id) {
-      _id
-      location {
-        coordinates
-      }
+export const STORE_BY_ID = gql`
+  query Restaurant($restaurantId: String) {
+    restaurant(id: $restaurantId) {
       zone {
         _id
       }
-      currentWalletAmount
+      location {
+        coordinates
+      }
       totalWalletAmount
       withdrawnWalletAmount
+      currentWalletAmount
+      bussinessDetails {
+        bankName
+        accountNumber
+        accountName
+        accountCode
+      }
     }
   }
-`
+`;
 
-export const RIDER_EARNINGS = gql`
-  query RiderEarnings {
+export const STORE_EARNINGS = gql`
+  query StoreEarnings {
     earnings {
       data {
         grandTotalEarnings {
-          riderTotal
+          storeTotal
         }
         earnings {
-          riderEarnings {
-            deliveryFee
-            tip
+          storeEarnings {
             totalEarnings
           }
         }
       }
     }
   }
-`
+`;
 
-export const RIDER_TRANSACTIONS_HISTORY = gql`
+export const STORE_TRANSACTIONS_HISTORY = gql`
   query TransactionHistory($userType: UserTypeEnum, $userId: String) {
     transactionHistory(userType: $userType, userId: $userId) {
       data {
@@ -46,66 +49,54 @@ export const RIDER_TRANSACTIONS_HISTORY = gql`
       }
     }
   }
-`
+`;
 
-export const RIDER_CURRENT_WITHDRAW_REQUEST = gql`
-  query RiderCurrentWithdrawRequest($riderId: String) {
-    riderCurrentWithdrawRequest(riderId: $riderId) {
+export const STORE_CURRENT_WITHDRAW_REQUEST = gql`
+  query RiderCurrentWithdrawRequest($storeId: String) {
+    storeCurrentWithdrawRequest(storeId: $storeId) {
       _id
       requestAmount
       status
       createdAt
     }
   }
-`
+`;
 
-export const RIDER_PROFILE = gql`
-  query rider($id: String!) {
-    rider(id: $id) {
-      accountNumber
-      assigned
-      available
+export const STORE_PROFILE = gql`
+  query Restaurant($restaurantId: String) {
+    restaurant(id: $restaurantId) {
       _id
-      zone {
-        _id
-      }
-      bussinessDetails {
-        bankName
-        accountName
-        accountCode
-        accountNumber
-      }
-      createdAt
-      currentWalletAmount
-      email
-      image
-      isActive
-      location {
-        coordinates
-      }
+      unique_restaurant_id
+      orderId
+      orderPrefix
       name
+      image
+      logo
+      address
+      username
       password
+      minimumOrder
+      isActive
+      isAvailable
+      slug
+      commissionRate
+      tax
+      notificationToken
+      enableNotification
+      shopType
       phone
       totalWalletAmount
-      updatedAt
-      username
       withdrawnWalletAmount
-      location {
-        coordinates
-      }
-      isActive
-      licenseDetails {
-        expiryDate
-        image
-        number
-      }
-      vehicleDetails {
-        image
-        number
+      currentWalletAmount
+      bussinessDetails {
+        bankName
+        accountNumber
+        accountName
+        accountCode
       }
     }
   }
-`
+`;
 
 export const rider = gql`
   query Rider($id: String) {
@@ -116,24 +107,19 @@ export const rider = gql`
       }
     }
   }
-`
+`;
 
-export const RIDER_ORDERS = gql`
-  query RiderOrders {
-    riderOrders {
+export const STORE_ORDERS = gql`
+  query Orders {
+    restaurantOrders {
       _id
       orderId
-      createdAt
-      acceptedAt
-      pickedAt
-      assignedAt
-      isPickedUp
-      deliveredAt
-      expectedTime
-      deliveryCharges
+      id
       restaurant {
         _id
+
         name
+        image
         address
         location {
           coordinates
@@ -144,55 +130,74 @@ export const RIDER_ORDERS = gql`
           coordinates
         }
         deliveryAddress
-        label
         details
+        label
       }
       items {
         _id
+        id
         title
-        food
         description
+        image
         quantity
         variation {
           _id
+          id
           title
           price
+          discounted
         }
         addons {
           _id
+          id
           options {
             _id
+            id
             title
+            description
             price
           }
-          title
           description
+          title
           quantityMinimum
           quantityMaximum
         }
+        specialInstructions
         isActive
         createdAt
+        updatedAt
       }
       user {
         _id
         name
         phone
+        email
       }
       paymentMethod
       paidAmount
       orderAmount
-      paymentStatus
       orderStatus
       tipping
       taxationAmount
+      status
+      paymentStatus
       reason
-      isRiderRinged
+      isActive
+      createdAt
+      orderDate
+      pickedAt
+      deliveryCharges
+      isPickedUp
       preparationTime
+      acceptedAt
+      isRinged
+      instructions
       rider {
         _id
         name
         username
+        available
       }
     }
   }
-`
+`;

@@ -2,8 +2,6 @@
 import { NormalizedCacheObject } from "@apollo/client";
 import { ApolloClient } from "@apollo/client";
 import { IGlobalProviderProps } from "./global.interface";
-import { IRiderEarnings } from "./rider-earnings.interface";
-import { Dispatch, SetStateAction } from "react";
 
 export interface ILoginInitialValues {
   username: string;
@@ -20,17 +18,17 @@ export interface IAuthProviderProps extends IGlobalProviderProps {
   client: ApolloClient<NormalizedCacheObject>;
 }
 
-interface IRiderLoginResponse {
+interface IStoreLoginResponse {
   token: string;
-  userId: string;
+  restaurantId: string;
 }
 
-interface IRiderDefaultCredsResponse {
-  riderUsername: string;
-  riderPassword: string;
+interface IStoreDefaultCredsResponse {
+  restaurantUsername: string;
+  restaurantPassword: string;
 }
 
-export interface IRiderLoginCompleteResponse {
-  riderLogin: IRiderLoginResponse;
-  lastOrderCreds: IRiderDefaultCredsResponse;
+export interface IStoreLoginCompleteResponse {
+  restaurantLogin: IStoreLoginResponse;
+  lastOrderCreds: IStoreDefaultCredsResponse;
 }

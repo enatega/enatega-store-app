@@ -28,6 +28,11 @@ export default function DrawerMain() {
           borderRadius: 0,
           marginTop: 4,
         },
+
+        drawerStyle: {
+          position: "absolute",
+          zIndex: 9,
+        },
       }}
     >
       <Drawer.Screen
@@ -110,7 +115,6 @@ export default function DrawerMain() {
           ),
         }}
       />
-      {/* <Drawer /> */}
     </Drawer>
   );
 }

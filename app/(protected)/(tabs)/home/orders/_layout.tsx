@@ -24,8 +24,9 @@ export default function Layout() {
             style={{
               alignItems: "center",
               borderBottomWidth: focused ? 2 : 0, // Bottom border when selected
-              borderBottomColor:
-                focused ? Colors[colorScheme ?? "dark"].primary : "transparent", // Black border for active tab
+              borderBottomColor: focused
+                ? Colors[colorScheme ?? "dark"].primary
+                : "transparent", // Black border for active tab
               paddingBottom: 8, // Space between text and border
             }}
           >

@@ -28,16 +28,17 @@ export default function CustomDrawerContent(
       {...props}
       scrollEnabled={false}
       contentContainerStyle={{
-        backgroundColor: Colors.light.primary,
         paddingBottom: 0,
         paddingStart: 0,
         paddingEnd: 0,
+        zIndex: 9999,
+        position: "relative",
       }}
     >
       <CustomDrawerHeader />
 
       {/* Drawer Items with Right Arrow */}
-      <View style={{ backgroundColor: Colors.light.white }}>
+      <View style={{ backgroundColor: "Colors.light.white" }}>
         {props.state.routes.map((route, index) => {
           const isFocused = props.state.index === index;
           const { options } = props.descriptors[route.key];

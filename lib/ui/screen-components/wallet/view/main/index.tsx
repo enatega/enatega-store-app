@@ -1,17 +1,20 @@
 // Interfaces
 import {
-  IRiderByIdResponse,
-  IRiderCurrentWithdrawRequestResponse,
-  IRiderEarningsResponse,
-  IRiderTransactionHistoryResponse,
+  IStoreByIdResponse,
+  IStoreCurrentWithdrawRequestResponse,
+  IStoreEarningsResponse,
+  IStoreTransactionHistoryResponse,
 } from "@/lib/utils/interfaces/rider.interface";
 import { ILazyQueryResult } from "@/lib/utils/interfaces";
 
 // Components
-import { CustomContinueButton } from "@/lib/ui/useable-components";
-import RecentTransaction from "../recent-transactions";
+import {
+  CustomContinueButton,
+  NoRecordFound,
+} from "@/lib/ui/useable-components";
 import { FlashMessageComponent } from "@/lib/ui/useable-components";
 import WithdrawModal from "../form";
+import RecentTransaction from "../recent-transactions";
 
 // Hooks
 import { useEffect, useState } from "react";
@@ -22,10 +25,10 @@ import { useUserContext } from "@/lib/context/global/user.context";
 // GraphQL
 import { CREATE_WITHDRAW_REQUEST } from "@/lib/apollo/mutations/withdraw-request.mutation";
 import {
-  RIDER_BY_ID,
-  RIDER_CURRENT_WITHDRAW_REQUEST,
-  RIDER_EARNINGS,
-  RIDER_TRANSACTIONS_HISTORY,
+  STORE_BY_ID,
+  STORE_CURRENT_WITHDRAW_REQUEST,
+  STORE_EARNINGS,
+  STORE_TRANSACTIONS_HISTORY,
 } from "@/lib/apollo/queries";
 import { GraphQLError } from "graphql";
 
@@ -33,70 +36,82 @@ import { GraphQLError } from "graphql";
 import { router } from "expo-router";
 
 // Core
-import { ScrollView, Alert } from "react-native";
+import { Alert, FlatList } from "react-native";
 import { Text, View } from "react-native";
 
 // Skeletons
 import { WalletScreenMainLoading } from "@/lib/ui/skeletons";
+import { useTranslation } from "react-i18next";
 
 export default function WalletMain() {
+  // Hooks
+  const { t } = useTranslation();
+
   // States
   const [isBottomModalOpen, setIsBottomModalOpen] = useState(false);
   const [amountErrMsg, setAmountErrMsg] = useState("");
   const { userId } = useUserContext();
 
   // Queries
-  const { fetch: fetchRiderEarnings, loading: isRiderEarningsLoading } =
-    useLazyQueryQL(RIDER_EARNINGS) as ILazyQueryResult<
-      IRiderEarningsResponse | undefined,
-      undefined
+  const { fetch: fetchStoreEarnings, loading: isStoreEarningsLoading } =
+    useLazyQueryQL(STORE_EARNINGS) as ILazyQueryResult<
+      IStoreEarningsResponse | undefined,
+      { userType: "STORE"; userId: string }
     >;
 
   const {
-    data: riderTransactionData,
-    fetch: fetchRiderTransactions,
-    loading: isRiderTransactionLoading,
+    data: storeTransactionData,
+    fetch: fetchStoreTransactions,
+    loading: isStoreTransactionLoading,
   } = useLazyQueryQL(
-    RIDER_TRANSACTIONS_HISTORY,
-    {},
+    STORE_TRANSACTIONS_HISTORY,
     {
-      userType: "RIDER",
+      fetchPolicy: "network-only",
+    },
+    {
+      userType: "STORE",
       userId: userId,
     },
   ) as ILazyQueryResult<
-    IRiderTransactionHistoryResponse | undefined,
+    IStoreTransactionHistoryResponse | undefined,
     {
       userType: string;
       userId: string;
     }
   >;
   const {
-    data: riderProfileData,
-    fetch: fetchRiderProfile,
-    loading: isRiderProfileLoading,
+    data: storeProfileData,
+    fetch: fetchStoreProfile,
+    loading: isStoreProfileLoading,
   } = useLazyQueryQL(
-    RIDER_BY_ID,
-    {},
+    STORE_BY_ID,
+    { fetchPolicy: "network-only" },
     {
       id: userId,
     },
-  ) as ILazyQueryResult<IRiderByIdResponse | undefined, { id: string }>;
+  ) as ILazyQueryResult<IStoreByIdResponse | undefined, { id: string }>;
 
   const {
-    data: riderCurrentWithdrawRequestData,
-    fetch: fetchRiderCurrentWithdrawRequest,
-    loading: isRiderCurrentWithdrawRequestLoading,
+    data: storeCurrentWithdrawRequestData,
+    fetch: fetchStoreCurrentWithdrawRequest,
+    loading: isStoreCurrentWithdrawRequestLoading,
   } = useLazyQueryQL(
-    RIDER_CURRENT_WITHDRAW_REQUEST,
-    {},
-    { riderId: userId },
+    STORE_CURRENT_WITHDRAW_REQUEST,
+    { fetchPolicy: "network-only" },
+    { storeId: userId },
   ) as ILazyQueryResult<
-    IRiderCurrentWithdrawRequestResponse | undefined,
+    IStoreCurrentWithdrawRequestResponse | undefined,
     {
-      riderId: string;
+      storeId: string;
     }
   >;
-
+  console.warn(
+    JSON.stringify({
+      storeTransactionData,
+      storeCurrentWithdrawRequestData,
+      storeProfileData,
+    }),
+  );
   // Mutaions
   const [createWithDrawRequest, { loading: createWithDrawRequestLoading }] =
     useMutation(CREATE_WITHDRAW_REQUEST, {
@@ -107,7 +122,7 @@ export default function WalletMain() {
         setIsBottomModalOpen(false);
         // setIsModalVisible(true)
         router.push({
-          pathname: "/(tabs)/wallet/(routes)/success",
+          pathname: "/(protected)/(tabs)/wallet/(routes)/success",
         });
       },
       onError: (error) => {
@@ -126,14 +141,23 @@ export default function WalletMain() {
         });
       },
       refetchQueries: [
-        { query: RIDER_BY_ID, variables: { id: userId } },
-        { query: RIDER_EARNINGS, variables: { id: userId } },
+        {
+          query: STORE_BY_ID,
+          variables: { id: userId },
+          fetchPolicy: "network-only",
+        },
+        {
+          query: STORE_EARNINGS,
+          variables: { id: userId },
+          fetchPolicy: "network-only",
+        },
       ],
     });
 
   // Handlers
   async function handleFormSubmission(withdrawAmount: number) {
-    const currentAmount = riderProfileData?.rider.currentWalletAmount || 0;
+    const currentAmount =
+      storeProfileData?.restaurant?.currentWalletAmount || 0;
     if (withdrawAmount > (currentAmount || 0)) {
       return setAmountErrMsg(
         `Please enter a valid amount. You have $${currentAmount} available.`,
@@ -162,97 +186,123 @@ export default function WalletMain() {
   // Loading state
   const isLoading =
     createWithDrawRequestLoading ||
-    isRiderEarningsLoading ||
-    isRiderProfileLoading ||
-    isRiderTransactionLoading ||
-    isRiderCurrentWithdrawRequestLoading ||
-    !riderProfileData?.rider.currentWalletAmount;
+    isStoreEarningsLoading ||
+    isStoreProfileLoading ||
+    isStoreTransactionLoading ||
+    isStoreCurrentWithdrawRequestLoading;
 
   // UseEffects
   useEffect(() => {
     if (userId) {
-      fetchRiderProfile();
-      fetchRiderEarnings();
-      fetchRiderTransactions();
-      fetchRiderCurrentWithdrawRequest({
-        riderId: userId,
+      fetchStoreProfile({
+        id: userId,
+      });
+      fetchStoreEarnings({
+        userType: "STORE",
+        userId: userId,
+      });
+      fetchStoreTransactions({
+        userType: "STORE",
+        userId: userId,
+      });
+      fetchStoreCurrentWithdrawRequest({
+        storeId: userId,
       });
     }
   }, [userId]);
+  console.warn({
+    cAmount: storeProfileData?.restaurant?.currentWalletAmount,
+    isLoading,
+    tData: storeTransactionData?.transactionHistory?.data,
+  });
   if (isLoading) return <WalletScreenMainLoading />;
-  return (
-    <View className="flex flex-col justify-between  w-[100%] h-full">
-      {!isLoading && riderProfileData?.rider.currentWalletAmount && (
-        <View className="flex flex-column gap-4 items-center bg-[#F3F4F6]">
-          <Text className="text-[18px] text-[#4B5563] font-[600] mt-12">
-            Current Balance
-          </Text>
-          <Text className="font-semibold text-[32px]">
-            ${riderProfileData?.rider.currentWalletAmount ?? 0}
-          </Text>
-          <CustomContinueButton
-            title="Withdraw Now"
-            onPress={() => setIsBottomModalOpen((prev) => !prev)}
-          />
-        </View>
-      )}
-      {riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
-        .requestAmount !== 0 &&
-        riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest && (
-          <View>
+  else
+    return (
+      <View className="flex flex-col justify-between items-center  w-[100%] h-[100%]">
+        {storeProfileData?.restaurant ? (
+          <View className="flex-1 flex flex-column gap-4 items-center bg-[#F3F4F6]">
+            <Text className="text-[18px] text-[#4B5563] font-[600] mt-12">
+              {t("Current Balance")}
+            </Text>
+            <Text className="font-semibold text-[32px]">
+              $
+              {String(storeProfileData?.restaurant?.currentWalletAmount ?? "0")}
+            </Text>
+            <CustomContinueButton
+              title={t("Withdraw Now")}
+              onPress={() => setIsBottomModalOpen((prev) => !prev)}
+            />
+          </View>
+        ) : (
+          <NoRecordFound msg={t("Your wallet is currently empty")} />
+        )}
+        {storeCurrentWithdrawRequestData?.storeCurrentWithdrawRequest && (
+          <View className="w-full h-full flex-1">
             <Text className="font-bold text-lg bg-white p-5 mt-4">
-              Pending Request
+              {t("Pending Request")}
             </Text>
             <RecentTransaction
               transaction={{
                 amountTransferred:
-                  riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
-                    .requestAmount || 0,
+                  storeCurrentWithdrawRequestData?.storeCurrentWithdrawRequest
+                    ?.requestAmount || 0,
                 status:
-                  riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
-                    .status,
+                  storeCurrentWithdrawRequestData?.storeCurrentWithdrawRequest
+                    ?.status,
                 createdAt:
-                  riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
-                    .createdAt,
+                  storeCurrentWithdrawRequestData?.storeCurrentWithdrawRequest
+                    ?.createdAt,
               }}
               key={
-                riderCurrentWithdrawRequestData?.riderCurrentWithdrawRequest
-                  .createdAt
+                storeCurrentWithdrawRequestData?.storeCurrentWithdrawRequest
+                  ?.createdAt
               }
               isLast={false}
             />
           </View>
         )}
-      <Text className="font-bold text-lg bg-white p-5 mt-4">
-        Recent Transactions
-      </Text>
 
-      <ScrollView style={{ backgroundColor: "white" }}>
-        {riderTransactionData?.transactionHistory.data.map(
-          (transaction, index) => {
-            return (
-              <RecentTransaction
-                transaction={transaction}
-                key={transaction.createdAt}
-                isLast={
-                  riderTransactionData?.transactionHistory.data.length - 1 ===
-                  index
-                }
-              />
-            );
-          },
+        {storeTransactionData && (
+          <FlatList
+            className="w-full h-full flex-1 basis-32 -mt-12"
+            ListHeaderComponent={() => {
+              return (
+                <Text className="font-bold text-lg bg-white p-5">
+                  {t("Recent Transactions")}
+                </Text>
+              );
+            }}
+            data={storeTransactionData?.transactionHistory?.data}
+            ListEmptyComponent={<NoRecordFound />}
+            renderItem={({ item, index }) => {
+              if (storeTransactionData?.transactionHistory?.data) {
+                return (
+                  <RecentTransaction
+                    transaction={item}
+                    isLast={
+                      storeTransactionData?.transactionHistory?.data?.length -
+                        1 ===
+                      index
+                    }
+                    key={`transaction_${index}#`}
+                  />
+                );
+              } else {
+                return <NoRecordFound />;
+              }
+            }}
+          />
         )}
-      </ScrollView>
 
-      <WithdrawModal
-        isBottomModalOpen={isBottomModalOpen}
-        setIsBottomModalOpen={setIsBottomModalOpen}
-        amountErrMsg={amountErrMsg}
-        setAmountErrMsg={setAmountErrMsg}
-        currentTotal={riderProfileData?.rider?.currentWalletAmount ?? 0}
-        handleFormSubmission={handleFormSubmission}
-        withdrawRequestLoading={createWithDrawRequestLoading}
-      />
-    </View>
-  );
+        <WithdrawModal
+          isBottomModalOpen={isBottomModalOpen}
+          setIsBottomModalOpen={setIsBottomModalOpen}
+          amountErrMsg={amountErrMsg}
+          setAmountErrMsg={setAmountErrMsg}
+          currentTotal={storeProfileData?.restaurant?.currentWalletAmount ?? 0}
+          handleFormSubmission={handleFormSubmission}
+          withdrawRequestLoading={createWithDrawRequestLoading}
+        />
+      </View>
+    );
 }

@@ -34,8 +34,8 @@ export const Colors = {
     lowOpacityPrimaryColor: "rgba(144, 227, 109, 0.15)",
     mainTextColor: "#000000",
     switchButtonColor: "#4F46E5",
-    sidebarIconBackground: '#E5E7EB',
-    borderLineColor: 'rgb(181, 181, 181)',
+    sidebarIconBackground: "#E5E7EB",
+    borderLineColor: "rgb(181, 181, 181)",
   },
   dark: {
     primary: "#A5C616", // Slightly darker green to avoid too much brightness
@@ -66,7 +66,7 @@ export const Colors = {
     lowOpacityPrimaryColor: "rgba(144, 227, 109, 0.15)",
     mainTextColor: "#f2f2f2",
     switchButtonColor: "#4F46E5",
-    sidebarIconBackground: '#E5E7EB',
-    borderLineColor: 'rgb(181, 181, 181)',
+    sidebarIconBackground: "#E5E7EB",
+    borderLineColor: "rgb(181, 181, 181)",
   },
 };

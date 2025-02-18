@@ -36,7 +36,7 @@ export default function StackLayout() {
           name="/(routes)/earnings-details"
           options={{ headerShown: true, headerTitle: "Earning Details" }}
         />*/}
-      </Stack> 
+      </Stack>
       <EarningBottomBar
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}

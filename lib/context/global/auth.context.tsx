@@ -32,7 +32,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
     try {
       client.clearStore();
       await AsyncStorage.removeItem(RIDER_TOKEN);
-      await AsyncStorage.removeItem("rider-id");
+      await AsyncStorage.removeItem("store-id");
 
       if (await Location.hasStartedLocationUpdatesAsync("RIDER_LOCATION")) {
         await Location.stopLocationUpdatesAsync("RIDER_LOCATION");

@@ -19,14 +19,13 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const RootLayout = () => {
-
   // States
   const [tabKey, setTabKey] = useState(1);
 
   // Hooks
   const colorScheme = useColorScheme();
   const pathName = usePathname();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (pathName.startsWith("/wallet/success")) {
@@ -43,7 +42,6 @@ const RootLayout = () => {
         tabBarStyle: Platform.select({
           ios: {
             position: "absolute",
-
             backgroundColor: "#1F2937",
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
@@ -52,6 +50,7 @@ const RootLayout = () => {
             shadowOffset: { width: 0, height: -5 },
             shadowOpacity: 0.1,
             shadowRadius: 5,
+            zIndex: 0,
           },
           android: {
             position: "absolute",
@@ -101,7 +100,7 @@ const RootLayout = () => {
         name="profile"
         options={{
           title: t("Profile"),
-          headerShown:false,
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <PersonIcon color={color} width={25} height={25} />
           ),

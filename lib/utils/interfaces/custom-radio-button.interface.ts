@@ -1,5 +1,5 @@
 export interface ICustomRadioButtonProps {
-  isSelected: boolean
-  label: string
-  showLabel: boolean
+  isSelected: boolean;
+  label: string;
+  showLabel: boolean;
 }

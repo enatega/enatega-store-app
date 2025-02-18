@@ -67,7 +67,7 @@ const setupApollo = () => {
                 restaurantLocation.coordinates[0][0][0],
                 restaurantLocation.coordinates[0][0][1],
                 variables?.latitude,
-                variables?.longitude
+                variables?.longitude,
               );
               return distance;
             },
@@ -128,7 +128,7 @@ const setupApollo = () => {
         return () => {
           if (handle) handle.unsubscribe();
         };
-      })
+      }),
   );
 
   // const terminatingLink = split(({ query }) => {
