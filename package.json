@@ -1,5 +1,5 @@
 {
-  "name": "mobile-architecture",
+  "name": "enatega-store-app",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -10,7 +10,8 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "npx eslint && prettier --write .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "upload-sourcemaps": "SENTRY_AUTH_TOKEN=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 npx sentry-expo upload-sourcemaps"
   },
   "jest": {
     "preset": "jest-expo"
@@ -59,7 +60,7 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-i18next": "^15.4.0",
-    "react-native": "0.76.6",
+    "react-native": "0.76.7",
     "react-native-calendars": "^1.1308.1",
     "react-native-countdown-component": "^2.7.1",
     "react-native-flash-message": "^0.4.2",
