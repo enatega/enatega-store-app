@@ -1,1 +1,1 @@
-export const RIDER_TOKEN = "rider-token";
+export const STORE_TOKEN = "store-token";

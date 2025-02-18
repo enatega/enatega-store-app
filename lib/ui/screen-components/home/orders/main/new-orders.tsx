@@ -1,88 +1,114 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
-import { useEffect, useState, useContext } from "react";
-import { View, Text, Dimensions, Platform, StyleSheet } from "react-native";
-import { NetworkStatus } from "@apollo/client";
-import { FlatList } from "react-native-gesture-handler";
-
-// Context
-import UserContext from "@/lib/context/global/user.context";
+import { useEffect, useState } from "react";
+import {
+  View,
+  Platform,
+  StyleSheet,
+  FlatList,
+  Text,
+  Dimensions,
+} from "react-native";
 // UI
-import Order from "@/lib/ui/useable-components/order";
+import CustomTab from "@/lib/ui/useable-components/custom-tab";
 import Spinner from "@/lib/ui/useable-components/spinner";
 // Constants
-import { NO_ORDER_PROMPT } from "@/lib/utils/constants";
+import { NO_ORDER_PROMPT, ORDER_DISPATCH_TYPE } from "@/lib/utils/constants";
+
 // Interface
 import { IOrderTabsComponentProps } from "@/lib/utils/interfaces";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
-// Type
-import { ORDER_TYPE } from "@/lib/utils/types";
-// Icon
+
+// Hook
+import useOrders from "@/lib/hooks/useOrders";
 import { WalletIcon } from "@/lib/ui/useable-components/svg";
+import Order from "@/lib/ui/useable-components/order";
+import { ORDER_TYPE } from "@/lib/utils/types";
 
 const { height } = Dimensions.get("window");
 
-export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
+function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
   // Props
   const { route } = props;
 
-  // Context
+  // Hooks
   const {
-    loadingAssigned,
-    errorAssigned,
-    assignedOrders,
-    refetchAssigned,
-    networkStatusAssigned,
-  } = useContext(UserContext);
+    loading,
+    error,
+    data,
+    activeOrders,
+    refetch,
+    currentTab,
+    setCurrentTab,
+  } = useOrders();
+
+  // const { loading: mutateLoading } = useAcceptOrder();
 
   // States
+  const [refreshing, setRefreshing] = useState(false);
   const [orders, setOrders] = useState<IOrder[]>([]);
 
   // Handlers
   const onInitOrders = () => {
-    if (loadingAssigned || errorAssigned) return;
-    if (!assignedOrders) return;
+    if (loading || error) return;
+    if (!data) return;
 
-    const _orders = assignedOrders?.filter(
-      (o: IOrder) => o.orderStatus === "ACCEPTED" && !o.rider && !o.isPickedUp,
+    const _orders = activeOrders.filter((order) =>
+      currentTab === ORDER_DISPATCH_TYPE[0]
+        ? !order?.isPickedUp
+        : order?.isPickedUp,
     );
-
     setOrders(_orders ?? []);
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    refetch();
+    setRefreshing(false);
   };
 
   // Use Effect
   useEffect(() => {
     onInitOrders();
-  }, [assignedOrders, route.key]);
+  }, [data?.restaurantOrders, route.key]);
 
   useEffect(() => {
     // Trigger refetch when orders length changes
     if (orders?.length === 0) {
-      // refetchAssigned();
+      refetch();
     }
   }, [orders?.length]);
 
   // Calculate the marginBottom dynamically
   const marginBottom = Platform.OS === "ios" ? height * 0.4 : height * 0.35;
 
-  // Render
   return (
-    <View className="pt-14 flex-1 bg-white pb-16" style={style.contaienr}>
-      {errorAssigned ? (
+    <View
+      className="pt-14 flex-1 items-center  bg-white pb-16"
+      style={style.contaienr}
+    >
+      <CustomTab
+        options={ORDER_DISPATCH_TYPE}
+        selectedTab={currentTab}
+        setSelectedTab={setCurrentTab}
+      />
+
+      {error ? (
         <View className="flex-1 justify-center items-center">
-          <Text className="text-2xl">Something went wrong</Text>
+          <Text className="text-2xl">
+            Something went wrong. Please refresh.
+          </Text>
         </View>
-      ) : loadingAssigned ? (
+      ) : loading ? (
         <View className="flex-1">
           <Spinner />
         </View>
       ) : orders?.length > 0 ? (
         <FlatList
-          className={`h-[${height}px] mb-[${marginBottom}px]`}
+          className={`w-full h-[${height}px] mb-[${marginBottom}px]`}
           keyExtractor={(item) => item._id}
           data={orders}
           showsVerticalScrollIndicator={false}
-          refreshing={networkStatusAssigned === NetworkStatus.loading}
-          onRefresh={refetchAssigned}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
           renderItem={({ item }: { item: IOrder }) => (
             <Order tab={route.key as ORDER_TYPE} order={item} key={item._id} />
           )}
@@ -104,7 +130,7 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
                     {NO_ORDER_PROMPT[route.key]}
                   </Text>
                 ) : (
-                  <Text>Pull downto refresh</Text>
+                  <Text>Pull down to refresh</Text>
                 )}
               </View>
             );
@@ -126,13 +152,15 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
               {NO_ORDER_PROMPT[route.key]}
             </Text>
           ) : (
-            <Text>Pull downto refresh</Text>
+            <Text>Pull down to refresh</Text>
           )}
         </View>
       )}
     </View>
   );
 }
+
+export default HomeNewOrdersMain;
 
 const style = StyleSheet.create({
   contaienr: {

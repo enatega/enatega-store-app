@@ -1,19 +1,8 @@
 import { gql } from "@apollo/client";
 
-export const subscriptionRiderLocation = gql`
-  subscription SubscriptionRiderLocation($riderId: String!) {
-    subscriptionRiderLocation(riderId: $riderId) {
-      _id
-      location {
-        coordinates
-      }
-    }
-  }
-`;
-
-export const orderStatusChanged = gql`
-  subscription OrderStatusChanged($userId: String!) {
-    orderStatusChanged(userId: $userId) {
+export const SUBSCRIBE_PLACE_ORDER = gql`
+  subscription SubscribePlaceOrder($restaurant: String!) {
+    subscribePlaceOrder(restaurant: $restaurant) {
       userId
       origin
       order {
@@ -33,13 +22,14 @@ export const orderStatusChanged = gql`
             coordinates
           }
           deliveryAddress
-          id
+          details
+          label
         }
         items {
           _id
           title
-          food
           description
+          image
           quantity
           variation {
             _id
@@ -55,23 +45,21 @@ export const orderStatusChanged = gql`
               description
               price
             }
-            title
             description
+            title
             quantityMinimum
             quantityMaximum
           }
+          specialInstructions
+          isActive
+          createdAt
+          updatedAt
         }
         user {
           _id
           name
           phone
-        }
-        rider {
-          _id
-          name
-        }
-        review {
-          _id
+          email
         }
         paymentMethod
         paidAmount
@@ -79,209 +67,23 @@ export const orderStatusChanged = gql`
         orderStatus
         tipping
         taxationAmount
+        status
+        paymentStatus
+        reason
+        isActive
         createdAt
-        completionTime
-        preparationTime
         orderDate
-        expectedTime
-        isPickedUp
         deliveryCharges
-        acceptedAt
-        pickedAt
-        deliveredAt
-        cancelledAt
-        assignedAt
-        instructions
-      }
-    }
-  }
-`;
-
-export const SUBSCRIPTION_NEW_MESSAGE = gql`
-  subscription SubscriptionNewMessage($order: ID!) {
-    subscriptionNewMessage(order: $order) {
-      id
-      message
-      user {
-        id
-        name
-      }
-      createdAt
-    }
-  }
-`;
-
-export const SUBSCRIPTION_ZONE_ORDERS = gql`
-  subscription SubscriptionZoneOrders($zoneId: String!) {
-    subscriptionZoneOrders(zoneId: $zoneId) {
-      zoneId
-      origin
-      order {
-        _id
-        createdAt
-        acceptedAt
-        expectedTime
-        pickedAt
-        assignedAt
         isPickedUp
-        deliveredAt
-        deliveryCharges
-        orderId
-        restaurant {
-          _id
-          name
-          address
-          location {
-            coordinates
-          }
-        }
-        deliveryAddress {
-          location {
-            coordinates
-          }
-          deliveryAddress
-          label
-          details
-        }
-        items {
-          _id
-          title
-          food
-          description
-          quantity
-          variation {
-            _id
-            title
-            price
-          }
-          addons {
-            _id
-            options {
-              _id
-              title
-              price
-            }
-            title
-            description
-            quantityMinimum
-            quantityMaximum
-          }
-          isActive
-          createdAt
-        }
-        user {
-          _id
-          name
-          phone
-        }
-        paymentMethod
-        paidAmount
-        orderAmount
-        paymentStatus
-        orderStatus
-        tipping
-        taxationAmount
-        reason
-        isRiderRinged
         preparationTime
+        acceptedAt
+        isRinged
         rider {
           _id
           name
           username
+          available
         }
-      }
-    }
-  }
-`;
-
-export const SUBSCRIPTION_ASSIGNED_RIDER = gql`
-  subscription SubscriptionAssignRider($riderId: String!) {
-    subscriptionAssignRider(riderId: $riderId) {
-      order {
-        _id
-        orderId
-        createdAt
-        acceptedAt
-        pickedAt
-        isPickedUp
-        deliveredAt
-        expectedTime
-        deliveryCharges
-        restaurant {
-          _id
-          name
-          address
-          location {
-            coordinates
-          }
-        }
-        deliveryAddress {
-          location {
-            coordinates
-          }
-          deliveryAddress
-          label
-          details
-        }
-        items {
-          _id
-          title
-          food
-          description
-          quantity
-          variation {
-            _id
-            title
-            price
-          }
-          addons {
-            _id
-            options {
-              _id
-              title
-              price
-            }
-            title
-            description
-            quantityMinimum
-            quantityMaximum
-          }
-          isActive
-          createdAt
-        }
-        user {
-          _id
-          name
-          phone
-        }
-        paymentMethod
-        paidAmount
-        orderAmount
-        paymentStatus
-        orderStatus
-        tipping
-        taxationAmount
-        reason
-        isRiderRinged
-        preparationTime
-        rider {
-          _id
-          name
-          username
-        }
-      }
-      origin
-    }
-  }
-`;
-
-export const SUBSCRIPTION_ORDERS = gql`
-  subscription SubscriptionOrder($id: String!) {
-    subscriptionOrder(id: $id) {
-      _id
-      orderStatus
-      rider {
-        _id
       }
     }
   }

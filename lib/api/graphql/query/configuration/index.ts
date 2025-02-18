@@ -6,8 +6,7 @@ export const GET_CONFIGURATION = gql`
       _id
       currency
       currencySymbol
-      riderAppSentryUrl
-      googleApiKey
+      restaurantAppSentryUrl
     }
   }
 `;

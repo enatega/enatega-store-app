@@ -52,7 +52,7 @@ export const STORE_TRANSACTIONS_HISTORY = gql`
 `;
 
 export const STORE_CURRENT_WITHDRAW_REQUEST = gql`
-  query RiderCurrentWithdrawRequest($storeId: String) {
+  query StoreCurrentWithdrawRequest($storeId: String) {
     storeCurrentWithdrawRequest(storeId: $storeId) {
       _id
       requestAmount
@@ -93,17 +93,6 @@ export const STORE_PROFILE = gql`
         accountNumber
         accountName
         accountCode
-      }
-    }
-  }
-`;
-
-export const rider = gql`
-  query Rider($id: String) {
-    rider(id: $id) {
-      _id
-      location {
-        coordinates
       }
     }
   }

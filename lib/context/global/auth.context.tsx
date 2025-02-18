@@ -1,11 +1,11 @@
 // Core
 import React, { useState } from "react";
-import * as Location from "expo-location";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 
 // Interfaces§
 import { IAuthContext, IAuthProviderProps } from "@/lib/utils/interfaces";
-import { RIDER_TOKEN } from "@/lib/utils/constants";
+import { STORE_TOKEN } from "@/lib/utils/constants";
 import { useRouter } from "expo-router";
 import { FlashMessageComponent } from "@/lib/ui/useable-components";
 
@@ -23,22 +23,19 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
   // State
   const [token, setToken] = useState<string>("");
   const setTokenAsync = async (token: string) => {
-    await AsyncStorage.setItem(RIDER_TOKEN, token);
+    await SecureStore.setItemAsync(STORE_TOKEN, token);
     client.clearStore();
     setToken(token);
   };
 
   const logout = async () => {
     try {
-      client.clearStore();
-      await AsyncStorage.removeItem(RIDER_TOKEN);
-      await AsyncStorage.removeItem("store-id");
+      await Promise.all([
+        client.clearStore(),
+        SecureStore.deleteItemAsync(STORE_TOKEN),
+        AsyncStorage.removeItem("store-id"),
+      ]);
 
-      if (await Location.hasStartedLocationUpdatesAsync("RIDER_LOCATION")) {
-        await Location.stopLocationUpdatesAsync("RIDER_LOCATION");
-        client.clearStore();
-        await AsyncStorage.removeItem(RIDER_TOKEN);
-      }
       setToken("");
       router.replace("/login");
     } catch (e) {

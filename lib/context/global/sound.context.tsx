@@ -36,7 +36,7 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
           (Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS = 2),
         playThroughEarpieceAndroid: true,
       });
-      await newSound.playAsync();
+      // await newSound.playAsync();
 
       setSound(newSound);
     } catch (err) {

@@ -29,7 +29,7 @@ import {
   STORE_CURRENT_WITHDRAW_REQUEST,
   STORE_EARNINGS,
   STORE_TRANSACTIONS_HISTORY,
-} from "@/lib/apollo/queries";
+} from "@/lib/apollo/queries/store.query";
 import { GraphQLError } from "graphql";
 
 // Expo
@@ -105,13 +105,7 @@ export default function WalletMain() {
       storeId: string;
     }
   >;
-  console.warn(
-    JSON.stringify({
-      storeTransactionData,
-      storeCurrentWithdrawRequestData,
-      storeProfileData,
-    }),
-  );
+
   // Mutaions
   const [createWithDrawRequest, { loading: createWithDrawRequestLoading }] =
     useMutation(CREATE_WITHDRAW_REQUEST, {
@@ -210,11 +204,7 @@ export default function WalletMain() {
       });
     }
   }, [userId]);
-  console.warn({
-    cAmount: storeProfileData?.restaurant?.currentWalletAmount,
-    isLoading,
-    tData: storeTransactionData?.transactionHistory?.data,
-  });
+
   if (isLoading) return <WalletScreenMainLoading />;
   else
     return (

@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 import { TPolygonPoints } from "../types/restaurant";
+import { IGlobalProviderProps } from "./global.interface";
 
 export interface IRestaurantProfile {
   _id: string;
@@ -46,3 +48,5 @@ export interface IRestaurantProfile {
 export interface IRestaurantLocation {
   coordinates: TPolygonPoints;
 }
+
+export interface IRestaurantProviderProps extends IGlobalProviderProps {}

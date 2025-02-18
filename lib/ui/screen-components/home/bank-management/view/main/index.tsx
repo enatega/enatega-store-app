@@ -1,6 +1,6 @@
 // Components
 import { UPDATE_BUSINESS_DETAILS } from "@/lib/apollo/mutations/rider.mutation";
-import { STORE_PROFILE } from "@/lib/apollo/queries";
+import { STORE_PROFILE } from "@/lib/apollo/queries/store.query";
 import { useUserContext } from "@/lib/context/global/user.context";
 import { CustomContinueButton } from "@/lib/ui/useable-components";
 
@@ -166,10 +166,7 @@ export default function BankManagementMain() {
       });
     }
   }, [dataProfile?.bussinessDetails, areBankDetailsLoading]);
-  console.log(
-    "🚀 ~ BankManagementMain ~ dataProfile?.bussinessDetails:",
-    dataProfile?.bussinessDetails,
-  );
+
   return (
     <View>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
