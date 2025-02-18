@@ -2,12 +2,13 @@
 import { Dispatch, SetStateAction } from "react";
 import { IGlobalProviderProps } from "./global.interface";
 import {
-  IRiderEarnings,
-  IRiderEarningsArray,
+  IStoreEarnings,
+  IStoreEarningsArray,
 } from "./rider-earnings.interface";
 import { ApolloError, NetworkStatus } from "@apollo/client";
 import { IOrder } from "./order.interface";
 import { LocationPermissionResponse } from "expo-location";
+import { WorkSchedule } from "./work-schedule.interface";
 
 export interface IUserContextProps {
   loadingProfile?: boolean;
@@ -20,12 +21,12 @@ export interface IUserContextProps {
   refetchAssigned?: () => void;
   networkStatusAssigned?: NetworkStatus;
   requestForegroundPermissionsAsync?: () => Promise<LocationPermissionResponse>;
-  modalVisible?: IRiderEarnings & { bool: boolean };
-  setModalVisible?: Dispatch<
-    SetStateAction<IRiderEarnings & { bool: boolean }>
+  modalVisible?: IStoreEarnings & { bool: boolean };
+  setModalVisible: Dispatch<
+    SetStateAction<IStoreEarnings & { bool: boolean }>
   >;
-  riderOrderEarnings?: IRiderEarningsArray[];
-  setRiderOrderEarnings?: Dispatch<SetStateAction<IRiderEarningsArray[]>>;
+  riderOrderEarnings?: IStoreEarningsArray[];
+  setRiderOrderEarnings?: Dispatch<SetStateAction<IStoreEarningsArray[]>>;
 }
 export interface IUserProviderProps extends IGlobalProviderProps {}
 
@@ -87,6 +88,7 @@ export interface IStoreProfile {
     accountName: string;
     accountCode: string;
   };
+  workSchedule: WorkSchedule[];
 }
 
 export interface IStoreProfileResponse {

@@ -1,15 +1,15 @@
 import { gql } from "@apollo/client";
 
-export const RIDER_EARNINGS_GRAPH = gql`
-  query RiderEarningsGraph(
-    $riderId: ID!
+export const STORE_EARNINGS_GRAPH = gql`
+  query StoreEarningsGraph(
+    $storeId: ID!
     $page: Int
     $limit: Int
     $startDate: String
     $endDate: String
   ) {
-    riderEarningsGraph(
-      riderId: $riderId
+    storeEarningsGraph(
+      storeId: $storeId
       page: $page
       limit: $limit
       startDate: $startDate
@@ -19,27 +19,23 @@ export const RIDER_EARNINGS_GRAPH = gql`
       earnings {
         _id
         earningsArray {
-          tip
           orderDetails {
             orderType
             orderId
             paymentMethod
           }
           totalEarnings
-          deliveryFee
           date
         }
         totalDeliveries
         totalEarningsSum
-        totalHours
-        totalTipsSum
         date
       }
     }
   }
 `;
 
-export const RIDER_GRAND_TOTAL_EARNINGS = gql`
+export const STORE_GRAND_TOTAL_EARNINGS = gql`
   query Earnings(
     $userType: UserTypeEnum
     $userId: String
@@ -59,7 +55,7 @@ export const RIDER_GRAND_TOTAL_EARNINGS = gql`
       data {
         earnings {
           grandTotalEarnings {
-            riderTotal
+            storeTotal
           }
         }
         message

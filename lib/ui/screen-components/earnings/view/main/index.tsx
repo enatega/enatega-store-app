@@ -7,15 +7,15 @@ import { useUserContext } from "@/lib/context/global/user.context";
 
 // Interfaces
 import {
-  IRiderEarnings,
-  IRiderEarningsResponse,
+  IStoreEarnings,
+  IStoreEarningsResponse,
 } from "@/lib/utils/interfaces/rider-earnings.interface";
 
 // Charts
 import { barDataItem } from "react-native-gifted-charts";
 
 // GraphQL
-import { RIDER_EARNINGS_GRAPH } from "@/lib/apollo/queries/earnings.query";
+import { STORE_EARNINGS_GRAPH } from "@/lib/apollo/queries/earnings.query";
 
 // Hooks
 import { QueryResult, useQuery } from "@apollo/client";
@@ -35,19 +35,20 @@ export default function EarningsMain() {
   const { userId, setModalVisible } = useUserContext();
 
   // Queries
-  const { loading: isRiderEarningsLoading, data: riderEarningsData } = useQuery(
-    RIDER_EARNINGS_GRAPH,
+  const { loading: isStoreEarningsLoading, data: storeEarningsData } = useQuery(
+    STORE_EARNINGS_GRAPH,
     {
       variables: {
-        riderId: userId ?? "",
+        storeId: userId ?? "",
       },
     },
-  ) as QueryResult<IRiderEarningsResponse | undefined, { riderId: string }>;
+  ) as QueryResult<IStoreEarningsResponse | undefined, { storeId: string }>;
+  console.log("🚀 ~ EarningsMain ~ storeEarningsData:", { storeEarningsData });
 
   const barData: barDataItem[] =
-    riderEarningsData?.riderEarningsGraph.earnings
+    storeEarningsData?.storeEarningsGraph.earnings
       .slice(0, 7)
-      .map((earning: IRiderEarnings) => ({
+      .map((earning: IStoreEarnings) => ({
         value: earning.totalEarningsSum,
         label: earning._id,
         topLabelComponent: () => {
@@ -67,7 +68,7 @@ export default function EarningsMain() {
       })) ?? ([] as barDataItem[]);
 
   // If loading
-  if (isRiderEarningsLoading) return <EarningScreenMainLoading />;
+  if (isStoreEarningsLoading) return <EarningScreenMainLoading />;
 
   return (
     <View className="bg-white">
@@ -90,23 +91,25 @@ export default function EarningsMain() {
               totalTipsSum: 0,
               totalDeliveries: 0,
             });
-            router.push("/(tabs)/earnings/(routes)/earnings-detail");
+            router.push(
+              "/(protected)/(tabs)/earnings/(routes)/earnings-detail",
+            );
           }}
         >
           <Text className="text-sm text-[#3B82F6] font-bold">See More</Text>
         </TouchableOpacity>
       </View>
       <View>
-        {riderEarningsData?.riderEarningsGraph?.earnings?.length === 0 &&
-          !isRiderEarningsLoading && (
+        {storeEarningsData?.storeEarningsGraph?.earnings?.length === 0 &&
+          !isStoreEarningsLoading && (
             <Text className="block mx-auto font-bold text-center w-full my-12">
               No record found.
             </Text>
           )}
-        {riderEarningsData?.riderEarningsGraph?.earnings?.length &&
-          riderEarningsData?.riderEarningsGraph?.earnings
+        {storeEarningsData?.storeEarningsGraph?.earnings?.length &&
+          storeEarningsData?.storeEarningsGraph?.earnings
             ?.slice(0, 4)
-            ?.map((earning: IRiderEarnings, index) => (
+            ?.map((earning: IStoreEarnings, index) => (
               <EarningStack
                 date={earning.date}
                 earning={earning.totalEarningsSum}

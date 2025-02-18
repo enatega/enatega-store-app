@@ -11,13 +11,32 @@ import {
   PrivacyIcon,
   PageIcon,
 } from "@/lib/ui/useable-components/svg";
+import { TouchableOpacity } from "react-native";
+import { DrawerActions } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
+import ScheduleIcon from "@/lib/ui/useable-components/svg/schedule";
 
 export default function DrawerMain() {
   return (
     <Drawer
       drawerContent={CustomDrawerContent}
       initialRouteName="orders"
-      screenOptions={{
+      screenOptions={({ navigation }) => ({
+        swipeEnabled: false,
+        lazy: true,
+
+        headerLeft: () => {
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.dispatch(DrawerActions.toggleDrawer());
+              }}
+              style={{ marginLeft: 16 }}
+            >
+              <Ionicons name="menu" size={24} color="black" />
+            </TouchableOpacity>
+          );
+        },
         drawerHideStatusBarOnOpen: true,
         drawerActiveBackgroundColor: Colors.light.lowOpacityPrimaryColor,
         drawerActiveTintColor: Colors.light.mainTextColor,
@@ -28,12 +47,10 @@ export default function DrawerMain() {
           borderRadius: 0,
           marginTop: 4,
         },
-
         drawerStyle: {
-          position: "absolute",
-          zIndex: 9,
+          marginBottom: 45,
         },
-      }}
+      })}
     >
       <Drawer.Screen
         name="orders"
@@ -52,6 +69,16 @@ export default function DrawerMain() {
           title: "Profile",
           drawerIcon: ({ color, size }) => (
             <UserIcon color={color} height={size} width={size} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="work-schedule"
+        options={{
+          drawerLabel: "Schedule",
+          title: "Schedule",
+          drawerIcon: ({ color, size }) => (
+            <ScheduleIcon color={color} height={size + 20} width={size + 20} />
           ),
         }}
       />

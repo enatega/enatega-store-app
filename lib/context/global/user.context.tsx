@@ -19,8 +19,8 @@ import {
 import { STORE_ORDERS, STORE_PROFILE } from "@/lib/apollo/queries";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  IRiderEarnings,
-  IRiderEarningsArray,
+  IStoreEarnings,
+  IStoreEarningsArray,
 } from "@/lib/utils/interfaces/rider-earnings.interface";
 
 const UserContext = createContext<IUserContextProps>({} as IUserContextProps);
@@ -28,19 +28,19 @@ const UserContext = createContext<IUserContextProps>({} as IUserContextProps);
 export const UserProvider = ({ children }: IUserProviderProps) => {
   // States
   const [modalVisible, setModalVisible] = useState<
-    IRiderEarnings & { bool: boolean }
+    IStoreEarnings & { bool: boolean }
   >({
     bool: false,
     _id: "",
     date: "",
-    earningsArray: [] as IRiderEarningsArray[],
+    earningsArray: [] as IStoreEarningsArray[],
     totalEarningsSum: 0,
     totalTipsSum: 0,
     totalDeliveries: 0,
   });
   // const [riderOrderEarnings, setRiderOrderEarnings] = useState<
-  //   IRiderEarningsArray[]
-  // >([] as IRiderEarningsArray[]);
+  //   IStoreEarningsArray[]
+  // >([] as IStoreEarningsArray[]);
   const [userId, setUserId] = useState("");
 
   // Refs
@@ -63,7 +63,9 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     IStoreProfileResponse | undefined,
     { restaurantId: string }
   >;
-  console.log("🚀 ~ UserProvider ~ loadingProfile:", { dataProfile });
+  console.log("🚀 ~ UserProvider ~ loadingProfile:", {
+    dataProfile: dataProfile?.restaurant.logo,
+  });
 
   const {
     // client,

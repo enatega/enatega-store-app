@@ -1,7 +1,7 @@
 import { ApolloQueryResult } from "@apollo/client";
 import { Dispatch, SetStateAction } from "react";
 
-export interface IRiderEarningsArray {
+export interface IStoreEarningsArray {
   tip: number;
   orderDetails: {
     orderType: string;
@@ -12,22 +12,22 @@ export interface IRiderEarningsArray {
   deliveryFee: number;
   date: string;
 }
-export interface IRiderEarnings {
+export interface IStoreEarnings {
   _id: string;
-  earningsArray: IRiderEarningsArray[];
+  earningsArray: IStoreEarningsArray[];
   date: string;
   totalEarningsSum: number;
   totalTipsSum: number;
   totalDeliveries: number;
 }
-export interface IRiderEarningsResponse {
-  riderEarningsGraph: {
+export interface IStoreEarningsResponse {
+  storeEarningsGraph: {
     totalCount: number;
-    earnings: IRiderEarnings[];
+    earnings: IStoreEarnings[];
   };
 }
 
-export interface IRiderEarningsOrderProps {
+export interface IStoreEarningsOrderProps {
   amount: number;
   orderId: string;
 }
@@ -49,10 +49,10 @@ export interface IEarningsDateFilterProps {
   refetchDeafult: (
     variables?:
       | Partial<{
-          riderId: string;
+          storeId: string;
           startDate?: string;
           endDate?: string;
         }>
       | undefined,
-  ) => Promise<ApolloQueryResult<IRiderEarningsResponse | undefined>>;
+  ) => Promise<ApolloQueryResult<IStoreEarningsResponse | undefined>>;
 }
