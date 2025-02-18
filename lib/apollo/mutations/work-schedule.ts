@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from "@apollo/client";
 
 export const UPDATE_WORK_SCHEDULE = gql`
   mutation UpdateTimings(
@@ -9,4 +9,4 @@ export const UPDATE_WORK_SCHEDULE = gql`
       _id
     }
   }
-`
+`;

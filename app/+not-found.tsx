@@ -12,8 +12,8 @@ import { ThemedView } from "@/lib/ui/useable-components/ThemedView";
 import { useTranslation } from "react-i18next";
 
 export default function NotFoundScreen() {
-    // Hooks
-    const { t } = useTranslation()
+  // Hooks
+  const { t } = useTranslation();
   return (
     <>
       <Stack.Screen options={{ title: "Oops!" }} />

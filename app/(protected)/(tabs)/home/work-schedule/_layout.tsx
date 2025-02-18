@@ -1,9 +1,9 @@
-import { Stack } from 'expo-router'
+import { Stack } from "expo-router";
 
 export default function WorkScheduleLayout() {
   return (
     <Stack
-      screenOptions={{ headerTitle: '', headerBackButtonMenuEnabled: true }}
+      screenOptions={{ headerTitle: "", headerBackButtonMenuEnabled: true }}
     >
       <Stack.Screen
         name="index"
@@ -13,5 +13,5 @@ export default function WorkScheduleLayout() {
         }}
       />
     </Stack>
-  )
+  );
 }

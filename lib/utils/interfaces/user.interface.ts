@@ -22,9 +22,7 @@ export interface IUserContextProps {
   networkStatusAssigned?: NetworkStatus;
   requestForegroundPermissionsAsync?: () => Promise<LocationPermissionResponse>;
   modalVisible?: IStoreEarnings & { bool: boolean };
-  setModalVisible: Dispatch<
-    SetStateAction<IStoreEarnings & { bool: boolean }>
-  >;
+  setModalVisible: Dispatch<SetStateAction<IStoreEarnings & { bool: boolean }>>;
   riderOrderEarnings?: IStoreEarningsArray[];
   setRiderOrderEarnings?: Dispatch<SetStateAction<IStoreEarningsArray[]>>;
 }
