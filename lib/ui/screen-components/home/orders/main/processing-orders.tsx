@@ -19,6 +19,7 @@ import { IOrderTabsComponentProps } from "@/lib/utils/interfaces";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
 // Types
 import { ORDER_TYPE } from "@/lib/utils/types";
+import { useTranslation } from "react-i18next";
 
 const { height } = Dimensions.get("window");
 
@@ -26,7 +27,8 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
   // Props
   const { route } = props;
 
-  // Context
+  // Hooks
+  const { t } = useTranslation();
   const {
     loadingAssigned,
     errorAssigned,
@@ -71,7 +73,7 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
     <View className="pt-14 flex-1 bg-white pb-16" style={style.contaienr}>
       {errorAssigned ? (
         <View className="flex-1 justify-center items-center">
-          <Text className="text-2xl">Something went wrong</Text>
+          <Text className="text-2xl">{t("Something went wrong")}</Text>
         </View>
       ) : loadingAssigned ? (
         <View className="flex-1">
@@ -107,7 +109,7 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
                     {NO_ORDER_PROMPT[route.key]}
                   </Text>
                 ) : (
-                  <Text>Pull downto refresh</Text>
+                  <Text>{t("Pull down to refresh")}</Text>
                 )}
               </View>
             );
@@ -129,7 +131,7 @@ function HomeProcessingOrdersMain(props: IOrderTabsComponentProps) {
               {NO_ORDER_PROMPT[route.key]}
             </Text>
           ) : (
-            <Text>Pull down to refresh</Text>
+            <Text>{t("Pull down to refresh")}</Text>
           )}
         </View>
       )}
