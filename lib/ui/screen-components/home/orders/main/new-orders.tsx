@@ -51,7 +51,7 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
     if (loading || error) return;
     if (!data) return;
 
-    const _orders = activeOrders.filter((order) =>
+    const _orders = activeOrders?.filter((order) =>
       currentTab === ORDER_DISPATCH_TYPE[0]
         ? !order?.isPickedUp
         : order?.isPickedUp,
@@ -68,7 +68,7 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
   // Use Effect
   useEffect(() => {
     onInitOrders();
-  }, [data?.restaurantOrders, route.key]);
+  }, [data?.restaurantOrders, route.key, currentTab]);
 
   useEffect(() => {
     // Trigger refetch when orders length changes

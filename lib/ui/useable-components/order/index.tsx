@@ -1,9 +1,83 @@
+import moment from "moment";
+import { useContext, useEffect, useRef, useState } from "react";
+import CountDown from "react-native-countdown-component";
+import { View, Text, TouchableOpacity, Image } from "react-native";
+
+// Context
+import { ConfigurationContext } from "@/lib/context/global/configuration.context";
+
+// Interface
 import { IOrderComponentProps } from "@/lib/utils/interfaces/order.interface";
-import { View, Text, TouchableOpacity } from "react-native";
+
+// Methods
+import { getIsAcceptButtonVisible } from "@/lib/utils/methods/gloabl";
+import { orderSubTotal } from "@/lib/utils/methods";
+// Constants
+import { MAX_TIME } from "@/lib/utils/constants";
+// UI
+import { HomeIcon } from "../svg";
+import SpinnerComponent from "../spinner";
 
 const Order = ({ order, tab }: IOrderComponentProps) => {
+  // Context
+  const configuration = useContext(ConfigurationContext);
+
+  // Ref
+  const timer = useRef<NodeJS.Timeout>();
+
+  // Timer
+  const timeNow = new Date();
+  const date = new Date(order.orderDate);
+  const acceptanceTime = moment(date).diff(timeNow, "seconds");
+  const createdTime = new Date(order?.createdAt);
+  let remainingTime = moment(createdTime)
+    .add(MAX_TIME, "seconds")
+    .diff(timeNow, "seconds");
+
+  // Prepation Time
+  // const prep = new Date(order?.preparationTime ?? Date.now()).getTime();
+  // const diffTime: number = prep - Date.now();
+  // const totalPrep = diffTime > 0 ? diffTime / 1000 : 0;
+
+  // States
+  const [isLoading] = useState(false);
+  const [isAcceptButtonVisible, setIsAcceptButtonVisible] = useState(
+    getIsAcceptButtonVisible(order?.orderDate),
+  );
+  const [isOvertime, setIsOvertime] = useState(false);
+
+  const decision = !isAcceptButtonVisible
+    ? acceptanceTime
+    : remainingTime > 0
+      ? remainingTime
+      : 0;
+
+  if (decision === acceptanceTime) {
+    remainingTime = 0;
+  }
+
+  // Use Effects
+  useEffect(() => {
+    let isSubscribed = true;
+    (() => {
+      timer.current = setInterval(() => {
+        const isAcceptButtonVisible = !moment().isBefore(order?.orderDate);
+        if (isSubscribed) {
+          setIsAcceptButtonVisible(isAcceptButtonVisible);
+        }
+        if (isAcceptButtonVisible) {
+          if (timer.current) clearInterval(timer.current);
+        }
+      }, 10000);
+    })();
+    return () => {
+      if (timer.current) clearInterval(timer.current);
+      isSubscribed = false;
+    };
+  }, []);
+
   return (
-    <View className="flex-1">
+    <View className="w-full">
       <TouchableOpacity
         activeOpacity={0.8}
         onPress={() => {
@@ -13,7 +87,7 @@ const Order = ({ order, tab }: IOrderComponentProps) => {
           // });
         }}
       >
-        <View className="flex-1 gap-y-4 bg-gray-50 border border-gray-100 border-1 rounded-[8px] m-4 p-2">
+        <View className="flex-1 gap-y-2 bg-gray-50 border border-gray-100 border-1 rounded-[8px] m-4 p-4">
           {/* Status */}
           <View className="flex-1 flex-row justify-between items-center">
             <Text className="font-[Inter] text-base font-bold  text-left decoration-skip-ink-0 text-gray-600">
@@ -51,6 +125,270 @@ const Order = ({ order, tab }: IOrderComponentProps) => {
               #{order?.orderId}
             </Text>
           </View>
+
+          {/* Order Items */}
+          <View className="flex-1 flex-row justify-between items-center">
+            <Text className="font-[Inter] text-sm font-bold  text-left decoration-skip-ink-0 text-gray-500">
+              ORDER
+            </Text>
+
+            <Text className="font-[Inter] text-sm font-bold  text-left decoration-skip-ink-0 text-gray-500">
+              PRICE
+            </Text>
+          </View>
+
+          <View>
+            {order?.items?.map((item) => {
+              return (
+                <View
+                  key={item._id}
+                  className="flex-1 flex-row justify-between items-center mb-6"
+                >
+                  <View className="w-full flex-row justify-between">
+                    {/* Left */}
+                    <View className="flex-row gap-x-2 w-[90%]">
+                      {/* Image */}
+                      <View className="w-[60px] h-[70px] bg-gray-200 rounded-[8px]">
+                        <Image
+                          src={item.image}
+                          style={{ width: 60, height: 70, borderRadius: 8 }}
+                        />
+                      </View>
+
+                      {/* Item Detaisl */}
+                      <View className="gap-y-2 justify-between">
+                        <View>
+                          <View>
+                            <Text className="font-[Inter] font-semibold  text-gray-900 mb-[4px]">
+                              {item?.variation?.title.slice(0, 37)}
+                            </Text>
+                          </View>
+
+                          {item?.addons?.length > 0 && (
+                            <View className="w-[90%]">
+                              <Text className="font-[Inter] text-md  text-gray-600">
+                                Addons (Options)
+                              </Text>
+
+                              {item?.addons?.map((addon, id) => {
+                                return (
+                                  <View>
+                                    <View className="w-[90%]">
+                                      <Text
+                                        className="font-[Inter] text-sm  text-gray-500"
+                                        key={id}
+                                      >
+                                        {id + 1} - {addon?.title}
+                                      </Text>
+                                    </View>
+                                    <View className="ml-[15px]">
+                                      {addon?.options?.map((option, ide) => {
+                                        return (
+                                          <View
+                                            key={ide}
+                                            className="flex-row gap-x-2 justify-between w-[95%]"
+                                          >
+                                            <Text className="font-[Inter] text-xs  text-gray-500">
+                                              {id + 1}.{ide + 1} -{" "}
+                                              {option.title}
+                                            </Text>
+                                            <Text className="font-[Inter] text-xs  text-gray-500">
+                                              {configuration?.currencySymbol}
+                                              {option?.price}
+                                            </Text>
+                                          </View>
+                                        );
+                                      })}
+                                    </View>
+                                  </View>
+                                );
+                              })}
+                            </View>
+                          )}
+                        </View>
+                        {item?.specialInstructions && (
+                          <View className="w-[90%]">
+                            <Text className="font-[Inter] text-xs font-bold  text-gray-500 mb-[4px]">
+                              Special Instructions
+                            </Text>
+                            <Text className="font-[Inter] text-xs   text-gray-500 mb-[4px]">
+                              {item?.specialInstructions}
+                            </Text>
+                          </View>
+                        )}
+                        <View>
+                          {/* <Text className="font-[Inter] text-gray-600">
+                          Quantity
+                        </Text> */}
+                          <Text className="font-[Inter] text-sm font-[600]  text-left decoration-skip-ink-0 text-gray-900">
+                            x{item?.quantity}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                    {/* Right */}
+                    <View className="w-[10%] items-end">
+                      <Text>
+                        {configuration?.currencySymbol}
+                        {item?.variation.price}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              );
+            })}
+          </View>
+
+          {/* Divider */}
+          <View className="flex-1 h-[1px] bg-gray-300 mb-4 mt-4" />
+
+          {/* SuB TOTAL */}
+          <View className="flex-row justify-between">
+            <Text className="text-gray-900 font-semibold text-lg">
+              Sub Total
+            </Text>
+            <Text className="text-gray-900 font-semibold text-lg">
+              {configuration?.currencySymbol}
+              {orderSubTotal(order)}
+            </Text>
+          </View>
+
+          {/* Tip */}
+          <View className="flex-row justify-between">
+            <Text className="text-gray-900 font-semibold text-lg">Tip</Text>
+            <Text className="text-gray-900 font-semibold text-lg">
+              {configuration?.currencySymbol}
+              {order?.tipping}
+            </Text>
+          </View>
+
+          {/* Tax */}
+          <View className="flex-row justify-between">
+            <Text className="text-gray-900 font-semibold text-lg">Tax</Text>
+            <Text className="text-gray-900 font-semibold text-lg">
+              {configuration?.currencySymbol}
+              {order?.taxationAmount}
+            </Text>
+          </View>
+
+          {/* Delivery */}
+          <View className="flex-row justify-between">
+            <Text className="text-gray-900 font-semibold text-lg">
+              Delivery Charges
+            </Text>
+            <Text className="text-gray-900 font-semibold text-lg">
+              {configuration?.currencySymbol}
+              {order?.deliveryCharges}
+            </Text>
+          </View>
+
+          {/* Total Amount */}
+          <View className="flex-row justify-between">
+            <Text className="text-gray-900 font-semibold text-lg">Total</Text>
+            <Text className="text-gray-900 font-semibold text-lg">
+              {configuration?.currencySymbol}
+              {order?.orderAmount}
+            </Text>
+          </View>
+
+          {/* Order Instructions */}
+          {order?.instructions && (
+            <View className="bg-white rounded-[4px] p-2">
+              <Text className="text-gray-600 font-semibold text-lg">
+                Comment
+              </Text>
+              <Text className="text-gray-600 font-semibold italic text-lg">
+                {order?.instructions}
+              </Text>
+            </View>
+          )}
+
+          {/* New Order */}
+          {order?.orderStatus === "PENDING" && (
+            <View className="flex-row gap-x-4 w-full mt-10">
+              {/* Decline */}
+              <TouchableOpacity
+                className="flex-1 h-16 items-center justify-center bg-transparent border border-red-500 rounded-[30px]"
+                onPress={() => alert("Declin")}
+              >
+                {isLoading ? (
+                  <SpinnerComponent />
+                ) : (
+                  <Text className="text-center text-red-500 text-lg font-medium">
+                    Decline
+                  </Text>
+                )}
+              </TouchableOpacity>
+
+              {/* Accept */}
+              <TouchableOpacity
+                className="flex-1 h-16 items-center justify-center bg-[#90E36D]  border border-[#90E36D] rounded-[30px]"
+                onPress={() => alert("Accept")}
+              >
+                {isLoading ? (
+                  <SpinnerComponent />
+                ) : (
+                  <Text className="text-center text-black text-lg font-medium">
+                    Accept
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {/* Processing */}
+          <View className="w-full items-center">
+            <View className="flex-row items-center gap-x-2">
+              <View>
+                <HomeIcon />
+              </View>
+              <View>
+                <Text className="font-[Inter] font-[500] text-[#191919] text-[14px]">
+                  Time Left
+                </Text>
+                {/* <Text className="font-[Inter] font-[500] text-[#191919] text-[20px]">
+                  Time Left
+                </Text> */}
+
+                <CountDown
+                  until={decision}
+                  size={20}
+                  timeToShow={["H", "M", "S"]}
+                  digitStyle={{ backgroundColor: "white" }}
+                  digitTxtStyle={{
+                    color: isOvertime ? "red" : "black",
+                    fontSize: 20,
+                  }}
+                  // timeLabels={{ h: null, m: null, s: null }}
+                  showSeparator={true}
+                  separatorStyle={{
+                    color: isOvertime ? "red" : "black",
+                    marginTop: -5,
+                  }}
+                  onFinish={() => setIsOvertime(true)}
+                />
+              </View>
+            </View>
+          </View>
+          {["ACCEPTED", "ASSIGNED", "PICKED"].includes(
+            order?.orderStatus ?? "",
+          ) && (
+            <View className="flex-row gap-x-4 w-full mt-10">
+              {/* Hand Order to Rider */}
+              <TouchableOpacity
+                className="flex-1 h-16 items-center justify-center bg-[#90E36D]  border border-[#90E36D] rounded-[30px]"
+                onPress={() => alert("Accept")}
+              >
+                {isLoading ? (
+                  <SpinnerComponent />
+                ) : (
+                  <Text className="text-center text-black text-lg font-medium">
+                    Hand Order to Rider
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </TouchableOpacity>
     </View>
