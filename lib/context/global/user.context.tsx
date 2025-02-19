@@ -7,6 +7,7 @@ import {
 } from "react";
 import { requestForegroundPermissionsAsync } from "expo-location";
 import { QueryResult, useQuery } from "@apollo/client";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // Interface
 import {
   IStoreProfileResponse,
@@ -16,12 +17,13 @@ import {
 // Context
 
 // API
-import { STORE_ORDERS, STORE_PROFILE } from "@/lib/apollo/queries";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { STORE_PROFILE } from "@/lib/apollo/queries";
 import {
   IRiderEarnings,
   IRiderEarningsArray,
 } from "@/lib/utils/interfaces/rider-earnings.interface";
+
+// Services
 import { asyncStorageEmitter } from "@/lib/services";
 
 const UserContext = createContext<IUserContextProps>({} as IUserContextProps);
@@ -57,16 +59,6 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     { restaurantId: string }
   >;
 
-  const {
-    loading: loadingAssigned,
-    error: errorAssigned,
-    data: dataAssigned,
-    networkStatus: networkStatusAssigned,
-  } = useQuery(STORE_ORDERS, {
-    fetchPolicy: "network-only",
-    notifyOnNetworkStatusChange: true,
-  });
-
   const getUserId = useCallback(async () => {
     const id = await AsyncStorage.getItem("store-id");
     if (id) {
@@ -96,47 +88,15 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     }
   }, [userId]);
 
-  /*Why is this duplicated? */
-  // useEffect(() => {
-  //   const trackRiderLocation = async () => {
-  //     locationListener.current = await watchPositionAsync(
-  //       { accuracy: LocationAccuracy.BestForNavigation, timeInterval: 10000 },
-  //       async (location) => {
-  //         client.mutate({
-  //           mutation: UPDATE_LOCATION,
-  //           variables: {
-  //             latitude: location.coords.latitude.toString(),
-  //             longitude: location.coords.longitude.toString(),
-  //           },
-  //         })
-  //       },
-  //     )
-  //   }
-  //   trackRiderLocation()
-  //   return () => {
-  //     if (locationListener.current) {
-  //       locationListener.current.remove()
-  //     }
-  //   }
-  // }, [])
-
   return (
     <UserContext.Provider
       value={{
         modalVisible,
-        // riderOrderEarnings,
         setModalVisible,
-        // setRiderOrderEarnings,
         userId,
         loadingProfile,
         errorProfile,
         dataProfile: dataProfile?.restaurant ?? null,
-        loadingAssigned,
-        errorAssigned,
-        assignedOrders:
-          loadingAssigned || errorAssigned ? [] : dataAssigned.restaurantOrders,
-        // refetchAssigned,
-        networkStatusAssigned,
         requestForegroundPermissionsAsync,
       }}
     >

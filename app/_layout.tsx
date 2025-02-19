@@ -78,26 +78,24 @@ function RootLayout() {
             <ConfigurationProvider>
               <AuthProvider client={client}>
                 <UserProvider>
-                  <SoundProvider>
-                    <UnavailableStatus />
-                    <Stack
-                      initialRouteName="(un-protected)"
-                      screenOptions={{ headerShown: false }}
-                    >
-                      <Stack.Screen name="+not-found" />
-                      <Stack.Screen
-                        name="(protected)"
-                        options={{
-                          headerShown: false,
-                          presentation: "fullScreenModal",
-                        }}
-                      />
-                      <Stack.Screen
-                        name="(un-protected)"
-                        options={{ headerShown: false }}
-                      />
-                    </Stack>
-                  </SoundProvider>
+                  <UnavailableStatus />
+                  <Stack
+                    initialRouteName="(un-protected)"
+                    screenOptions={{ headerShown: false }}
+                  >
+                    <Stack.Screen name="+not-found" />
+                    <Stack.Screen
+                      name="(protected)"
+                      options={{
+                        headerShown: false,
+                        presentation: "fullScreenModal",
+                      }}
+                    />
+                    <Stack.Screen
+                      name="(un-protected)"
+                      options={{ headerShown: false }}
+                    />
+                  </Stack>
                 </UserProvider>
 
                 <StatusBar style="auto" />

@@ -29,12 +29,15 @@ export default function useOrders() {
       (order: IOrder) => order?.orderStatus === "DELIVERED"
     );
 
+  const hasNewOrders = activeOrders?.length > 0;
+
   return {
     loading,
     error,
     data,
     refetch,
     networkStatus,
+    hasNewOrders,
     activeOrders,
     processingOrders,
     deliveredOrders,
