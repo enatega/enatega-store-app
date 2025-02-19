@@ -1,5 +1,5 @@
 // GraphQL
-import { RIDER_EARNINGS_GRAPH } from "@/lib/apollo/queries/earnings.query";
+import { STORE_EARNINGS_GRAPH } from "@/lib/apollo/queries/earnings.query";
 
 // Hooks
 import { useUserContext } from "@/lib/context/global/user.context";
@@ -9,52 +9,48 @@ import { QueryResult, useQuery } from "@apollo/client";
 import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 
 // Interfacs
-import { IRiderEarningsResponse } from "@/lib/utils/interfaces/rider-earnings.interface";
+import { IStoreEarningsResponse } from "@/lib/utils/interfaces/rider-earnings.interface";
 
 // Core
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 export default function EarningDetailsHeader() {
   // States
-  const [riderEarningsGrandTotal, setRiderEarningsGrandTotal] = useState({
+  const [storeEarningsGrandTotal, setStoreEarningsGrandTotal] = useState({
     earnings: 0,
-    tips: 0,
     totalDeliveries: 0,
   });
 
-  // Contexts
+  // Hooks
+  const { t } = useTranslation();
   const { userId } = useUserContext();
 
   // Queries
   const { loading: isRiderEarningsLoading, data: riderEarningsData } = useQuery(
-    RIDER_EARNINGS_GRAPH,
+    STORE_EARNINGS_GRAPH,
     {
       variables: {
         riderId: userId ?? "",
       },
     },
-  ) as QueryResult<IRiderEarningsResponse | undefined, { riderId: string }>;
+  ) as QueryResult<IStoreEarningsResponse | undefined, { riderId: string }>;
 
   useEffect(() => {
-    if (riderEarningsData?.riderEarningsGraph?.earnings?.length) {
+    if (riderEarningsData?.storeEarningsGraph?.earnings?.length) {
       const totalEarnings =
-        riderEarningsData?.riderEarningsGraph?.earnings?.reduce(
+        riderEarningsData?.storeEarningsGraph?.earnings?.reduce(
           (acc, curr) => acc + curr.totalEarningsSum,
           0,
         );
-      const totalTips = riderEarningsData?.riderEarningsGraph?.earnings?.reduce(
-        (acc, curr) => acc + curr.totalTipsSum,
-        0,
-      );
       const totalDeliveries =
-        riderEarningsData?.riderEarningsGraph.earnings.reduce(
+        riderEarningsData?.storeEarningsGraph.earnings.reduce(
           (acc, curr) => acc + curr.totalDeliveries,
           0,
         );
-      setRiderEarningsGrandTotal({
+      setStoreEarningsGrandTotal({
         earnings: totalEarnings,
-        tips: totalTips,
         totalDeliveries: totalDeliveries,
       });
     }
@@ -63,24 +59,18 @@ export default function EarningDetailsHeader() {
   if (isRiderEarningsLoading) return <SpinnerComponent />;
   return (
     <View className="bg-gray-100 py-3 border border-gray-100">
-      <Text className="left-5 text-xl font-semibold">Summary</Text>
+      <Text className="left-5 text-xl font-semibold">{t("Summary")}</Text>
       <View className="flex flex-row justify-between items-center p-5">
         <View className="flex gap-2 items-center">
-          <Text className="text-lg text-black">Total Earnings</Text>
+          <Text className="text-lg text-black">{t("Total Earnings")}</Text>
           <Text className="font-semibold text-lg text-start self-start">
-            ${riderEarningsGrandTotal.earnings}
+            ${storeEarningsGrandTotal.earnings}
           </Text>
         </View>
         <View className="flex gap-2 items-center border-l-2 border-l-gray-200 pl-3">
-          <Text className="text-lg text-black">Total Tips</Text>
+          <Text className="text-lg text-black">{t("Total Deliveries")}</Text>
           <Text className="font-semibold text-lg text-start self-start">
-            ${riderEarningsGrandTotal.tips}
-          </Text>
-        </View>
-        <View className="flex gap-2 items-center border-l-2 border-l-gray-200 pl-3">
-          <Text className="text-lg text-black">Total Deliveries</Text>
-          <Text className="font-semibold text-lg text-start self-start">
-            {riderEarningsGrandTotal.totalDeliveries}
+            {storeEarningsGrandTotal.totalDeliveries}
           </Text>
         </View>
       </View>

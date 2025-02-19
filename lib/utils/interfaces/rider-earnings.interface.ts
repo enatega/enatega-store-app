@@ -1,58 +1,55 @@
-import { ApolloQueryResult } from "@apollo/client";
-import { Dispatch, SetStateAction } from "react";
+import { ApolloQueryResult } from '@apollo/client'
+import { Dispatch, SetStateAction } from 'react'
 
-export interface IRiderEarningsArray {
-  tip: number;
+export interface IStoreEarningsArray {
   orderDetails: {
-    orderType: string;
-    orderId: string;
-    paymentMethod: string;
-  };
-  totalEarnings: number;
-  deliveryFee: number;
-  date: string;
+    orderType: string
+    orderId: string
+    paymentMethod: string
+  }
+  totalEarnings: number
+  date: string
 }
-export interface IRiderEarnings {
-  _id: string;
-  earningsArray: IRiderEarningsArray[];
-  date: string;
-  totalEarningsSum: number;
-  totalTipsSum: number;
-  totalDeliveries: number;
+export interface IStoreEarnings {
+  _id: string
+  earningsArray: IStoreEarningsArray[]
+  date: string
+  totalEarningsSum: number
+  totalDeliveries: number
 }
-export interface IRiderEarningsResponse {
-  riderEarningsGraph: {
-    totalCount: number;
-    earnings: IRiderEarnings[];
-  };
+export interface IStoreEarningsResponse {
+  storeEarningsGraph: {
+    totalCount: number
+    earnings: IStoreEarnings[]
+  }
 }
 
-export interface IRiderEarningsOrderProps {
-  amount: number;
-  orderId: string;
+export interface IStoreEarningsOrderProps {
+  amount: number
+  orderId: string
 }
 
 export interface IDateFilter {
-  startDate: string;
-  endDate: string;
+  startDate: string
+  endDate: string
 }
 
 export interface IEarningDetailsMainProps {
-  dateFilter: IDateFilter;
-  setDateFilter: Dispatch<SetStateAction<IDateFilter>>;
+  dateFilter: IDateFilter
+  setDateFilter: Dispatch<SetStateAction<IDateFilter>>
 }
 export interface IEarningsDateFilterProps {
-  handleFilterSubmit: () => Promise<void>;
-  isFiltering: boolean;
-  isDateFilterVisible: boolean;
-  setIsDateFilterVisible: Dispatch<SetStateAction<boolean>>;
+  handleFilterSubmit: () => Promise<void>
+  isFiltering: boolean
+  isDateFilterVisible: boolean
+  setIsDateFilterVisible: Dispatch<SetStateAction<boolean>>
   refetchDeafult: (
     variables?:
       | Partial<{
-          riderId: string;
-          startDate?: string;
-          endDate?: string;
+          storeId: string
+          startDate?: string
+          endDate?: string
         }>
       | undefined,
-  ) => Promise<ApolloQueryResult<IRiderEarningsResponse | undefined>>;
+  ) => Promise<ApolloQueryResult<IStoreEarningsResponse | undefined>>
 }

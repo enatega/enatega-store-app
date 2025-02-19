@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Image } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import { useState } from "react";
@@ -49,21 +49,30 @@ const CustomDrawerHeader = () => {
           className="w-[54px] h-[54px] rounded-full items-center justify-center overflow-hidden"
           style={{ backgroundColor: Colors.light.white }}
         >
-          <Text
-            className="text-[16px] font-semibold"
-            style={{
-              color: Colors.light.primary,
-            }}
-          >
-            {dataProfile?.name
-              .split(" ")[0]
-              .substring(0, 1)
-              .toUpperCase()
-              .concat(
-                "",
-                dataProfile?.name.split(" ")[1].substring(0, 1).toUpperCase(),
-              ) ?? "JS"}
-          </Text>
+          {dataProfile?.logo ? (
+            <Image
+              source={{ uri: dataProfile.logo }}
+              width={100}
+              height={100}
+              resizeMode="cover"
+            />
+          ) : (
+            <Text
+              className="text-[16px] font-semibold"
+              style={{
+                color: Colors.light.primary,
+              }}
+            >
+              {dataProfile?.name
+                .split(" ")[0]
+                .substring(0, 1)
+                .toUpperCase()
+                .concat(
+                  "",
+                  dataProfile?.name.split(" ")[1].substring(0, 1).toUpperCase(),
+                ) ?? "JS"}
+            </Text>
+          )}
         </View>
         <View>
           <Text
@@ -90,7 +99,7 @@ const CustomDrawerHeader = () => {
           className="text-md"
           style={{ color: Colors.light.secondaryTextColor }}
         >
-          Availability
+          {t("Availability")}
         </Text>
         <CustomSwitch
           value={dataProfile?.available ?? isEnabled}

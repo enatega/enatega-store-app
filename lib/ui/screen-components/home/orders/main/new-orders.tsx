@@ -18,6 +18,7 @@ import { IOrder } from "@/lib/utils/interfaces/order.interface";
 import { ORDER_TYPE } from "@/lib/utils/types";
 // Icon
 import { WalletIcon } from "@/lib/ui/useable-components/svg";
+import { useTranslation } from "react-i18next";
 
 const { height } = Dimensions.get("window");
 
@@ -25,12 +26,13 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
   // Props
   const { route } = props;
 
-  // Context
+  // Hooks
+  const { t } = useTranslation();
   const {
     loadingAssigned,
     errorAssigned,
     assignedOrders,
-    refetchAssigned,
+    // refetchAssigned,
     networkStatusAssigned,
   } = useContext(UserContext);
 
@@ -69,7 +71,7 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
     <View className="pt-14 flex-1 bg-white pb-16" style={style.contaienr}>
       {errorAssigned ? (
         <View className="flex-1 justify-center items-center">
-          <Text className="text-2xl">Something went wrong</Text>
+          <Text className="text-2xl">{t("Something went wrong")}</Text>
         </View>
       ) : loadingAssigned ? (
         <View className="flex-1">
@@ -82,7 +84,7 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
           data={orders}
           showsVerticalScrollIndicator={false}
           refreshing={networkStatusAssigned === NetworkStatus.loading}
-          onRefresh={refetchAssigned}
+          // onRefresh={refetchAssigned}
           renderItem={({ item }: { item: IOrder }) => (
             <Order tab={route.key as ORDER_TYPE} order={item} key={item._id} />
           )}
@@ -104,7 +106,7 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
                     {NO_ORDER_PROMPT[route.key]}
                   </Text>
                 ) : (
-                  <Text>Pull downto refresh</Text>
+                  <Text>{t("Pull down to refresh")}</Text>
                 )}
               </View>
             );
@@ -126,7 +128,7 @@ export default function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
               {NO_ORDER_PROMPT[route.key]}
             </Text>
           ) : (
-            <Text>Pull downto refresh</Text>
+            <Text>{t("Pull down to refresh")}</Text>
           )}
         </View>
       )}

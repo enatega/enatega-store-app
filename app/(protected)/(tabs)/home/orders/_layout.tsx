@@ -4,8 +4,11 @@ import { Platform, View, Text, Pressable } from "react-native";
 import { Colors } from "@/lib/utils/constants/colors";
 // Hooks
 import { useColorScheme } from "@/lib/hooks/useColorScheme";
+import { useTranslation } from "react-i18next";
 
 export default function Layout() {
+  // Hooks
+  const { t } = useTranslation();
   const colorScheme = useColorScheme();
 
   return (
@@ -85,19 +88,19 @@ export default function Layout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "New Orders",
+          title: t("New Orders"),
         }}
       />
       <Tabs.Screen
         name="processing"
         options={{
-          title: "Processing",
+          title: t("Processing"),
         }}
       />
       <Tabs.Screen
         name="delivered"
         options={{
-          title: "Delivered",
+          title: t("Delivered"),
         }}
       />
     </Tabs>

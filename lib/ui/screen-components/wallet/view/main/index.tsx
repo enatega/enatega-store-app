@@ -117,7 +117,7 @@ export default function WalletMain() {
     useMutation(CREATE_WITHDRAW_REQUEST, {
       onCompleted: () => {
         FlashMessageComponent({
-          message: "Successfully created the withdraw request!",
+          message: t("Successfully created the withdraw request"),
         });
         setIsBottomModalOpen(false);
         // setIsModalVisible(true)
@@ -126,10 +126,10 @@ export default function WalletMain() {
         });
       },
       onError: (error) => {
-        Alert.alert("Warning", error.message, [
+        Alert.alert(t("Warning"), error.message, [
           {
             onPress: () => setIsBottomModalOpen(false),
-            text: "Okay",
+            text: t("Okay"),
           },
         ]);
         FlashMessageComponent({
@@ -137,7 +137,7 @@ export default function WalletMain() {
             error.message ||
             error.graphQLErrors[0].message ||
             JSON.stringify(error) ||
-            "Something went wrong",
+            t("Something went wrong"),
         });
       },
       refetchQueries: [
@@ -160,14 +160,14 @@ export default function WalletMain() {
       storeProfileData?.restaurant?.currentWalletAmount || 0;
     if (withdrawAmount > (currentAmount || 0)) {
       return setAmountErrMsg(
-        `Please enter a valid amount. You have $${currentAmount} available.`,
+        `${t("Please enter a valid amount")}. ${t("You have")} $${currentAmount} ${"available"}.`,
       );
     } else if (withdrawAmount < 10) {
       return setAmountErrMsg(
-        "The withdraw amount must be atleast 10 or greater.",
+        t("The withdraw amount must be atleast 10 or greater"),
       );
     } else if (typeof withdrawAmount !== "number") {
-      return setAmountErrMsg("Please enter a valid number.");
+      return setAmountErrMsg(t("Please enter a valid number"));
     }
     try {
       await createWithDrawRequest({
@@ -179,7 +179,8 @@ export default function WalletMain() {
       const err = error as GraphQLError;
       console.log(error);
       FlashMessageComponent({
-        message: err.message || JSON.stringify(error) || "Something went wrong",
+        message:
+          err.message || JSON.stringify(error) || t("Something went wrong"),
       });
     }
   }
@@ -210,11 +211,7 @@ export default function WalletMain() {
       });
     }
   }, [userId]);
-  console.warn({
-    cAmount: storeProfileData?.restaurant?.currentWalletAmount,
-    isLoading,
-    tData: storeTransactionData?.transactionHistory?.data,
-  });
+
   if (isLoading) return <WalletScreenMainLoading />;
   else
     return (
