@@ -12,3 +12,4 @@ export * from "./sound.interface";
 export * from "./well-done.interface";
 export * from "./chat.interface";
 export * from "./set-order-time.interface";
+export * from "./work-schedule.interface";

@@ -37,9 +37,11 @@ import { useEffect } from "react";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import FlashMessage from "react-native-flash-message";
+
+// PRoviders
 import InternetProvider from "@/lib/context/global/internet-provider";
+// UI
 import AnimatedSplashScreen from "@/lib/ui/useable-components/splash/AnimatedSplashScreen";
-import { SoundProvider } from "@/lib/context/global/sound.context";
 import UnavailableStatus from "@/lib/ui/useable-components/unavailable-status";
 
 initSentry();

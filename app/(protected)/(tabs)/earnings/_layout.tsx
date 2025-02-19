@@ -1,35 +1,36 @@
-import EarningBottomBar from "@/lib/ui/screen-components/earnings/view/bottom-bar";
-import { Stack, usePathname } from "expo-router";
-import { useUserContext } from "@/lib/context/global/user.context";
+import EarningBottomBar from '@/lib/ui/screen-components/earnings/view/bottom-bar'
+import { Stack, usePathname } from 'expo-router'
+import { useUserContext } from '@/lib/context/global/user.context'
 
 export default function StackLayout() {
-  const { modalVisible, setModalVisible } = useUserContext();
-  const pathname = usePathname();
+  const { modalVisible, setModalVisible } = useUserContext()
+  const pathname = usePathname()
   return (
     <>
       <Stack
         screenOptions={{
-          headerTitle: pathname.startsWith("/earnings/earnings-detail")
-            ? "Earnings Summary"
-            : pathname.startsWith("/earnings/earnings-order-details")
-              ? "Deliveries"
-              : "Earnings",
-          headerBackTitle: "",
+          headerTitle:
+            pathname.startsWith('/earnings/earnings-detail') ?
+              'Earnings Summary'
+            : pathname.startsWith('/earnings/earnings-order-details') ?
+              'Deliveries'
+            : 'Earnings',
+          headerBackTitle: '',
           contentStyle: {
-            backgroundColor: "white",
+            backgroundColor: 'white',
           },
         }}
       >
         <Stack.Screen
           name="index"
-          options={{ headerShown: true, headerTitle: "Earnings Order Details" }}
+          options={{ headerShown: true, headerTitle: 'Earnings Order Details' }}
         />
         <Stack.Screen
           name="(routes)"
           options={{
             headerShown: true,
-            headerTitle: "Earnings Order Details",
-            headerBackTitle: "Earnings",
+            headerTitle: 'Earnings Order Details',
+            headerBackTitle: 'Earnings',
           }}
         />
         {/* <Stack.Screen
@@ -38,12 +39,11 @@ export default function StackLayout() {
         />*/}
       </Stack>
       <EarningBottomBar
+        totalDeliveries={modalVisible.totalDeliveries}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
-        totalDeliveries={modalVisible.earningsArray.length || 0}
-        totalEarnings={modalVisible.totalEarningsSum}
-        totalTips={modalVisible.totalTipsSum}
+        totalEarnings={modalVisible?.totalEarningsSum ?? 0}
       />
     </>
-  );
+  )
 }

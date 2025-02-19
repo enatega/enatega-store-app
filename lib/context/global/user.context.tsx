@@ -14,13 +14,12 @@ import {
   IUserContextProps,
   IUserProviderProps,
 } from "@/lib/utils/interfaces";
-// Context
 
 // API
 import { STORE_PROFILE } from "@/lib/apollo/queries";
 import {
-  IRiderEarnings,
-  IRiderEarningsArray,
+  IStoreEarnings,
+  IStoreEarningsArray,
 } from "@/lib/utils/interfaces/rider-earnings.interface";
 
 // Services
@@ -31,17 +30,15 @@ const UserContext = createContext<IUserContextProps>({} as IUserContextProps);
 export const UserProvider = ({ children }: IUserProviderProps) => {
   // States
   const [modalVisible, setModalVisible] = useState<
-    IRiderEarnings & { bool: boolean }
+    IStoreEarnings & { bool: boolean }
   >({
     bool: false,
     _id: "",
     date: "",
-    earningsArray: [] as IRiderEarningsArray[],
+    earningsArray: [] as IStoreEarningsArray[],
     totalEarningsSum: 0,
-    totalTipsSum: 0,
     totalDeliveries: 0,
   });
-
   const [userId, setUserId] = useState("");
 
   const {

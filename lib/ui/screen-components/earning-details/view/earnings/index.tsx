@@ -2,27 +2,27 @@
 import { ScrollView, Text } from "react-native";
 
 // Interfaces
-import { IRiderEarnings } from "@/lib/utils/interfaces/rider-earnings.interface";
-import { IRiderEarningsDetailProps } from "@/lib/utils/interfaces/earning.interface";
+import { IStoreEarnings } from "@/lib/utils/interfaces/rider-earnings.interface";
+import { IStoreEarningsDetailProps } from "@/lib/utils/interfaces/earning.interface";
 
 // Components
 import EarningStack from "../../../earnings/view/earnings-stack";
 import NoRecordFound from "@/lib/ui/useable-components/no-record-found";
 
 export default function EarningsDetailStacks({
-  riderEarningsData,
-  isRiderEarningsLoading,
+  storeEarningsData,
+  isStoreEarningsLoading,
   setModalVisible,
-}: IRiderEarningsDetailProps) {
+}: IStoreEarningsDetailProps) {
   return (
     <ScrollView className="h-full border-t-2 border-t-gray-200 bg-white">
       <Text>
-        {riderEarningsData?.riderEarningsGraph?.earnings?.length === 0 &&
-          !isRiderEarningsLoading && <NoRecordFound />}
+        {storeEarningsData?.storeEarningsGraph?.earnings?.length === 0 &&
+          !isStoreEarningsLoading && <NoRecordFound />}
       </Text>
-      {riderEarningsData?.riderEarningsGraph?.earnings?.length &&
-        riderEarningsData?.riderEarningsGraph?.earnings?.map(
-          (earning: IRiderEarnings, index) => (
+      {storeEarningsData?.storeEarningsGraph?.earnings?.length &&
+        storeEarningsData?.storeEarningsGraph?.earnings?.map(
+          (earning: IStoreEarnings, index: number) => (
             <EarningStack
               totalDeliveries={earning.totalDeliveries}
               date={earning.date}

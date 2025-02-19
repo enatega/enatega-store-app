@@ -1,29 +1,27 @@
 import { Dispatch, SetStateAction } from "react";
 import {
-  IRiderEarnings,
-  IRiderEarningsArray,
-  IRiderEarningsResponse,
+  IStoreEarnings,
+  IStoreEarningsArray,
+  IStoreEarningsResponse,
 } from "./rider-earnings.interface";
 
 export interface IEarningStackProps {
   earning: number;
   date: string;
-  setModalVisible: Dispatch<SetStateAction<IRiderEarnings & { bool: boolean }>>;
-  tip: number;
+  setModalVisible: Dispatch<SetStateAction<IStoreEarnings & { bool: boolean }>>;
   _id: string;
-  earningsArray: IRiderEarningsArray[];
+  earningsArray: IStoreEarningsArray[];
   totalDeliveries: number;
 }
 export interface IEarningBottomProps {
   totalEarnings: number;
   totalDeliveries: number;
-  totalTips: number;
-  modalVisible: IRiderEarnings & { bool: boolean };
-  setModalVisible: Dispatch<SetStateAction<IRiderEarnings & { bool: boolean }>>;
+  modalVisible: IStoreEarnings & { bool: boolean };
+  setModalVisible: Dispatch<SetStateAction<IStoreEarnings & { bool: boolean }>>;
 }
 
-export interface IRiderEarningsDetailProps {
-  riderEarningsData: IRiderEarningsResponse | undefined;
-  isRiderEarningsLoading: boolean;
-  setModalVisible: Dispatch<SetStateAction<IRiderEarnings & { bool: boolean }>>;
+export interface IStoreEarningsDetailProps {
+  storeEarningsData: IStoreEarningsResponse | undefined;
+  isStoreEarningsLoading: boolean;
+  setModalVisible: Dispatch<SetStateAction<IStoreEarnings & { bool: boolean }>>;
 }

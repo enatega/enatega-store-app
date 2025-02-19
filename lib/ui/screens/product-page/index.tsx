@@ -4,7 +4,7 @@ import { useLayoutEffect } from "react";
 
 const index = () => {
   useLayoutEffect(() => {
-    router.replace("/(tabs)/home/orders/processing");
+    router.replace("/(protected)/(tabs)/home/orders/processing");
     Linking.openURL("https://ninjascode.com/terms-conditions");
   }, []);
   return <></>;

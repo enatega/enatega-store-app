@@ -152,7 +152,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
               {NO_ORDER_PROMPT[route.key]}
             </Text>
           ) : (
-            <Text>Pull down to refresh</Text>
+            <Text>{t("Pull down to refresh")}</Text>
           )}
         </View>
       )}

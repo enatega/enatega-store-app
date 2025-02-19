@@ -23,7 +23,6 @@ import useLogin from "@/lib/hooks/useLogin";
 // Interface
 import { ILoginInitialValues } from "@/lib/utils/interfaces";
 import { useTranslation } from "react-i18next";
-// const { height } = Dimensions.get("window")
 
 const initial: ILoginInitialValues = {
   username: "",

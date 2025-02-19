@@ -1,4 +1,7 @@
+// Core
 import { SafeAreaView } from "react-native";
+
+// Components
 import WalletMain from "../../screen-components/wallet/view/main";
 
 export default function WalletScreen() {

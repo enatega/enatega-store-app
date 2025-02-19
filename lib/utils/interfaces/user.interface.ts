@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import { Dispatch, SetStateAction } from "react";
 import { IGlobalProviderProps } from "./global.interface";
-import {
-  IRiderEarnings,
-  IRiderEarningsArray,
-} from "./rider-earnings.interface";
+import { IStoreEarnings } from "./rider-earnings.interface";
+import { TWeekDays } from "../types/restaurant";
 import { ApolloError, NetworkStatus } from "@apollo/client";
 import { IOrder } from "./order.interface";
 import { LocationPermissionResponse } from "expo-location";
@@ -20,12 +18,8 @@ export interface IUserContextProps {
   refetchAssigned?: () => void;
   networkStatusAssigned?: NetworkStatus;
   requestForegroundPermissionsAsync?: () => Promise<LocationPermissionResponse>;
-  modalVisible?: IRiderEarnings & { bool: boolean };
-  setModalVisible?: Dispatch<
-    SetStateAction<IRiderEarnings & { bool: boolean }>
-  >;
-  riderOrderEarnings?: IRiderEarningsArray[];
-  setRiderOrderEarnings?: Dispatch<SetStateAction<IRiderEarningsArray[]>>;
+  modalVisible: IStoreEarnings & { bool: boolean };
+  setModalVisible: Dispatch<SetStateAction<IStoreEarnings & { bool: boolean }>>;
 }
 export interface IUserProviderProps extends IGlobalProviderProps {}
 
@@ -55,9 +49,7 @@ export interface IStoreProfile {
   rating: number;
   isActive: string;
   isAvailable: string;
-  openingTimes: {
-    day: string;
-  };
+  openingTimes: ITimingResponseGQL[];
   slug: string;
   stripeDetailsSubmitted: string;
   commissionRate: string;
@@ -87,6 +79,26 @@ export interface IStoreProfile {
     accountName: string;
     accountCode: string;
   };
+}
+
+export interface ITimeSlot {
+  startTime: string | null;
+  endTime: string | null;
+}
+
+export interface ITimingForm {
+  day: TWeekDays;
+  times: ITimeSlot[];
+}
+
+export interface ITimeSlotResponseGQL {
+  startTime: string[];
+  endTime: string[];
+}
+
+export interface ITimingResponseGQL {
+  day: TWeekDays;
+  times: ITimeSlotResponseGQL[];
 }
 
 export interface IStoreProfileResponse {
