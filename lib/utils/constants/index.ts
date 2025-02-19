@@ -7,3 +7,4 @@ export * from "./strings";
 export * from "./languages";
 export * from "./faq";
 export * from "./tab";
+export * from "./order";
