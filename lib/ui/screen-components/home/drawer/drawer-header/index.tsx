@@ -1,6 +1,5 @@
 import { View, Text, Image } from "react-native";
 import { useTranslation } from "react-i18next";
-
 import { useState } from "react";
 import { Colors } from "@/lib/utils/constants";
 import CustomSwitch from "@/lib/ui/useable-components/switch-button";
@@ -64,12 +63,15 @@ const CustomDrawerHeader = () => {
               }}
             >
               {dataProfile?.name
-                .split(" ")[0]
-                .substring(0, 1)
-                .toUpperCase()
-                .concat(
+                ?.split(" ")[0]
+                ?.substring(0, 1)
+                ?.toUpperCase()
+                ?.concat(
                   "",
-                  dataProfile?.name.split(" ")[1].substring(0, 1).toUpperCase(),
+                  dataProfile?.name
+                    ?.split(" ")[1]
+                    ?.substring(0, 1)
+                    ?.toUpperCase(),
                 ) ?? "JS"}
             </Text>
           )}
@@ -89,7 +91,7 @@ const CustomDrawerHeader = () => {
               color: Colors.light.secondaryTextColor,
             }}
           >
-            {dataProfile?._id.substring(0, 9).toUpperCase() ?? t("store id")}
+            {dataProfile?._id?.substring(0, 9)?.toUpperCase() ?? t("store id")}
           </Text>
         </View>
       </View>

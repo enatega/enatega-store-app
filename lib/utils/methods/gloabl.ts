@@ -1,3 +1,4 @@
+import moment from "moment";
 import {
   ApolloQueryResult,
   DocumentNode,
@@ -12,7 +13,7 @@ export const retryQuery = async <
 >(
   queryFn: () => Promise<QueryResult<T, V> | ApolloQueryResult<T>>, // Function to execute the query
   retries: number, // Number of retries
-  delayMs: number, // Delay between retries
+  delayMs: number // Delay between retries
 ): Promise<QueryResult<T, V> | ApolloQueryResult<T>> => {
   let attempt = 0;
 
@@ -31,4 +32,9 @@ export const retryQuery = async <
   };
 
   return retry(); // Initial call to retry function
+};
+
+export const getIsAcceptButtonVisible = (orderDate: string) => {
+  const mockCurrentTime = moment().add(5, "minutes"); // Add 5 minutes as a grace period
+  return !mockCurrentTime.isBefore(orderDate);
 };

@@ -41,7 +41,7 @@ export default [
       // "react/jsx-filename-extension": [1, { extensions: [".tsx", ".jsx"] }],
       "max-lines": [
         "warn",
-        { max: 500, skipBlankLines: true, skipComments: true },
+        { max: 550, skipBlankLines: true, skipComments: true },
       ],
 
       "react/react-in-jsx-scope": "off",

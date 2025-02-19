@@ -7,7 +7,7 @@ import {
 } from "react";
 import { requestForegroundPermissionsAsync } from "expo-location";
 import { QueryResult, useQuery } from "@apollo/client";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // Interface
 import {
   IStoreProfileResponse,
@@ -16,12 +16,14 @@ import {
 } from "@/lib/utils/interfaces";
 
 // API
-import { STORE_ORDERS, STORE_PROFILE } from "@/lib/apollo/queries";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { STORE_PROFILE } from "@/lib/apollo/queries";
 import {
   IStoreEarnings,
   IStoreEarningsArray,
 } from "@/lib/utils/interfaces/rider-earnings.interface";
+
+// Services
+import { asyncStorageEmitter } from "@/lib/services";
 
 const UserContext = createContext<IUserContextProps>({} as IUserContextProps);
 
@@ -37,9 +39,6 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     totalEarningsSum: 0,
     totalDeliveries: 0,
   });
-  const [storeOrderEarnings, setStoreOrderEarnings] = useState<
-    IStoreEarningsArray[]
-  >([]);
   const [userId, setUserId] = useState("");
 
   const {
@@ -57,24 +56,6 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     { restaurantId: string }
   >;
 
-  const {
-    loading: loadingAssigned,
-    error: errorAssigned,
-    data: dataAssigned,
-    networkStatus: networkStatusAssigned,
-  } = useQuery(STORE_ORDERS, {
-    fetchPolicy: "network-only",
-    notifyOnNetworkStatusChange: true,
-  });
-  async function fetchProfile() {
-    try {
-      if (userId) {
-        await refetchProfile({ restaurantId: userId });
-      }
-    } catch (error) {
-      console.error("profile fetch error", error);
-    }
-  }
   const getUserId = useCallback(async () => {
     const id = await AsyncStorage.getItem("store-id");
     if (id) {
@@ -83,30 +64,36 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   }, [userId]);
 
   useEffect(() => {
+    const listener = asyncStorageEmitter.addListener("store-id", (data) => {
+      setUserId(data?.value ?? "");
+    });
+
     getUserId();
-  }, [userId]);
+
+    return () => {
+      if (listener) {
+        listener.removeListener("store-id", () => {
+          console.log("Rider Id listerener removed");
+        });
+      }
+    };
+  }, []);
 
   useEffect(() => {
-    fetchProfile();
-  }, [userId, refetchProfile]);
+    if (userId) {
+      refetchProfile({ restaurantId: userId });
+    }
+  }, [userId]);
 
   return (
     <UserContext.Provider
       value={{
         modalVisible,
-        storeOrderEarnings,
         setModalVisible,
-        setStoreOrderEarnings,
         userId,
         loadingProfile,
         errorProfile,
         dataProfile: dataProfile?.restaurant ?? null,
-        loadingAssigned,
-        errorAssigned,
-        assignedOrders:
-          loadingAssigned || errorAssigned ? [] : dataAssigned.restaurantOrders,
-        // refetchAssigned,
-        networkStatusAssigned,
         requestForegroundPermissionsAsync,
       }}
     >

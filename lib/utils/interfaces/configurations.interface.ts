@@ -5,8 +5,7 @@ export interface IConfigurationContextProps extends IGlobalProps {}
 
 export interface IConfiguration {
   _id: string;
-  googleApiKey: string;
-  riderAppSentryUrl: string;
+  restaurantAppSentryUrl: string;
   currency: string;
   currencySymbol: string;
 }

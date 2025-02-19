@@ -1,18 +1,27 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
-
-import UserContext from "@/lib/context/global/user.context";
-import Order from "@/lib/ui/useable-components/order";
+import { useEffect, useState } from "react";
+import {
+  View,
+  Platform,
+  StyleSheet,
+  FlatList,
+  Text,
+  Dimensions,
+} from "react-native";
+// UI
+import CustomTab from "@/lib/ui/useable-components/custom-tab";
 import Spinner from "@/lib/ui/useable-components/spinner";
-import { WalletIcon } from "@/lib/ui/useable-components/svg";
-import { NO_ORDER_PROMPT } from "@/lib/utils/constants";
+// Constants
+import { NO_ORDER_PROMPT, ORDER_DISPATCH_TYPE } from "@/lib/utils/constants";
+
+// Interface
 import { IOrderTabsComponentProps } from "@/lib/utils/interfaces";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
+
+// Hook
+import useOrders from "@/lib/hooks/useOrders";
+import { WalletIcon } from "@/lib/ui/useable-components/svg";
+import Order from "@/lib/ui/useable-components/order";
 import { ORDER_TYPE } from "@/lib/utils/types";
-import { NetworkStatus } from "@apollo/client";
-import { useEffect, useState, useContext } from "react";
-import { useTranslation } from "react-i18next";
-import { View, Text, Dimensions, Platform, StyleSheet } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
 
 const { height } = Dimensions.get("window");
 
@@ -21,67 +30,85 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
   const { route } = props;
 
   // Hooks
-  const { t } = useTranslation();
   const {
-    dataProfile,
-    loadingAssigned,
-    errorAssigned,
-    assignedOrders,
-    refetchAssigned,
-    networkStatusAssigned,
-  } = useContext(UserContext);
+    loading,
+    error,
+    data,
+    deliveredOrders,
+    refetch,
+    currentTab,
+    setCurrentTab,
+  } = useOrders();
+
+  // const { loading: mutateLoading } = useAcceptOrder();
 
   // States
+  const [refreshing, setRefreshing] = useState(false);
   const [orders, setOrders] = useState<IOrder[]>([]);
 
   // Handlers
   const onInitOrders = () => {
-    if (loadingAssigned || errorAssigned) return;
-    if (!assignedOrders) return;
+    if (loading || error) return;
+    if (!data) return;
 
-    const _orders = assignedOrders?.filter((o: IOrder) => {
-      const isDelivered = ["DELIVERED", "CANCELLED"].includes(o.orderStatus);
-      const isCurrentRider = o.rider?._id === dataProfile?._id;
-      return isDelivered && isCurrentRider;
-    });
-
+    const _orders = deliveredOrders?.filter((order) =>
+      currentTab === ORDER_DISPATCH_TYPE[0]
+        ? !order?.isPickedUp
+        : order?.isPickedUp,
+    );
     setOrders(_orders ?? []);
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    refetch();
+    setRefreshing(false);
   };
 
   // Use Effect
   useEffect(() => {
     onInitOrders();
-  }, [assignedOrders, route.key]);
+  }, [data?.restaurantOrders, route.key, currentTab]);
 
   useEffect(() => {
     // Trigger refetch when orders length changes
     if (orders?.length === 0) {
-      // refetchAssigned();
+      refetch();
     }
   }, [orders?.length]);
 
   // Calculate the marginBottom dynamically
   const marginBottom = Platform.OS === "ios" ? height * 0.4 : height * 0.35;
 
-  // Render
   return (
-    <View className="pt-14 flex-1 bg-white pb-16" style={style.contaienr}>
-      {errorAssigned ? (
+    <View
+      className="pt-14 flex-1 items-center  bg-white pb-16"
+      style={style.contaienr}
+    >
+      <CustomTab
+        options={ORDER_DISPATCH_TYPE}
+        selectedTab={currentTab}
+        setSelectedTab={setCurrentTab}
+      />
+
+      {error ? (
         <View className="flex-1 justify-center items-center">
-          <Text className="text-2xl">{t("Something went wrong")}</Text>
+          <Text className="text-2xl">
+            Something went wrong. Please refresh.
+          </Text>
         </View>
-      ) : loadingAssigned ? (
+      ) : loading ? (
         <View className="flex-1">
           <Spinner />
         </View>
       ) : orders?.length > 0 ? (
         <FlatList
-          className={`h-[${height}px] mb-[${marginBottom}px]`}
+          className={`w-full h-[${height}px] mb-[${marginBottom}px]`}
           keyExtractor={(item) => item._id}
           data={orders}
           showsVerticalScrollIndicator={false}
-          refreshing={networkStatusAssigned === NetworkStatus.loading}
-          onRefresh={refetchAssigned}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
           renderItem={({ item }: { item: IOrder }) => (
             <Order tab={route.key as ORDER_TYPE} order={item} key={item._id} />
           )}
@@ -103,7 +130,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
                     {NO_ORDER_PROMPT[route.key]}
                   </Text>
                 ) : (
-                  <Text>{t("Pull down to refresh")}</Text>
+                  <Text>Pull down to refresh</Text>
                 )}
               </View>
             );
@@ -125,7 +152,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
               {NO_ORDER_PROMPT[route.key]}
             </Text>
           ) : (
-            <Text>{t("Pull down to refresh")}</Text>
+            <Text>Pull down to refresh</Text>
           )}
         </View>
       )}

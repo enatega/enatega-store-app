@@ -1,117 +1,29 @@
 import { Href, useRouter } from "expo-router";
-import { useCallback, useEffect } from "react";
-import * as Notifications from "expo-notifications";
+import { useEffect } from "react";
+import * as SecureStore from "expo-secure-store";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
-// Context
-import { useLocationContext } from "@/lib/context/global/location.context";
-// API
-import { STORE_ORDERS } from "@/lib/apollo/queries";
 // Constant
-import { RIDER_TOKEN, ROUTES } from "@/lib/utils/constants";
-// Service
-import setupApollo from "@/lib/apollo";
-import { IOrder } from "@/lib/utils/interfaces/order.interface";
+import { STORE_TOKEN, ROUTES } from "@/lib/utils/constants";
+import useNotification from "@/lib/hooks/useNotification";
 
 function App() {
-  const client = setupApollo();
   const router = useRouter();
-  const { locationPermission } = useLocationContext();
+  useNotification();
+
   // Handler
   const init = async () => {
-    const token = await AsyncStorage.getItem(RIDER_TOKEN);
+    const token = await SecureStore.getItemAsync(STORE_TOKEN);
     if (token) {
-      if (!locationPermission) {
-        router.navigate(ROUTES.location as Href);
-        return;
-      }
-
       router.navigate(ROUTES.home as Href);
       return;
     }
     router.navigate(ROUTES.login as Href);
   };
 
-  // Notification Handler
-  const registerForPushNotification = async () => {
-    const { status: existingStatus } =
-      await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-
-    if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-
-    if (finalStatus === "granted") {
-      Notifications.setNotificationHandler({
-        handleNotification: async () => {
-          return {
-            shouldShowAlert: false, // Prevent the app from closing
-            shouldPlaySound: false,
-            shouldSetBadge: false,
-          };
-        },
-      });
-    }
-  };
-
-  const handleNotification = useCallback(
-    async (response: Notifications.NotificationResponse) => {
-      if (
-        response &&
-        response.notification &&
-        response.notification.request &&
-        response.notification.request.content &&
-        response.notification.request.content.data
-      ) {
-        const { _id } = response.notification.request.content.data;
-        const { data } = await client.query({
-          query: STORE_ORDERS,
-          fetchPolicy: "network-only",
-        });
-        const order = data.riderOrders.find((o: IOrder) => o._id === _id);
-        const lastNotificationHandledId = await AsyncStorage.getItem(
-          "@lastNotificationHandledId",
-        );
-        if (lastNotificationHandledId === _id) return;
-        await AsyncStorage.setItem("@lastNotificationHandledId", _id);
-        router.navigate("/order-detail");
-        router.setParams({ itemId: _id, order });
-      }
-    },
-    [],
-  );
-
-  // Use Effect
-  useEffect(() => {
-    const subscription =
-      Notifications.addNotificationResponseReceivedListener(handleNotification);
-
-    return () => subscription.remove();
-  }, [handleNotification]);
-
-  useEffect(() => {
-    registerForPushNotification();
-
-    // Register a notification handler that will be called when a notification is received.
-    Notifications.setNotificationHandler({
-      handleNotification: async () => {
-        return {
-          shouldShowAlert: false, // Prevent the app from closing
-          shouldPlaySound: false,
-          shouldSetBadge: false,
-        };
-      },
-    });
-  }, []);
-
   useEffect(() => {
     init();
-  }, [locationPermission]);
+  }, []);
 
-  // return <Redirect href="/(tabs)/home/orders" />;
-  // return <Redirect href="/login" />;
   return <></>;
 }
 

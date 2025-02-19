@@ -7,8 +7,9 @@ import {
   ISoundContextProviderProps,
 } from "@/lib/utils/interfaces";
 // Context/Hooks
-import { useUserContext } from "./user.context";
-import { IOrder } from "@/lib/utils/interfaces/order.interface";
+
+// Hook
+import useOrders from "@/lib/hooks/useOrders";
 
 const SoundContext = createContext<ISoundContext>({} as ISoundContext);
 
@@ -16,7 +17,7 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
   // State
   const [sound, setSound] = useState<Audio.SoundObject | null>(null);
   // Context/Hooks
-  const { assignedOrders } = useUserContext();
+  const { hasNewOrders } = useOrders();
 
   // Handlers
   const playSound = async () => {
@@ -53,15 +54,11 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
 
   // Use Effect
   useEffect(() => {
-    if (assignedOrders) {
-      // Check if any order should play sound
-      const new_order = assignedOrders?.find(
-        (o: IOrder) => o.orderStatus === "ACCEPTED" && !o?.isPickedUp,
-      );
-
-      const shouldPlaySound = !!new_order;
+    if (hasNewOrders) {
+      const shouldPlaySound = hasNewOrders;
 
       if (shouldPlaySound && !sound) {
+        console.log("playing...");
         playSound();
       } else if (!shouldPlaySound && sound) {
         stopSound();
@@ -75,7 +72,7 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
         stopSound();
       }
     };
-  }, [assignedOrders, sound]);
+  }, [hasNewOrders, sound]);
 
   return (
     <SoundContext.Provider value={{ playSound, stopSound }}>

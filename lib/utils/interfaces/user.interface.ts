@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import { Dispatch, SetStateAction } from "react";
 import { IGlobalProviderProps } from "./global.interface";
-import {
-  IStoreEarnings,
-  IStoreEarningsArray,
-} from "./rider-earnings.interface";
+import { IStoreEarnings } from "./rider-earnings.interface";
 import { TWeekDays } from "../types/restaurant";
 import { ApolloError, NetworkStatus } from "@apollo/client";
 import { IOrder } from "./order.interface";
@@ -23,8 +20,6 @@ export interface IUserContextProps {
   requestForegroundPermissionsAsync?: () => Promise<LocationPermissionResponse>;
   modalVisible: IStoreEarnings & { bool: boolean };
   setModalVisible: Dispatch<SetStateAction<IStoreEarnings & { bool: boolean }>>;
-  storeOrderEarnings?: IStoreEarningsArray[];
-  setStoreOrderEarnings: Dispatch<SetStateAction<IStoreEarningsArray[]>>;
 }
 export interface IUserProviderProps extends IGlobalProviderProps {}
 

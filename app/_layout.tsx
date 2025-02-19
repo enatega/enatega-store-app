@@ -17,7 +17,6 @@ import setupApollo from "@/lib/apollo";
 
 // Providers
 import { AuthProvider } from "@/lib/context/global/auth.context";
-import { LocationProvider } from "@/lib/context/global/location.context";
 import { ConfigurationProvider } from "@/lib/context/global/configuration.context";
 import { ApolloProvider } from "@apollo/client";
 
@@ -38,6 +37,12 @@ import { useEffect } from "react";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import FlashMessage from "react-native-flash-message";
+
+// PRoviders
+import InternetProvider from "@/lib/context/global/internet-provider";
+// UI
+import AnimatedSplashScreen from "@/lib/ui/useable-components/splash/AnimatedSplashScreen";
+import UnavailableStatus from "@/lib/ui/useable-components/unavailable-status";
 
 initSentry();
 
@@ -69,35 +74,39 @@ function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <ApolloProvider client={client}>
-        <ConfigurationProvider>
-          <AuthProvider client={client}>
-            <LocationProvider>
-              <UserProvider>
-                <Stack
-                  initialRouteName="(un-protected)"
-                  screenOptions={{ headerShown: false }}
-                >
-                  <Stack.Screen name="+not-found" />
-                  <Stack.Screen
-                    name="(protected)"
-                    options={{
-                      headerShown: false,
-                      presentation: "fullScreenModal",
-                    }}
-                  />
-                  <Stack.Screen
-                    name="(un-protected)"
-                    options={{ headerShown: false }}
-                  />
-                </Stack>
-              </UserProvider>
-              <StatusBar style="auto" />
-              <FlashMessage position="bottom" />
-            </LocationProvider>
-          </AuthProvider>
-        </ConfigurationProvider>
-      </ApolloProvider>
+      <AnimatedSplashScreen>
+        <InternetProvider>
+          <ApolloProvider client={client}>
+            <ConfigurationProvider>
+              <AuthProvider client={client}>
+                <UserProvider>
+                  <UnavailableStatus />
+                  <Stack
+                    initialRouteName="(un-protected)"
+                    screenOptions={{ headerShown: false }}
+                  >
+                    <Stack.Screen name="+not-found" />
+                    <Stack.Screen
+                      name="(protected)"
+                      options={{
+                        headerShown: false,
+                        presentation: "fullScreenModal",
+                      }}
+                    />
+                    <Stack.Screen
+                      name="(un-protected)"
+                      options={{ headerShown: false }}
+                    />
+                  </Stack>
+                </UserProvider>
+
+                <StatusBar style="auto" />
+                <FlashMessage position="bottom" />
+              </AuthProvider>
+            </ConfigurationProvider>
+          </ApolloProvider>
+        </InternetProvider>
+      </AnimatedSplashScreen>
     </ThemeProvider>
   );
 }

@@ -14,6 +14,7 @@ import { Href, router } from "expo-router";
 import { FlashMessageComponent } from "../ui/useable-components";
 import { IStoreLoginCompleteResponse } from "../utils/interfaces/auth.interface";
 import { ROUTES } from "../utils/constants";
+import { setItem } from "../services";
 
 const useLogin = () => {
   const [creds, setCreds] = useState({ username: "", password: "" });
@@ -37,7 +38,7 @@ const useLogin = () => {
   }: IStoreLoginCompleteResponse) {
     setIsLoading(false);
     if (restaurantLogin) {
-      await AsyncStorage.setItem("store-id", restaurantLogin?.restaurantId);
+      await setItem("store-id", restaurantLogin?.restaurantId);
       await setTokenAsync(restaurantLogin?.token);
       router.replace(ROUTES.home as Href);
     } else if (
@@ -52,6 +53,7 @@ const useLogin = () => {
     }
   }
   function onError(err: ApolloError) {
+    console.log({ err });
     const error = err as ApolloError;
     setIsLoading(false);
     FlashMessageComponent({
@@ -114,7 +116,7 @@ const useLogin = () => {
         await AsyncStorage.setItem(
           "store-id",
           data.restaurantLogin?.restaurantId ||
-            storeLoginData.restaurantLogin?.restaurantId,
+            storeLoginData.restaurantLogin?.restaurantId
         );
       }
     } catch (err) {
