@@ -14,6 +14,7 @@ export default function EarningsDetailStacks({
   isStoreEarningsLoading,
   setModalVisible,
 }: IStoreEarningsDetailProps) {
+  console.warn({ storeEarningsData });
   return (
     <ScrollView className="h-full border-t-2 border-t-gray-200 bg-white">
       <Text>
@@ -24,13 +25,13 @@ export default function EarningsDetailStacks({
         storeEarningsData?.storeEarningsGraph?.earnings?.map(
           (earning: IStoreEarnings, index: number) => (
             <EarningStack
-              totalDeliveries={earning.totalDeliveries}
+              totalDeliveries={earning.earningsArray.length}
               date={earning.date}
               earning={earning.totalEarningsSum}
               _id={earning._id}
-              tip={earning.totalTipsSum}
               earningsArray={earning.earningsArray}
               key={index}
+              totalOrderAmount={earning.totalOrderAmount}
               setModalVisible={setModalVisible}
             />
           ),

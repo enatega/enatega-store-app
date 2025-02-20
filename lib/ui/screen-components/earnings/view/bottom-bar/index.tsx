@@ -41,6 +41,7 @@ export default function EarningBottomBar({
           earningsArray: [],
           totalEarningsSum: 0,
           totalDeliveries: 0,
+          totalOrderAmount: 0,
         });
       }}
       style={{
@@ -79,6 +80,7 @@ export default function EarningBottomBar({
             earningsArray: [],
             totalEarningsSum: 0,
             totalDeliveries: 0,
+            totalOrderAmount: 0,
           });
         }}
       />
@@ -107,6 +109,7 @@ export default function EarningBottomBar({
                 earningsArray: [],
                 totalEarningsSum: 0,
                 totalDeliveries: 0,
+                totalOrderAmount: 0,
               });
             }}
           >

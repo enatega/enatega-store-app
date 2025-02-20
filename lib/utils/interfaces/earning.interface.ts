@@ -12,6 +12,7 @@ export interface IEarningStackProps {
   _id: string;
   earningsArray: IStoreEarningsArray[];
   totalDeliveries: number;
+  totalOrderAmount: number;
 }
 export interface IEarningBottomProps {
   totalEarnings: number;

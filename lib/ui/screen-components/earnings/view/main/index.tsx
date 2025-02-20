@@ -31,6 +31,7 @@ import { EarningScreenMainLoading } from "@/lib/ui/skeletons";
 import EarningStack from "../earnings-stack";
 import EarningsBarChart from "../../bar-chart";
 import { NoRecordFound } from "@/lib/ui/useable-components";
+import { showMessage } from "react-native-flash-message";
 
 export default function EarningsMain() {
   // Hooks
@@ -41,12 +42,25 @@ export default function EarningsMain() {
   const { loading: isStoreEarningsLoading, data: storeEarningsData } = useQuery(
     STORE_EARNINGS_GRAPH,
     {
+      onError: (err) => {
+        console.error(err);
+        showMessage({
+          message:
+            err.graphQLErrors[0].message ||
+            err.networkError?.message ||
+            "Failed to fetch earnings",
+          type: "danger",
+          duration: 1000,
+        });
+      },
       variables: {
         storeId: userId ?? "",
       },
     },
-  ) as QueryResult<IStoreEarningsResponse | undefined, { storeId: string }>;
-
+  ) as QueryResult<
+    IStoreEarningsResponse | undefined,
+    { storeId: string; startDate?: string; endDate?: string }
+  >;
   const barData: barDataItem[] =
     storeEarningsData?.storeEarningsGraph.earnings
       .slice(0, 7)
@@ -58,9 +72,10 @@ export default function EarningsMain() {
             <Text
               style={{
                 color: "#000",
-                fontSize: 14,
+                fontSize: 8,
                 fontWeight: "600",
                 marginBottom: 1,
+                wordWrap: "wrap",
               }}
             >
               ${earning.totalEarningsSum}
@@ -69,6 +84,7 @@ export default function EarningsMain() {
         },
       })) ?? ([] as barDataItem[]);
 
+  console.warn({ storeEarningsData: JSON.stringify(storeEarningsData) });
   // If loading
   if (isStoreEarningsLoading) return <EarningScreenMainLoading />;
 
@@ -76,9 +92,10 @@ export default function EarningsMain() {
     <View className="bg-white">
       <EarningsBarChart
         data={barData}
-        width={900}
-        height={280}
+        width={1000}
+        height={270}
         frontColor="#8fe36e"
+        disableScroll={true}
       />
       <View className="flex flex-row justify-between w-full px-4 py-4">
         <Text className="text-xl text-black font-bold">
@@ -92,8 +109,8 @@ export default function EarningsMain() {
               date: "",
               earningsArray: [],
               totalEarningsSum: 0,
-              totalTipsSum: 0,
               totalDeliveries: 0,
+              totalOrderAmount: 0,
             });
             router.push(
               "/(protected)/(tabs)/earnings/(routes)/earnings-detail",
@@ -117,9 +134,9 @@ export default function EarningsMain() {
                 earning={earning.totalEarningsSum}
                 totalDeliveries={earning.earningsArray.length}
                 _id={earning._id}
-                tip={earning.totalTipsSum}
                 earningsArray={earning.earningsArray}
                 key={index}
+                totalOrderAmount={earning.totalOrderAmount}
                 setModalVisible={setModalVisible}
               />
             ))}

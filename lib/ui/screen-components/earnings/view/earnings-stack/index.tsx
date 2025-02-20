@@ -14,7 +14,7 @@ export default function EarningStack({
   setModalVisible,
   _id,
   earningsArray,
-  tip,
+  totalOrderAmount,
   totalDeliveries,
 }: IEarningStackProps) {
   // Hooks
@@ -27,9 +27,9 @@ export default function EarningStack({
       _id: _id,
       date: date,
       earningsArray: earningsArray,
-      totalTipsSum: tip,
       totalEarningsSum: earning,
       totalDeliveries: totalDeliveries,
+      totalOrderAmount: totalOrderAmount,
     });
   }
   return (
