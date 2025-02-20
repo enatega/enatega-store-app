@@ -1,25 +1,25 @@
 import { gql } from "@apollo/client";
 
 export const STORE_EARNINGS_GRAPH = gql`
-query StoreEarningsGraph($storeId: ID!) {
-  storeEarningsGraph(storeId: $storeId) {
+  query StoreEarningsGraph($storeId: ID!) {
+    storeEarningsGraph(storeId: $storeId) {
       totalCount
-    earnings {
-      _id
-      totalEarningsSum
-      earningsArray {
-        totalOrderAmount
-        totalEarnings
-        orderDetails {
-          orderId
-          orderType
-          paymentMethod
+      earnings {
+        _id
+        totalEarningsSum
+        earningsArray {
+          totalOrderAmount
+          totalEarnings
+          orderDetails {
+            orderId
+            orderType
+            paymentMethod
+          }
+          date
         }
-        date
       }
     }
   }
-}
 `;
 
 export const STORE_GRAND_TOTAL_EARNINGS = gql`

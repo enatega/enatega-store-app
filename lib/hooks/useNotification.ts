@@ -69,7 +69,7 @@ export default function useNotification() {
         // });
         // const order = data.riderOrders.find((o: IOrder) => o._id === _id);
         const lastNotificationHandledId = await AsyncStorage.getItem(
-          "@lastNotificationHandledId"
+          "@lastNotificationHandledId",
         );
         if (lastNotificationHandledId === _id) return;
         await AsyncStorage.setItem("@lastNotificationHandledId", _id);
@@ -77,7 +77,7 @@ export default function useNotification() {
         // router.setParams({ itemId: _id, order });
       }
     },
-    []
+    [],
   );
 
   // Use Effect

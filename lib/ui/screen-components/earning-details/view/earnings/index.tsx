@@ -14,7 +14,6 @@ export default function EarningsDetailStacks({
   isStoreEarningsLoading,
   setModalVisible,
 }: IStoreEarningsDetailProps) {
-  console.warn({ storeEarningsData });
   return (
     <ScrollView className="h-full border-t-2 border-t-gray-200 bg-white">
       <Text>

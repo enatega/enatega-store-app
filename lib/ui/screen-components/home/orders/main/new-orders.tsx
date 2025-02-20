@@ -29,6 +29,7 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import SetTimeScreenAndAcceptOrder from "@/lib/ui/useable-components/set-order-accept-time";
+import { useTranslation } from "react-i18next";
 
 const { height } = Dimensions.get("window");
 
@@ -37,6 +38,7 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
   const { route } = props;
 
   // Hooks
+  const { t } = useTranslation();
   const {
     loading,
     error,
@@ -114,7 +116,7 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
           {error ? (
             <View className="flex-1 justify-center items-center">
               <Text className="text-2xl">
-                Something went wrong. Please refresh.
+                {t("Something went wrong Please refresh")}
               </Text>
             </View>
           ) : loading ? (
@@ -152,10 +154,10 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
                     <WalletIcon height={100} width={100} />
                     {orders?.length === 0 ? (
                       <Text className="font-[Inter] text-[18px] text-base font-[500] text-gray-600">
-                        {NO_ORDER_PROMPT[route.key]}
+                        {t(NO_ORDER_PROMPT[route.key])}
                       </Text>
                     ) : (
-                      <Text>Pull down to refresh</Text>
+                      <Text>{t("Pull down to refresh")}</Text>
                     )}
                   </View>
                 );
@@ -177,7 +179,7 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
                   {NO_ORDER_PROMPT[route.key]}
                 </Text>
               ) : (
-                <Text>Pull down to refresh</Text>
+                <Text>{t("Pull down to refresh")}</Text>
               )}
             </View>
           )}

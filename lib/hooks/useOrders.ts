@@ -9,24 +9,24 @@ export default function useOrders() {
   const [currentTab, setCurrentTab] = useState<string>(ORDER_DISPATCH_TYPE[0]);
 
   const { loading, error, data, refetch, networkStatus } = useContext(
-    RestaurantProvider.Context
+    RestaurantProvider.Context,
   );
   const activeOrders: IOrder[] =
     data &&
     data?.restaurantOrders?.filter(
-      (order: IOrder) => order?.orderStatus === "PENDING"
+      (order: IOrder) => order?.orderStatus === "PENDING",
     );
 
   const processingOrders: IOrder[] =
     data &&
     data?.restaurantOrders?.filter((order: IOrder) =>
-      ["ACCEPTED", "ASSIGNED", "PICKED"].includes(order?.orderStatus ?? "")
+      ["ACCEPTED", "ASSIGNED", "PICKED"].includes(order?.orderStatus ?? ""),
     );
 
   const deliveredOrders: IOrder[] =
     data &&
     data?.restaurantOrders?.filter(
-      (order: IOrder) => order?.orderStatus === "DELIVERED"
+      (order: IOrder) => order?.orderStatus === "DELIVERED",
     );
 
   const hasNewOrders = activeOrders?.length > 0;

@@ -59,7 +59,7 @@ const setupApollo = () => {
         return () => {
           if (handle) handle.unsubscribe();
         };
-      })
+      }),
   );
 
   // const terminatingLink = split(({ query }) => {

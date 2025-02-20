@@ -116,7 +116,7 @@ const useLogin = () => {
         await AsyncStorage.setItem(
           "store-id",
           data.restaurantLogin?.restaurantId ||
-            storeLoginData.restaurantLogin?.restaurantId
+            storeLoginData.restaurantLogin?.restaurantId,
         );
       }
     } catch (err) {

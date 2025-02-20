@@ -21,6 +21,7 @@ import SpinnerComponent from "../spinner";
 import useCancelOrder from "@/lib/hooks/useCancelOrder";
 import useOrderPickedUp from "@/lib/hooks/useOrderPickedUp";
 import CountdownTimer from "../custom-timer";
+import { useTranslation } from "react-i18next";
 
 const Order = ({
   order,
@@ -31,6 +32,7 @@ const Order = ({
   const configuration = useContext(ConfigurationContext);
 
   // Hooks
+  const { t } = useTranslation();
   const { cancelOrder, loading: loadingCancelOrder } = useCancelOrder();
   const { pickedUp, loading: loadingPicked } = useOrderPickedUp();
 
@@ -109,7 +111,7 @@ const Order = ({
         {/* Status */}
         <View className="flex-1 flex-row justify-between items-center">
           <Text className="font-[Inter] text-base font-bold  text-left decoration-skip-ink-0 text-gray-600">
-            Status
+            {t("Status")}
           </Text>
           <View
             className={`ps-3 pe-3 bg-green-100 border border-1 rounded-[12px] ${
@@ -129,7 +131,7 @@ const Order = ({
                     : "text-green-800"
               }`}
             >
-              {order?.orderStatus}
+              {t(order?.orderStatus ?? "")}
             </Text>
           </View>
         </View>
@@ -137,7 +139,7 @@ const Order = ({
         {/* Order ID */}
         <View className="flex-1 flex-row justify-between items-center">
           <Text className="font-[Inter] text-base font-bold  text-left decoration-skip-ink-0 text-gray-600">
-            Order ID
+            {t("Order ID")}
           </Text>
           <Text className="font-[Inter] text-[16px] text-base font-semibold  text-right underline-offset-auto decoration-skip-ink text-gray-900  mr-2">
             #{order?.orderId}
@@ -147,11 +149,11 @@ const Order = ({
         {/* Order Items */}
         <View className="flex-1 flex-row justify-between items-center">
           <Text className="font-[Inter] text-sm font-bold  text-left decoration-skip-ink-0 text-gray-500">
-            ORDER
+            {t("ORDER")}
           </Text>
 
           <Text className="font-[Inter] text-sm font-bold  text-left decoration-skip-ink-0 text-gray-500">
-            PRICE
+            {t("PRICE")}
           </Text>
         </View>
 
@@ -185,7 +187,7 @@ const Order = ({
                         {item?.addons?.length > 0 && (
                           <View className="w-[90%]">
                             <Text className="font-[Inter] text-md  text-gray-600">
-                              Addons (Options)
+                              {t("Addons")} ({t("Options")})
                             </Text>
 
                             {item?.addons?.map((addon, id) => {
@@ -226,7 +228,7 @@ const Order = ({
                       {item?.specialInstructions && (
                         <View className="w-[90%]">
                           <Text className="font-[Inter] text-xs font-bold  text-gray-500 mb-[4px]">
-                            Special Instructions
+                            {t("Special Instructions")}
                           </Text>
                           <Text className="font-[Inter] text-xs   text-gray-500 mb-[4px]">
                             {item?.specialInstructions}
@@ -261,7 +263,9 @@ const Order = ({
 
         {/* SuB TOTAL */}
         <View className="flex-row justify-between">
-          <Text className="text-gray-900 font-semibold text-lg">Sub Total</Text>
+          <Text className="text-gray-900 font-semibold text-lg">
+            {t("Sub Total")}
+          </Text>
           <Text className="text-gray-900 font-semibold text-lg">
             {configuration?.currencySymbol}
             {orderSubTotal(order)}
@@ -270,7 +274,9 @@ const Order = ({
 
         {/* Tip */}
         <View className="flex-row justify-between">
-          <Text className="text-gray-900 font-semibold text-lg">Tip</Text>
+          <Text className="text-gray-900 font-semibold text-lg">
+            {t("Tip")}
+          </Text>
           <Text className="text-gray-900 font-semibold text-lg">
             {configuration?.currencySymbol}
             {order?.tipping}
@@ -289,7 +295,7 @@ const Order = ({
         {/* Delivery */}
         <View className="flex-row justify-between">
           <Text className="text-gray-900 font-semibold text-lg">
-            Delivery Charges
+            {t("Delivery Charges")}
           </Text>
           <Text className="text-gray-900 font-semibold text-lg">
             {configuration?.currencySymbol}
@@ -299,7 +305,9 @@ const Order = ({
 
         {/* Total Amount */}
         <View className="flex-row justify-between">
-          <Text className="text-gray-900 font-semibold text-lg">Total</Text>
+          <Text className="text-gray-900 font-semibold text-lg">
+            {t("Total")}
+          </Text>
           <Text className="text-gray-900 font-semibold text-lg">
             {configuration?.currencySymbol}
             {order?.orderAmount}
@@ -311,7 +319,9 @@ const Order = ({
         {/* Order Instructions */}
         {order?.instructions && (
           <View className="bg-white rounded-[4px] p-2">
-            <Text className="text-gray-600 font-semibold text-lg">Comment</Text>
+            <Text className="text-gray-600 font-semibold text-lg">
+              {t("Comment")}
+            </Text>
             <Text className="text-gray-600 font-semibold italic text-lg">
               {order?.instructions}
             </Text>
@@ -331,7 +341,7 @@ const Order = ({
                   <SpinnerComponent color="#ef4444" />
                 ) : (
                   <Text className="text-center text-red-500 text-lg font-medium">
-                    Decline
+                    {t("Decline")}
                   </Text>
                 )}
               </TouchableOpacity>
@@ -343,7 +353,7 @@ const Order = ({
                   onPress={() => handlePresentModalPress(order)}
                 >
                   <Text className="text-center text-black text-lg font-medium">
-                    Accept
+                    {t("Accept")}
                   </Text>
                 </TouchableOpacity>
               )}
@@ -362,7 +372,7 @@ const Order = ({
 
                 <View>
                   <Text className="font-[Inter] font-[500] text-[#191919] text-[14px]">
-                    Time Left
+                    {t("Time Left")}
                   </Text>
 
                   <CountdownTimer duration={totalPrep} />
@@ -381,7 +391,7 @@ const Order = ({
                     <SpinnerComponent color="#fff" />
                   ) : (
                     <Text className="text-center text-black text-lg font-medium">
-                      Hand Order to Rider
+                      {t("Hand Order to Rider")}
                     </Text>
                   )}
                 </TouchableOpacity>

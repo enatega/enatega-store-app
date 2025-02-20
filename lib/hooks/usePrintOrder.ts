@@ -23,14 +23,11 @@ export default function usePrintOrder() {
   const printOrder = async (id) => {
     if (!loading && !error) {
       const order = data.restaurantOrders.find(
-        (order: IOrder) => order._id === id
+        (order: IOrder) => order._id === id,
       );
       const result = await printAsync(
         { ...order, currencySymbol: configuration?.currencySymbol },
-        Platform.OS === "ios" ?
-          printer ? printer.url
-          : null
-        : null
+        Platform.OS === "ios" ? (printer ? printer.url : null) : null,
       );
     }
   };
