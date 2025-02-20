@@ -1,8 +1,8 @@
 export const formatReceipt = (order) => {
   const address =
-    order.shippingMethod === "PICKUP" ?
-      "PICKUP"
-    : `${order.deliveryAddress.label} ${order.deliveryAddress.details} ${order.deliveryAddress.deliveryAddress}`;
+    order.shippingMethod === "PICKUP"
+      ? "PICKUP"
+      : `${order.deliveryAddress.label} ${order.deliveryAddress.details} ${order.deliveryAddress.deliveryAddress}`;
   const {
     user: { email, phone },
     taxationAmount: tax,
@@ -19,7 +19,7 @@ export const formatReceipt = (order) => {
       .map(
         (addon) =>
           `<br>${addon.title}: ` +
-          addon.options.map((option) => option.title).join(",")
+          addon.options.map((option) => option.title).join(","),
       )
       .join(",")}</p></td>
     <td className="tableitem"><p className="itemtext">${item.quantity}</p></td>
@@ -27,11 +27,11 @@ export const formatReceipt = (order) => {
       item.variation.price +
       item.addons
         .map((addon) =>
-          addon.options.reduce((prev, curr) => prev + curr.price, 0)
+          addon.options.reduce((prev, curr) => prev + curr.price, 0),
         )
         .reduce((prev, curr) => prev + curr, 0)
     ).toFixed(2)}</p></td>
-  </tr>`
+  </tr>`,
   )}`;
   return `<head>
   <style>
@@ -134,14 +134,14 @@ export const formatReceipt = (order) => {
                 <td></td>
                 <td class="Rate"><h2>Tax</h2></td>
                 <td class="payment"><h2>${order.currencySymbol}${tax.toFixed(
-                  2
+                  2,
                 )}</h2></td>
               </tr>
               <tr class="tabletitle">
                 <td></td>
                 <td class="Rate"><h2>Tip</h2></td>
                 <td class="payment"><h2>${order.currencySymbol}${tip.toFixed(
-                  2
+                  2,
                 )}</h2></td>
               </tr>
               <tr class="tabletitle">

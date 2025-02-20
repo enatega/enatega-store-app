@@ -13,7 +13,7 @@ export const retryQuery = async <
 >(
   queryFn: () => Promise<QueryResult<T, V> | ApolloQueryResult<T>>, // Function to execute the query
   retries: number, // Number of retries
-  delayMs: number // Delay between retries
+  delayMs: number, // Delay between retries
 ): Promise<QueryResult<T, V> | ApolloQueryResult<T>> => {
   let attempt = 0;
 

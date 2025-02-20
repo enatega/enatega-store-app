@@ -84,7 +84,6 @@ export default function EarningsMain() {
         },
       })) ?? ([] as barDataItem[]);
 
-  console.warn({ storeEarningsData: JSON.stringify(storeEarningsData) });
   // If loading
   if (isStoreEarningsLoading) return <EarningScreenMainLoading />;
 

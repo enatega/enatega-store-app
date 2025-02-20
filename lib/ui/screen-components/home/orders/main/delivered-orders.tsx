@@ -22,6 +22,7 @@ import useOrders from "@/lib/hooks/useOrders";
 import { WalletIcon } from "@/lib/ui/useable-components/svg";
 import Order from "@/lib/ui/useable-components/order";
 import { ORDER_TYPE } from "@/lib/utils/types";
+import { useTranslation } from "react-i18next";
 
 const { height } = Dimensions.get("window");
 
@@ -30,6 +31,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
   const { route } = props;
 
   // Hooks
+  const { t } = useTranslation();
   const {
     loading,
     error,
@@ -94,7 +96,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
       {error ? (
         <View className="flex-1 justify-center items-center">
           <Text className="text-2xl">
-            Something went wrong. Please refresh.
+            {t("Something went wrong Please refresh")}
           </Text>
         </View>
       ) : loading ? (
@@ -127,10 +129,10 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
                 <WalletIcon height={100} width={100} />
                 {orders?.length === 0 ? (
                   <Text className="font-[Inter] text-[18px] text-base font-[500] text-gray-600">
-                    {NO_ORDER_PROMPT[route.key]}
+                    {t(NO_ORDER_PROMPT[route.key])}
                   </Text>
                 ) : (
-                  <Text>Pull down to refresh</Text>
+                  <Text>{t("Pull down to refresh")}</Text>
                 )}
               </View>
             );
@@ -152,7 +154,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
               {NO_ORDER_PROMPT[route.key]}
             </Text>
           ) : (
-            <Text>Pull down to refresh</Text>
+            <Text>{t("Pull down to refresh")}</Text>
           )}
         </View>
       )}

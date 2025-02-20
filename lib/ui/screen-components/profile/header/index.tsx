@@ -12,7 +12,7 @@ export default function ProfileHeader() {
   // Hooks
   const { t } = useTranslation();
   const { dataProfile } = useUserContext();
-  console.log({ logo: dataProfile?.logo });
+
   return (
     <ImageBackground
       source={{ uri: dataProfile?.image as string }}
