@@ -5,15 +5,19 @@ import { useState } from "react";
 // Hooks
 import useAcceptOrder from "@/lib/hooks/useAcceptOrder";
 import useOrderRing from "@/lib/hooks/useOrderRing";
-import usePrintOrder from "@/lib/hooks/usePrintOrder";
+// import usePrintOrder from "@/lib/hooks/usePrintOrder";
 
 // Constants
 import { TIMES } from "@/lib/utils/constants";
 
 // Interface
 import { ISetOrderTimeComponentProps } from "@/lib/utils/interfaces";
+
+// UI
 import SpinnerComponent from "../spinner";
 import FlashMessageComponent from "../flash-message";
+
+// Icons
 import { CircleCrossIcon } from "../svg";
 
 const SetTimeScreenAndAcceptOrder = ({
@@ -24,15 +28,15 @@ const SetTimeScreenAndAcceptOrder = ({
   // States
   const [selectedTime, setSelectedTime] = useState(TIMES[0]);
 
-  const { muteRing } = useOrderRing();
-  const { acceptOrder, loading } = useAcceptOrder();
-  const { printOrder } = usePrintOrder();
+  const { muteRing, loading: loadingRing } = useOrderRing();
+  const { acceptOrder, loading: loadingAcceptOrder } = useAcceptOrder();
+  // const { printOrder } = usePrintOrder();
 
-  const onAcceptOrderHandler = () => {
+  const onAcceptOrderHandler = async () => {
     try {
-      acceptOrder(id, selectedTime?.toString() || "0");
-      muteRing(orderId);
-      printOrder(id);
+      await acceptOrder(id, selectedTime?.toString() || "0");
+      await muteRing(orderId);
+      // printOrder(id);
 
       handleDismissModal();
     } catch (err) {
@@ -80,8 +84,8 @@ const SetTimeScreenAndAcceptOrder = ({
           className="h-12 bg-[#90E36D] rounded-3xl py-3"
           onPress={onAcceptOrderHandler}
         >
-          {loading ? (
-            <SpinnerComponent />
+          {loadingAcceptOrder || loadingRing ? (
+            <SpinnerComponent color="white" />
           ) : (
             <Text className="text-center text-white text-lg font-medium">
               Done
