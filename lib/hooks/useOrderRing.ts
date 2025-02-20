@@ -6,8 +6,8 @@ export default function useOrderRing() {
   const [mutate, { loading }] = useMutation(MUTATE_ORDER_RING, {
     refetchQueries: [{ query: GET_ORDERS }],
   });
-  const muteRing = (id: string) => {
-    mutate({ variables: { orderId: id } });
+  const muteRing = async (id: string) => {
+    await mutate({ variables: { orderId: id } });
   };
   return { loading, muteRing };
 }
