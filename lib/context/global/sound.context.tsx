@@ -58,7 +58,6 @@ export const SoundProvider = ({ children }: ISoundContextProviderProps) => {
       const shouldPlaySound = hasNewOrders;
 
       if (shouldPlaySound && !sound) {
-        console.log("playing...");
         playSound();
       } else if (!shouldPlaySound && sound) {
         stopSound();

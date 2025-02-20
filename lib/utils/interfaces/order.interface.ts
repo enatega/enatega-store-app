@@ -4,6 +4,8 @@ import { ORDER_TYPE } from "../types";
 export interface IOrderComponentProps extends IGlobalComponentProps {
   order: IOrder;
   tab: ORDER_TYPE;
+  handlePresentModalPress: (order: IOrder) => void;
+  handleDismissModal: () => void;
 }
 
 export interface Location {
