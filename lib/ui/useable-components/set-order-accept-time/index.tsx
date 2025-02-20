@@ -85,7 +85,7 @@ const SetTimeScreenAndAcceptOrder = ({
           onPress={onAcceptOrderHandler}
         >
           {loadingAcceptOrder || loadingRing ? (
-            <SpinnerComponent />
+            <SpinnerComponent color="white" />
           ) : (
             <Text className="text-center text-white text-lg font-medium">
               Done
