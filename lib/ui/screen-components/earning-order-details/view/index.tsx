@@ -22,7 +22,7 @@ export default function EarningsOrderDetailsMain() {
           return (
             <OrderStack
               key={index}
-              amount={earning.totalEarnings}
+              amount={earning.totalOrderAmount}
               orderId={earning.orderDetails.orderId}
             />
           );
