@@ -38,8 +38,12 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     earningsArray: [] as IStoreEarningsArray[],
     totalEarningsSum: 0,
     totalDeliveries: 0,
+    totalOrderAmount: 0,
   });
   const [userId, setUserId] = useState("");
+  const [storeOrdersEarnings, setStoreOrderEarnings] = useState<
+    IStoreEarningsArray[] | null
+  >(null);
 
   const {
     loading: loadingProfile,
@@ -95,6 +99,8 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
         errorProfile,
         dataProfile: dataProfile?.restaurant ?? null,
         requestForegroundPermissionsAsync,
+        setStoreOrderEarnings,
+        storeOrdersEarnings,
       }}
     >
       {children}

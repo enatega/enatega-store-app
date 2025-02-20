@@ -13,11 +13,11 @@ import OrderStack from "../order-stack";
 
 export default function EarningsOrderDetailsMain() {
   // Contexts
-  const { storeOrderEarnings } = useUserContext();
+  const { storeOrdersEarnings } = useUserContext();
   return (
     <View>
-      {storeOrderEarnings?.length === 0 && <NoRecordFound />}
-      {storeOrderEarnings?.map(
+      {storeOrdersEarnings?.length === 0 && <NoRecordFound />}
+      {storeOrdersEarnings?.map(
         (earning: IStoreEarningsArray, index: number) => {
           return (
             <OrderStack

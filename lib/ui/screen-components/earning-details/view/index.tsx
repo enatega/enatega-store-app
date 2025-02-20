@@ -45,7 +45,7 @@ export default function EarningDetailsMain({
   const {
     loading: isStoreEarningsLoading,
     data: storeEarningsData,
-    refetch: fetchRiderEarnings,
+    refetch: fetchStoreEarnings,
   } = useQuery(STORE_EARNINGS_GRAPH, {
     onError: (err) => {
       console.error(err);
@@ -59,11 +59,11 @@ export default function EarningDetailsMain({
       });
     },
     variables: {
-      riderId: userId ?? "",
+      storeId: userId ?? "",
     },
   }) as QueryResult<
     IStoreEarningsResponse | undefined,
-    { riderId: string; startDate?: string; endDate?: string }
+    { storeId: string; startDate?: string; endDate?: string }
   >;
 
   // Handlers
@@ -98,8 +98,8 @@ export default function EarningDetailsMain({
     }
 
     // Fetch with filters
-    await fetchRiderEarnings({
-      riderId: userId,
+    await fetchStoreEarnings({
+      storeId: userId,
       startDate: dateFilter.startDate,
       endDate: dateFilter.endDate,
     });
@@ -119,7 +119,7 @@ export default function EarningDetailsMain({
         isFiltering={isStoreEarningsLoading || isFiltering}
         isDateFilterVisible={isDateFilterVisible}
         setIsDateFilterVisible={setIsDateFilterVisible}
-        refetchDeafult={fetchRiderEarnings}
+        refetchDeafult={fetchStoreEarnings}
       />
       <EarningDetailsHeader />
       <EarningsDetailStacks

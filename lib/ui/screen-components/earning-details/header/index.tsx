@@ -32,10 +32,10 @@ export default function EarningDetailsHeader() {
     STORE_EARNINGS_GRAPH,
     {
       variables: {
-        riderId: userId ?? "",
+        storeId: userId ?? "",
       },
     },
-  ) as QueryResult<IStoreEarningsResponse | undefined, { riderId: string }>;
+  ) as QueryResult<IStoreEarningsResponse | undefined, { storeId: string }>;
 
   useEffect(() => {
     if (riderEarningsData?.storeEarningsGraph?.earnings?.length) {
@@ -46,7 +46,7 @@ export default function EarningDetailsHeader() {
         );
       const totalDeliveries =
         riderEarningsData?.storeEarningsGraph.earnings.reduce(
-          (acc, curr) => acc + curr.totalDeliveries,
+          (acc, curr) => acc + curr.earningsArray.length,
           0,
         );
       setStoreEarningsGrandTotal({

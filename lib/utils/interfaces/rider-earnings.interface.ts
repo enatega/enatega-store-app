@@ -7,6 +7,7 @@ export interface IStoreEarningsArray {
     orderId: string
     paymentMethod: string
   }
+  totalOrderAmount: number
   totalEarnings: number
   date: string
 }
@@ -15,6 +16,7 @@ export interface IStoreEarnings {
   earningsArray: IStoreEarningsArray[]
   date: string
   totalEarningsSum: number
+  totalOrderAmount: number
   totalDeliveries: number
 }
 export interface IStoreEarningsResponse {
