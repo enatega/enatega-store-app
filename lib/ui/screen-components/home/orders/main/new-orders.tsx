@@ -135,7 +135,6 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
                   order={item}
                   key={item._id}
                   handlePresentModalPress={handlePresentModalPress}
-                  handleDismissModal={handleDismissModal}
                 />
               )}
               ListEmptyComponent={() => {
