@@ -73,41 +73,42 @@ function RootLayout() {
   Appearance.setColorScheme("light"); // Forces light mode
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashScreen>
-        <InternetProvider>
-          <ApolloProvider client={client}>
-            <ConfigurationProvider>
-              <AuthProvider client={client}>
-                <UserProvider>
-                  <UnavailableStatus />
-                  <Stack
-                    initialRouteName="(un-protected)"
-                    screenOptions={{ headerShown: false }}
-                  >
-                    <Stack.Screen name="+not-found" />
-                    <Stack.Screen
-                      name="(protected)"
-                      options={{
-                        headerShown: false,
-                        presentation: "fullScreenModal",
-                      }}
-                    />
-                    <Stack.Screen
-                      name="(un-protected)"
-                      options={{ headerShown: false }}
-                    />
-                  </Stack>
-                </UserProvider>
-
-                <StatusBar style="auto" />
-                <FlashMessage position="bottom" />
-              </AuthProvider>
-            </ConfigurationProvider>
-          </ApolloProvider>
-        </InternetProvider>
-      </AnimatedSplashScreen>
-    </ThemeProvider>
+    <>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <AnimatedSplashScreen>
+          <InternetProvider>
+            <ApolloProvider client={client}>
+              <ConfigurationProvider>
+                <AuthProvider client={client}>
+                  <UserProvider>
+                    <UnavailableStatus />
+                    <Stack
+                      initialRouteName="(un-protected)"
+                      screenOptions={{ headerShown: false }}
+                    >
+                      <Stack.Screen name="+not-found" />
+                      <Stack.Screen
+                        name="(protected)"
+                        options={{
+                          headerShown: false,
+                          presentation: "fullScreenModal",
+                        }}
+                      />
+                      <Stack.Screen
+                        name="(un-protected)"
+                        options={{ headerShown: false }}
+                      />
+                    </Stack>
+                  </UserProvider>
+                </AuthProvider>
+              </ConfigurationProvider>
+            </ApolloProvider>
+          </InternetProvider>
+        </AnimatedSplashScreen>
+      </ThemeProvider>
+      <StatusBar style="auto" />
+      <FlashMessage position="center" />
+    </>
   );
 }
 
