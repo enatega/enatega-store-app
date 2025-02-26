@@ -1,21 +1,20 @@
-import { Drawer } from "expo-router/drawer";
-import { Colors } from "@/lib/utils/constants";
 import CustomDrawerContent from "@/lib/ui/screen-components/home/drawer/drawer-content";
 import {
-  LanguageIcon,
-  UserIcon,
-  HomeIcon,
   AboutIcon,
   CardIcon,
   HelpIcon,
-  PrivacyIcon,
+  HomeIcon,
+  LanguageIcon,
   PageIcon,
+  PrivacyIcon,
 } from "@/lib/ui/useable-components/svg";
-import { TouchableOpacity } from "react-native";
-import { DrawerActions } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
 import ScheduleIcon from "@/lib/ui/useable-components/svg/schedule";
+import { Colors } from "@/lib/utils/constants";
+import { Ionicons } from "@expo/vector-icons";
+import { DrawerActions } from "@react-navigation/native";
+import { Drawer } from "expo-router/drawer";
 import { useTranslation } from "react-i18next";
+import { TouchableOpacity } from "react-native";
 
 export default function DrawerMain() {
   // Hooks
@@ -65,16 +64,20 @@ export default function DrawerMain() {
           ),
         }}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="profile"
         options={{
           drawerLabel: t("Profile"),
           title: t("Profile"),
           drawerIcon: ({ color, size }) => (
-            <UserIcon color={color} height={size} width={size} />
+            <UserIcon
+              color={color}
+              height={size}
+              width={size}
+            />
           ),
         }}
-      />
+      /> */}
       <Drawer.Screen
         name="work-schedule"
         options={{

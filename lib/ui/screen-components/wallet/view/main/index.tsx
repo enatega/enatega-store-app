@@ -1,26 +1,26 @@
 // Interfaces
+import { ILazyQueryResult } from "@/lib/utils/interfaces";
 import {
   IStoreByIdResponse,
   IStoreCurrentWithdrawRequestResponse,
   IStoreEarningsResponse,
   IStoreTransactionHistoryResponse,
 } from "@/lib/utils/interfaces/rider.interface";
-import { ILazyQueryResult } from "@/lib/utils/interfaces";
 
 // Components
 import {
   CustomContinueButton,
+  FlashMessageComponent,
   NoRecordFound,
 } from "@/lib/ui/useable-components";
-import { FlashMessageComponent } from "@/lib/ui/useable-components";
 import WithdrawModal from "../form";
 import RecentTransaction from "../recent-transactions";
 
 // Hooks
-import { useEffect, useState } from "react";
+import { useUserContext } from "@/lib/context/global/user.context";
 import { useLazyQueryQL } from "@/lib/hooks/useLazyQueryQL";
 import { useMutation } from "@apollo/client";
-import { useUserContext } from "@/lib/context/global/user.context";
+import { useEffect, useState } from "react";
 
 // GraphQL
 import { CREATE_WITHDRAW_REQUEST } from "@/lib/apollo/mutations/withdraw-request.mutation";
@@ -36,8 +36,7 @@ import { GraphQLError } from "graphql";
 import { router } from "expo-router";
 
 // Core
-import { Alert, FlatList } from "react-native";
-import { Text, View } from "react-native";
+import { Alert, FlatList, Text, View } from "react-native";
 
 // Skeletons
 import { WalletScreenMainLoading } from "@/lib/ui/skeletons";
@@ -171,11 +170,7 @@ export default function WalletMain() {
       });
     } catch (error) {
       const err = error as GraphQLError;
-      console.log(error);
-      FlashMessageComponent({
-        message:
-          err.message || JSON.stringify(error) || t("Something went wrong"),
-      });
+      console.log(err);
     }
   }
   // Loading state

@@ -45,9 +45,9 @@ export default function EarningBottomBar({
         });
       }}
       style={{
-        maxHeight: 350,
+        maxHeight: "25%",
         width: "100%",
-        height: "100%",
+        height: "25%",
         backgroundColor: "#fff",
         borderRadius: 20,
         padding: 5,
@@ -60,7 +60,7 @@ export default function EarningBottomBar({
           height: 2,
         },
         marginLeft: 0,
-        marginTop: 582,
+        marginTop: "145%",
         shadowOpacity: 0.25,
         shadowRadius: 4,
       }}

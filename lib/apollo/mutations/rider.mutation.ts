@@ -9,9 +9,10 @@ export const UPDATE_LOCATION = gql`
 `;
 
 export const UPDATE_AVAILABILITY = gql`
-  mutation ToggleStore($restaurantId: String) {
-    toggleAvailablity(restaurantId: $restaurantId) {
+  mutation ToggleStore($restaurantId: String!) {
+    toggleStoreAvailability(restaurantId: $restaurantId) {
       _id
+      isAvailable
     }
   }
 `;

@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 // Core
-import { Appearance } from "react-native";
 import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
+import { Appearance } from "react-native";
 import "react-native-reanimated";
 
 // import * as Sentry from "sentry-expo";
@@ -30,12 +30,12 @@ import "@/i18next";
 import "../global.css";
 
 // Hooks
+import { UserProvider } from "@/lib/context/global/user.context";
 import { useColorScheme } from "@/lib/hooks/useColorScheme";
 import { useFonts } from "expo-font";
-import { UserProvider } from "@/lib/context/global/user.context";
-import { useEffect } from "react";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
 import FlashMessage from "react-native-flash-message";
 
 // PRoviders
@@ -73,41 +73,42 @@ function RootLayout() {
   Appearance.setColorScheme("light"); // Forces light mode
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashScreen>
-        <InternetProvider>
-          <ApolloProvider client={client}>
-            <ConfigurationProvider>
-              <AuthProvider client={client}>
-                <UserProvider>
-                  <UnavailableStatus />
-                  <Stack
-                    initialRouteName="(un-protected)"
-                    screenOptions={{ headerShown: false }}
-                  >
-                    <Stack.Screen name="+not-found" />
-                    <Stack.Screen
-                      name="(protected)"
-                      options={{
-                        headerShown: false,
-                        presentation: "fullScreenModal",
-                      }}
-                    />
-                    <Stack.Screen
-                      name="(un-protected)"
-                      options={{ headerShown: false }}
-                    />
-                  </Stack>
-                </UserProvider>
-
-                <StatusBar style="auto" />
-                <FlashMessage position="bottom" />
-              </AuthProvider>
-            </ConfigurationProvider>
-          </ApolloProvider>
-        </InternetProvider>
-      </AnimatedSplashScreen>
-    </ThemeProvider>
+    <>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <AnimatedSplashScreen>
+          <InternetProvider>
+            <ApolloProvider client={client}>
+              <ConfigurationProvider>
+                <AuthProvider client={client}>
+                  <UserProvider>
+                    <UnavailableStatus />
+                    <Stack
+                      initialRouteName="(un-protected)"
+                      screenOptions={{ headerShown: false }}
+                    >
+                      <Stack.Screen name="+not-found" />
+                      <Stack.Screen
+                        name="(protected)"
+                        options={{
+                          headerShown: false,
+                          presentation: "fullScreenModal",
+                        }}
+                      />
+                      <Stack.Screen
+                        name="(un-protected)"
+                        options={{ headerShown: false }}
+                      />
+                    </Stack>
+                  </UserProvider>
+                </AuthProvider>
+              </ConfigurationProvider>
+            </ApolloProvider>
+          </InternetProvider>
+        </AnimatedSplashScreen>
+      </ThemeProvider>
+      <StatusBar style="auto" />
+      <FlashMessage position="center" />
+    </>
   );
 }
 

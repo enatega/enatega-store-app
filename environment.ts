@@ -12,8 +12,8 @@ const getEnvVars = (env = Updates.channel) => {
 
   if (env === "production" || env === "staging") {
     return {
-      GRAPHQL_URL: "https://enatega-multivendor.up.railway.app/graphql",
-      WS_GRAPHQL_URL: "wss://enatega-multivendor.up.railway.app/graphql",
+      GRAPHQL_URL: "https://enatega-multivendor-revamp.up.railway.app/graphql",
+      WS_GRAPHQL_URL: "wss://enatega-multivendor-revamp.up.railway.app/graphql",
       SENTRY_DSN:
         configuration?.restaurantAppSentryUrl ??
         "https://91b55f514a2c4708845789d6e79abf10@o1103026.ingest.sentry.io/6131933",

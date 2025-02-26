@@ -19,9 +19,10 @@ export default function ProfileHeader() {
       width={100}
       height={100}
       resizeMode="cover"
+      className="backdrop-blur-3xl"
     >
       <View
-        className={`justify-between flex-row h-[130px] w-[55%] items-center p-4`}
+        className={`justify-between flex-row h-[130px] w-[55%] items-center p-4 shadow-black shadow-xl`}
       >
         <View
           className="w-[54px] h-[54px] rounded-full items-center justify-center overflow-hidden"

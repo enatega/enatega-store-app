@@ -1,4 +1,4 @@
-import { useTranslation } from "react-i18next";
+import { useApptheme } from "@/lib/context/theme.context";
 import { Text, TouchableOpacity } from "react-native";
 import { TouchableOpacityProps } from "react-native-gesture-handler";
 
@@ -7,13 +7,14 @@ export default function CustomContinueButton({
   ...props
 }: { title: string } & TouchableOpacityProps) {
   // Hooks
-  const { t } = useTranslation();
+  const { appTheme } = useApptheme();
   return (
     <TouchableOpacity
       {...props}
-      className="py-5 min-w-96 lg:px-52 rounded-[80] items-center justify-center bg-[#90E36D]"
+      className="py-5 min-w-96 lg:px-52 rounded-[80] items-center justify-center my-auto mt-8"
+      style={{ backgroundColor: appTheme.primary }}
     >
-      <Text className="text-[16px]">{t(title)}</Text>
+      <Text className="text-[16px]">{title}</Text>
     </TouchableOpacity>
   );
 }

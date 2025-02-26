@@ -2,11 +2,9 @@
 import { IWithdrawModalProps } from "@/lib/utils/interfaces/withdraw.interface";
 
 // Core
-import { Text } from "react-native";
-import { ReactNativeModal } from "react-native-modal";
-import { View } from "react-native";
-import { TextInput } from "react-native";
 import { useState } from "react";
+import { Text, TextInput, View } from "react-native";
+import { ReactNativeModal } from "react-native-modal";
 
 // Components
 import { CustomContinueButton } from "@/lib/ui/useable-components";
@@ -23,7 +21,7 @@ export default function WithdrawModal({
 }: IWithdrawModalProps) {
   // States
   const [withdrawAmount, setWithdrawAmount] = useState("");
-  const [ModalMarginTop, setModalMargintTop] = useState(480);
+  const [ModalMarginTop, setModalMargintTop] = useState("100%");
 
   // Hooks
   const { t } = useTranslation();
@@ -74,8 +72,8 @@ export default function WithdrawModal({
             value={withdrawAmount}
             onChangeText={(val) => handleTextChange(val)}
             maxLength={9999999}
-            onFocus={() => setModalMargintTop(200)}
-            onBlur={() => setModalMargintTop(480)}
+            onFocus={() => setModalMargintTop("20%")}
+            onBlur={() => setModalMargintTop("30%")}
             placeholder="$0.00"
             keyboardType="number-pad"
             returnKeyType="done"

@@ -1,14 +1,14 @@
-import { View, Text, Image } from "react-native";
-import { useTranslation } from "react-i18next";
-import { useState } from "react";
-import { Colors } from "@/lib/utils/constants";
-import CustomSwitch from "@/lib/ui/useable-components/switch-button";
-import { useUserContext } from "@/lib/context/global/user.context";
 import { UPDATE_AVAILABILITY } from "@/lib/apollo/mutations/rider.mutation";
-import { MutationTuple, useMutation } from "@apollo/client";
 import { STORE_PROFILE } from "@/lib/apollo/queries";
-import { showMessage } from "react-native-flash-message";
+import { useUserContext } from "@/lib/context/global/user.context";
+import CustomSwitch from "@/lib/ui/useable-components/switch-button";
+import { Colors } from "@/lib/utils/constants";
 import { IStoreProfile } from "@/lib/utils/interfaces";
+import { MutationTuple, useMutation } from "@apollo/client";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Image, Text, View } from "react-native";
+import { showMessage } from "react-native-flash-message";
 
 const CustomDrawerHeader = () => {
   // States
@@ -37,7 +37,17 @@ const CustomDrawerHeader = () => {
           t("Unable to update availability"),
       });
     },
-  }) as MutationTuple<IStoreProfile | undefined, { id: string }>;
+  }) as MutationTuple<IStoreProfile | undefined, { restaurantId: string }>;
+
+  // Handlers
+  async function handleToggleAvailability() {
+    try {
+      await toggleAvailablity({ variables: { restaurantId: userId ?? "" } });
+      console.log("🚀 ~ CustomDrawerHeader ~ userId:", userId);
+    } catch (error) {
+      console.error("error whilte toggling availabibility", error);
+    }
+  }
   return (
     <View
       className="w-full -mt-6 h-[110px] flex-row justify-between p-4"
@@ -106,9 +116,7 @@ const CustomDrawerHeader = () => {
         <CustomSwitch
           value={dataProfile?.available ?? isEnabled}
           isDisabled={loading}
-          onToggle={async () =>
-            await toggleAvailablity({ variables: { id: userId ?? "" } })
-          }
+          onToggle={handleToggleAvailability}
         />
         <Text
           className="text-xs font-medium"

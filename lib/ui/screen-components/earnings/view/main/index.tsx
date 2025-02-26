@@ -1,6 +1,5 @@
 // Core
-import { TouchableOpacity, View } from "react-native";
-import { Text } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 // Contexts
 import { useUserContext } from "@/lib/context/global/user.context";
@@ -28,10 +27,10 @@ import { router } from "expo-router";
 import { EarningScreenMainLoading } from "@/lib/ui/skeletons";
 
 // Components
-import EarningStack from "../earnings-stack";
-import EarningsBarChart from "../../bar-chart";
 import { NoRecordFound } from "@/lib/ui/useable-components";
 import { showMessage } from "react-native-flash-message";
+import EarningsBarChart from "../../bar-chart";
+import EarningStack from "../earnings-stack";
 
 export default function EarningsMain() {
   // Hooks
@@ -65,7 +64,9 @@ export default function EarningsMain() {
     storeEarningsData?.storeEarningsGraph.earnings
       .slice(0, 7)
       .map((earning: IStoreEarnings) => ({
-        value: earning.totalEarningsSum,
+        value: earning.totalEarningsSum.toString().startsWith("-")
+          ? Number(-earning.totalEarningsSum)
+          : earning.totalEarningsSum,
         label: earning._id,
         topLabelComponent: () => {
           return (
@@ -78,7 +79,10 @@ export default function EarningsMain() {
                 wordWrap: "wrap",
               }}
             >
-              ${earning.totalEarningsSum}
+              $
+              {earning.totalEarningsSum.toString().startsWith("-")
+                ? Number(-earning.totalEarningsSum)
+                : earning.totalEarningsSum}
             </Text>
           );
         },
