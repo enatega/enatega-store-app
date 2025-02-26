@@ -25,9 +25,9 @@ const CountdownTimer: React.FC<TimerProps> = ({ duration }) => {
     const seconds = Math.floor(time % 60);
 
     return {
-      hours: String(hours).padStart(2, "0"),
-      minutes: String(minutes).padStart(2, "0"),
-      seconds: String(seconds).padStart(2, "0"),
+      hours: hours < 1 ? "00" : String(hours).padStart(2, "0"),
+      minutes: minutes < 1 ? "00" : String(minutes).padStart(2, "0"),
+      seconds: seconds < 1 ? "00" : String(seconds).padStart(2, "0"),
     };
   };
 

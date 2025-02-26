@@ -141,7 +141,7 @@ const Order = ({
           <Text className="font-[Inter] text-base font-bold  text-left decoration-skip-ink-0 text-gray-600">
             {t("Order ID")}
           </Text>
-          <Text className="font-[Inter] text-[16px] text-base font-semibold  text-right underline-offset-auto decoration-skip-ink text-gray-900  mr-2">
+          <Text className="font-[Inter] text-[16px] text-base font-semibold  text-right underline-offset-auto decoration-skip-ink text-gray-900">
             #{order?.orderId}
           </Text>
         </View>
@@ -152,7 +152,7 @@ const Order = ({
             {t("ORDER")}
           </Text>
 
-          <Text className="font-[Inter] text-sm font-bold  text-left decoration-skip-ink-0 text-gray-500">
+          <Text className="font-[Inter] text-sm font-bold  text-right decoration-skip-ink-0 text-gray-500">
             {t("PRICE")}
           </Text>
         </View>
@@ -176,16 +176,22 @@ const Order = ({
                     </View>
 
                     {/* Item Detaisl */}
-                    <View className="gap-y-2 justify-between">
+                    <View className="w-[90%] gap-y-2 justify-between">
                       <View>
-                        <View>
+                        {/* Item Title and Price */}
+                        <View className="flex-row justify-between">
                           <Text className="font-[Inter] font-semibold  text-gray-900 mb-[4px]">
                             {item?.variation?.title.slice(0, 37)}
+                          </Text>
+
+                          <Text>
+                            {configuration?.currencySymbol}
+                            {item?.variation.price}
                           </Text>
                         </View>
 
                         {item?.addons?.length > 0 && (
-                          <View className="w-[90%]">
+                          <View className="w-full">
                             <Text className="font-[Inter] text-md  text-gray-600">
                               {t("Addons")} ({t("Options")})
                             </Text>
@@ -206,9 +212,9 @@ const Order = ({
                                       return (
                                         <View
                                           key={ide}
-                                          className="flex-row gap-x-2 justify-between w-[95%]"
+                                          className="flex-row justify-between gap-x-2 w-full"
                                         >
-                                          <Text className="font-[Inter] text-xs  text-gray-500">
+                                          <Text className="ml-2 font-[Inter] text-xs  text-gray-500">
                                             {id + 1}.{ide + 1} - {option.title}
                                           </Text>
                                           <Text className="font-[Inter] text-xs  text-gray-500">
@@ -235,6 +241,7 @@ const Order = ({
                           </Text>
                         </View>
                       )}
+
                       <View>
                         {/* <Text className="font-[Inter] text-gray-600">
                           Quantity
@@ -244,13 +251,6 @@ const Order = ({
                         </Text>
                       </View>
                     </View>
-                  </View>
-                  {/* Right */}
-                  <View className="w-[10%] items-end">
-                    <Text>
-                      {configuration?.currencySymbol}
-                      {item?.variation.price}
-                    </Text>
                   </View>
                 </View>
               </View>
@@ -392,6 +392,25 @@ const Order = ({
                   ) : (
                     <Text className="text-center text-black text-lg font-medium">
                       {t("Hand Order to Rider")}
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {order.isPickedUp && (
+              <View className="flex-row gap-x-4 w-full mt-10">
+                {/* Hand Order to Customer */}
+                <TouchableOpacity
+                  className="flex-1 h-16 items-center justify-center bg-[#90E36D]  border border-[#90E36D] rounded-[30px]"
+                  onPress={() => onPickupOrder()}
+                >
+                  {loadingPicked ? (
+                    <SpinnerComponent color="#fff" />
+                  ) : (
+                    <Text className="text-center text-black text-lg font-medium">
+                      {/* {t("Hand Order to Rider")} */}
+                      Mark as Delivered
                     </Text>
                   )}
                 </TouchableOpacity>
