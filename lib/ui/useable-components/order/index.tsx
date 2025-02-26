@@ -192,7 +192,7 @@ const Order = ({
 
                             {item?.addons?.map((addon, id) => {
                               return (
-                                <View>
+                                <View key={id}>
                                   <View className="w-[90%]">
                                     <Text
                                       className="font-[Inter] text-sm  text-gray-500"

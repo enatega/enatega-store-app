@@ -104,7 +104,7 @@ const useLogin = () => {
       // Perform mutation with the obtained data
       const { data } = await login({
         variables: {
-          username: username.toLowerCase(),
+          username: username,
           password: password,
           notificationToken: notificationToken,
         },
@@ -116,7 +116,7 @@ const useLogin = () => {
         await AsyncStorage.setItem(
           "store-id",
           data.restaurantLogin?.restaurantId ||
-            storeLoginData.restaurantLogin?.restaurantId,
+            storeLoginData.restaurantLogin?.restaurantId
         );
       }
     } catch (err) {
