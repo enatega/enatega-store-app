@@ -12,11 +12,11 @@ import { Alert, KeyboardAvoidingView, ScrollView } from "react-native";
 
 // Core
 import {
-  TouchableWithoutFeedback,
+  Keyboard,
   Text,
   TextInput,
+  TouchableWithoutFeedback,
   View,
-  Keyboard,
 } from "react-native";
 import { showMessage } from "react-native-flash-message";
 
@@ -82,7 +82,9 @@ export default function BankManagementMain() {
           message: "",
         });
       },
-      refetchQueries: [{ query: STORE_PROFILE, variables: { id: userId } }],
+      refetchQueries: [
+        { query: STORE_PROFILE, variables: { restaurantId: userId } },
+      ],
     },
   );
 
@@ -135,7 +137,7 @@ export default function BankManagementMain() {
           bussinessDetails: {
             bankName: formData.bankName,
             accountName: formData.accountName,
-            accountNumber: Number(formData.accountNumber),
+            accountNumber: String(formData.accountNumber),
             accountCode: formData.accountCode,
           },
         },
@@ -156,6 +158,7 @@ export default function BankManagementMain() {
       dataProfile?.bussinessDetails &&
       Object.values(dataProfile?.bussinessDetails).length > 0
     ) {
+      console.warn(dataProfile?.bussinessDetails.accountNumber);
       setFormData({
         bankName: dataProfile?.bussinessDetails.bankName ?? "",
         accountName: dataProfile?.bussinessDetails.accountName ?? "",
@@ -217,6 +220,8 @@ export default function BankManagementMain() {
                 className={`min-w-[100%] rounded-md border ${isError.field === "accountNumber" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
                 value={formData.accountNumber}
                 placeholder="7838246824682346"
+                keyboardType="number-pad"
+                textContentType="password"
                 onChangeText={(val) => {
                   setIsError({ field: "", message: "" });
                   handleChange("accountNumber", val);
