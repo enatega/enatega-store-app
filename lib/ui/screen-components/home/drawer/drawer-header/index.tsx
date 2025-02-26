@@ -24,8 +24,8 @@ const CustomDrawerHeader = () => {
       { query: STORE_PROFILE, variables: { restaurantId: userId } },
     ],
     onCompleted: () => {
-      if (dataProfile?.available) {
-        setIsEnabled(dataProfile?.available);
+      if (dataProfile?.isAvailable) {
+        setIsEnabled(dataProfile?.isAvailable);
       }
     },
     onError: (error) => {
@@ -48,6 +48,7 @@ const CustomDrawerHeader = () => {
       console.error("error whilte toggling availabibility", error);
     }
   }
+
   return (
     <View
       className="w-full -mt-6 h-[110px] flex-row justify-between p-4"
@@ -114,7 +115,7 @@ const CustomDrawerHeader = () => {
           {t("Availability")}
         </Text>
         <CustomSwitch
-          value={dataProfile?.available ?? isEnabled}
+          value={dataProfile?.isAvailable ?? isEnabled}
           isDisabled={loading}
           onToggle={handleToggleAvailability}
         />

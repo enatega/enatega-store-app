@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
+import { ApolloError, NetworkStatus } from "@apollo/client";
+import { LocationPermissionResponse } from "expo-location";
 import { Dispatch, SetStateAction } from "react";
+import { TWeekDays } from "../types/restaurant";
 import { IGlobalProviderProps } from "./global.interface";
+import { IOrder } from "./order.interface";
 import {
   IStoreEarnings,
   IStoreEarningsArray,
 } from "./rider-earnings.interface";
-import { TWeekDays } from "../types/restaurant";
-import { ApolloError, NetworkStatus } from "@apollo/client";
-import { IOrder } from "./order.interface";
-import { LocationPermissionResponse } from "expo-location";
 
 export interface IUserContextProps {
   loadingProfile?: boolean;
@@ -53,7 +53,7 @@ export interface IStoreProfile {
   sections: string;
   rating: number;
   isActive: string;
-  isAvailable: string;
+  isAvailable: boolean;
   openingTimes: ITimingResponseGQL[];
   slug: string;
   stripeDetailsSubmitted: string;
