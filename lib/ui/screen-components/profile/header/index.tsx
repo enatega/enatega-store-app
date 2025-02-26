@@ -3,14 +3,16 @@ import { useUserContext } from "@/lib/context/global/user.context";
 import { useTranslation } from "react-i18next";
 
 // Constants
-import { Colors } from "@/lib/utils/constants";
 
 // Core
+import { useApptheme } from "@/lib/context/theme.context";
+import { BlurTint, BlurView } from "expo-blur";
 import { Image, ImageBackground, Text, View } from "react-native";
 
 export default function ProfileHeader() {
   // Hooks
   const { t } = useTranslation();
+  const { appTheme, currentTheme } = useApptheme();
   const { dataProfile } = useUserContext();
 
   return (
@@ -22,11 +24,11 @@ export default function ProfileHeader() {
       className="backdrop-blur-3xl"
     >
       <View
-        className={`justify-between flex-row h-[130px] w-[55%] items-center p-4 shadow-black shadow-xl`}
+        className={`justify-between flex-row h-[130px] w-[55%] items-center p-4 shadow-xl `}
       >
         <View
           className="w-[54px] h-[54px] rounded-full items-center justify-center overflow-hidden"
-          style={{ backgroundColor: Colors.light.white }}
+          style={{ backgroundColor: appTheme.white }}
         >
           {dataProfile?.logo ? (
             <Image
@@ -39,7 +41,10 @@ export default function ProfileHeader() {
             <Text
               className="text-[16px] font-semibold"
               style={{
-                color: Colors.light.primary,
+                color: appTheme.primary,
+                textShadowColor: appTheme.black,
+                textShadowOffset: { width: 22, height: 22 },
+                textShadowRadius: 40,
               }}
             >
               {dataProfile?.name
@@ -53,22 +58,15 @@ export default function ProfileHeader() {
             </Text>
           )}
         </View>
-        <View
-          style={{
-            shadowOffset: { width: 20, height: 20 },
-            shadowOpacity: 0.85,
-            shadowColor: "#FFFF",
-            shadowRadius: 35,
-            width: "100%",
-          }}
-        >
+        <BlurView intensity={25} tint={currentTheme as BlurTint}>
           <Text
             className={`font-semibold text-[16px]`}
             style={{
-              color: Colors.light.black,
-              textShadowColor: Colors.light.primary,
-              textShadowOffset: { width: 20, height: 20 },
-              textShadowRadius: 15,
+              color: appTheme.fontMainColor,
+              fontWeight: "bold",
+              textShadowColor: appTheme.black,
+              textShadowOffset: { width: 22, height: 22 },
+              textShadowRadius: 40,
             }}
           >
             {dataProfile?.name ?? t("store name")}
@@ -76,12 +74,13 @@ export default function ProfileHeader() {
           <Text
             className="font-medium"
             style={{
-              color: Colors.light.secondaryTextColor,
+              color: appTheme.secondaryTextColor,
+              fontWeight: "condensedBold",
             }}
           >
             {dataProfile?._id.substring(0, 9).toUpperCase() ?? t("store id")}
           </Text>
-        </View>
+        </BlurView>
       </View>
     </ImageBackground>
   );

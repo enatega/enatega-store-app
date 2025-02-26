@@ -1,6 +1,6 @@
 // Providers
-import { SoundProvider } from "@/lib/context/global/sound.context";
 import RestaurantProvider from "@/lib/context/global/restaurant";
+import { SoundProvider } from "@/lib/context/global/sound.context";
 
 // Expo
 import { Stack } from "expo-router";
@@ -19,12 +19,18 @@ export default function ProtectedLayout() {
               headerShown: false,
             }}
           >
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="(tabs)"
+              options={{ headerShown: false }}
+            />
             <Stack.Screen
               name="order-detail"
               options={{ headerShown: false }}
             />
-            <Stack.Screen name="chat" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="chat"
+              options={{ headerShown: false }}
+            />
           </Stack>
 
           <StatusBar style="auto" />

@@ -1,8 +1,11 @@
 import { Colors } from "@/lib/utils/constants";
 import { Stack } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { Platform } from "react-native";
 
 export default function LoginLayour() {
+  // Hooks
+  const { t } = useTranslation();
   return (
     <Stack
       screenOptions={{
@@ -26,7 +29,7 @@ export default function LoginLayour() {
         name="index"
         options={{
           headerShown: false,
-          title: "Chat",
+          title: t("Chat"),
           headerTitleAlign: "center",
           headerShadowVisible: false,
         }}

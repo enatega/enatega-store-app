@@ -27,6 +27,7 @@ import { router } from "expo-router";
 import { EarningScreenMainLoading } from "@/lib/ui/skeletons";
 
 // Components
+import { useApptheme } from "@/lib/context/theme.context";
 import { NoRecordFound } from "@/lib/ui/useable-components";
 import { showMessage } from "react-native-flash-message";
 import EarningsBarChart from "../../bar-chart";
@@ -34,6 +35,7 @@ import EarningStack from "../earnings-stack";
 
 export default function EarningsMain() {
   // Hooks
+  const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const { userId, setModalVisible } = useUserContext();
 
@@ -95,10 +97,18 @@ export default function EarningsMain() {
     <View className="bg-white">
       <EarningsBarChart
         data={barData}
-        width={1000}
-        height={270}
-        frontColor="#8fe36e"
-        disableScroll={true}
+        width={700}
+        height={200}
+        frontColor={appTheme.primary}
+        barStyle={{ marginTop: 15 }}
+        rulesColor={appTheme.secondaryTextColor}
+        topLabelTextStyle={{ color: appTheme.primary }}
+        xAxisLabelTextStyle={{
+          display: "flex",
+          fontSize: 9,
+          color: appTheme.fontMainColor,
+        }}
+        yAxisTextStyle={{ fontSize: 8, color: appTheme.fontSecondColor }}
       />
       <View className="flex flex-row justify-between w-full px-4 py-4">
         <Text className="text-xl text-black font-bold">

@@ -1,8 +1,11 @@
 import { Colors } from "@/lib/utils/constants";
 import { Stack } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { Platform } from "react-native";
 
 export default function OrderDetailLayour() {
+  // Hooks
+  const { t } = useTranslation();
   return (
     <Stack
       screenOptions={{
@@ -25,7 +28,7 @@ export default function OrderDetailLayour() {
       <Stack.Screen
         name="index"
         options={{
-          title: "Order Detail",
+          title: t("Order Detail"),
           headerTitleAlign: "center",
           headerShadowVisible: false,
         }}

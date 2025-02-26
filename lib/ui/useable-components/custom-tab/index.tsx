@@ -1,12 +1,16 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 import { ICustomTabProps } from "@/lib/utils/interfaces";
+import { useTranslation } from "react-i18next";
 
 const CustomTab = ({
   options,
   selectedTab,
   setSelectedTab,
 }: ICustomTabProps) => {
+  // Hooks
+  const { t } = useTranslation();
+
   return (
     <View className="sticky top-0 z-10 w-full bg-white p-3">
       <View className="h-[50px] w-full flex-row p-2 justify-center items-center space-x-2 rounded-[8px] bg-[#F3F4F6]">
@@ -21,7 +25,7 @@ const CustomTab = ({
             <Text
               className={`${selectedTab === option ? "text-black" : "text-gray-500"}`}
             >
-              {option}
+              {t(option)}
             </Text>
           </TouchableOpacity>
         ))}

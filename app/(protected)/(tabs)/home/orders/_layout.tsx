@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { Platform, View, Text, Pressable } from "react-native";
+import { Platform, Pressable, Text, View } from "react-native";
 // Constants
 import { Colors } from "@/lib/utils/constants/colors";
 // Hooks
@@ -27,9 +27,8 @@ export default function Layout() {
             style={{
               alignItems: "center",
               borderBottomWidth: focused ? 2 : 0, // Bottom border when selected
-              borderBottomColor: focused
-                ? Colors[colorScheme ?? "dark"].primary
-                : "transparent", // Black border for active tab
+              borderBottomColor:
+                focused ? Colors[colorScheme ?? "dark"].primary : "transparent", // Black border for active tab
               paddingBottom: 8, // Space between text and border
             }}
           >
@@ -88,19 +87,28 @@ export default function Layout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: t("New Orders"),
+          title:
+            t("New Orders").length > 13 ?
+              t("New Orders").substring(0, 13).concat("..")
+            : t("New Orders"),
         }}
       />
       <Tabs.Screen
         name="processing"
         options={{
-          title: t("Processing"),
+          title:
+            t("Processing").length > 13 ?
+              t("Processing").substring(0, 13).concat("..")
+            : t("Processing"),
         }}
       />
       <Tabs.Screen
         name="delivered"
         options={{
-          title: t("Delivered"),
+          title:
+            t("Delivered").length > 13 ?
+              t("Delivered").substring(0, 13).concat("..")
+            : t("Delivered"),
         }}
       />
     </Tabs>
