@@ -66,7 +66,10 @@ export default function DocumentsSection() {
         >
           {t("Other Details")}
         </Text>
-        <View className="flex flex-row gap-3 items-center justify-between px-5 w-full border-b-2  border-b-gray-200 py-3">
+        <View
+          className="flex flex-row gap-3 items-center justify-between px-5 w-full border-b-2 py-3"
+          style={{ borderColor: appTheme.borderLineColor }}
+        >
           <Text
             style={{
               color: appTheme.fontMainColor,
@@ -82,7 +85,10 @@ export default function DocumentsSection() {
             <Ionicons name="sad-outline" color={appTheme.iconPink} size={20} />
           )}
         </View>
-        <View className="flex flex-row gap-3 items-center justify-between px-5 w-full border-b-2  border-b-gray-200 py-3">
+        <View
+          className="flex flex-row gap-3 items-center justify-between px-5 w-full border-b-2 py-3"
+          style={{ borderColor: appTheme.borderLineColor }}
+        >
           <Text
             style={{
               color: appTheme.fontMainColor,
@@ -98,7 +104,10 @@ export default function DocumentsSection() {
             <Ionicons name="sad-outline" color={appTheme.iconPink} size={20} />
           )}
         </View>
-        <View className="flex flex-row gap-3 items-center justify-between px-5 w-full border-b-2  border-b-gray-200 py-3">
+        <View
+          className="flex flex-row gap-3 items-center justify-between px-5 w-full border-b-2 py-3"
+          style={{ borderColor: appTheme.borderLineColor }}
+        >
           <Text
             style={{
               color: appTheme.fontMainColor,
@@ -114,7 +123,10 @@ export default function DocumentsSection() {
             <Ionicons name="sad-outline" color={appTheme.iconPink} size={20} />
           )}
         </View>
-        <View className="flex flex-row gap-3 items-center justify-between px-5 w-full border-b-2  border-b-gray-200 py-3">
+        <View
+          className="flex flex-row gap-3 items-center justify-between px-5 w-full border-b-2 py-3"
+          style={{ borderColor: appTheme.borderLineColor }}
+        >
           <Text
             style={{
               color: appTheme.fontMainColor,
@@ -130,7 +142,10 @@ export default function DocumentsSection() {
             <Ionicons name="sad-outline" color={appTheme.iconPink} size={20} />
           )}
         </View>
-        <View className="flex flex-row gap-3 items-center justify-between px-5 w-full border-b-2  border-b-gray-200 py-3">
+        <View
+          className="flex flex-row gap-3 items-center justify-between px-5 w-full border-b-2 py-3"
+          style={{ borderColor: appTheme.borderLineColor }}
+        >
           <Text
             style={{
               color: appTheme.fontMainColor,

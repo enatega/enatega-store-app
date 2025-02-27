@@ -6,13 +6,12 @@ import { useTranslation } from "react-i18next";
 
 // Core
 import { useApptheme } from "@/lib/context/theme.context";
-import { BlurTint, BlurView } from "expo-blur";
 import { Image, ImageBackground, Text, View } from "react-native";
 
 export default function ProfileHeader() {
   // Hooks
+  const { appTheme } = useApptheme();
   const { t } = useTranslation();
-  const { appTheme, currentTheme } = useApptheme();
   const { dataProfile } = useUserContext();
 
   return (
@@ -24,63 +23,75 @@ export default function ProfileHeader() {
       className="backdrop-blur-3xl"
     >
       <View
-        className={`justify-between flex-row h-[130px] w-[55%] items-center p-4 shadow-xl `}
+        className={`justify-between flex-row h-[130px] w-[55%] items-center p-4 shadow-xl sticky top-5`}
       >
         <View
-          className="w-[54px] h-[54px] rounded-full items-center justify-center overflow-hidden"
-          style={{ backgroundColor: appTheme.white }}
+          className="p-1 rounded-[100px]"
+          style={{ backgroundColor: appTheme.themeBackground }}
         >
-          {dataProfile?.logo ? (
-            <Image
-              source={{ uri: dataProfile.logo }}
-              width={100}
-              height={100}
-              resizeMode="cover"
-            />
-          ) : (
-            <Text
-              className="text-[16px] font-semibold"
-              style={{
-                color: appTheme.primary,
-                textShadowColor: appTheme.black,
-                textShadowOffset: { width: 22, height: 22 },
-                textShadowRadius: 40,
-              }}
-            >
-              {dataProfile?.name
-                .split(" ")[0]
-                .substring(0, 1)
-                .toUpperCase()
-                .concat(
-                  "",
-                  dataProfile?.name.split(" ")[1].substring(0, 1).toUpperCase(),
-                ) ?? "JS"}
-            </Text>
-          )}
+          <View
+            className="w-[54px] h-[54px] rounded-full items-center justify-center overflow-hidden"
+            style={{ backgroundColor: appTheme.white }}
+          >
+            {dataProfile?.logo ? (
+              <Image
+                source={{ uri: dataProfile.logo }}
+                width={100}
+                height={100}
+                resizeMode="cover"
+                style={{ backgroundColor: "white" }}
+              />
+            ) : (
+              <Text
+                className="text-[16px] font-semibold"
+                style={{
+                  color: appTheme.primary,
+                  textShadowColor: appTheme.black,
+                  textShadowOffset: { width: 22, height: 22 },
+                  textShadowRadius: 40,
+                }}
+              >
+                {dataProfile?.name
+                  .split(" ")[0]
+                  .substring(0, 1)
+                  .toUpperCase()
+                  .concat(
+                    "",
+                    dataProfile?.name
+                      .split(" ")[1]
+                      .substring(0, 1)
+                      .toUpperCase(),
+                  ) ?? "JS"}
+              </Text>
+            )}
+          </View>
         </View>
-        <BlurView intensity={25} tint={currentTheme as BlurTint}>
+        <View className="left-5">
           <Text
-            className={`font-semibold text-[16px]`}
+            className={`font-semibold xs`}
             style={{
               color: appTheme.fontMainColor,
-              fontWeight: "bold",
-              textShadowColor: appTheme.black,
-              textShadowOffset: { width: 22, height: 22 },
-              textShadowRadius: 40,
+              fontWeight: "semibolds",
+              padding: 3,
+              borderRadius: 70,
+              backgroundColor: appTheme.themeBackground,
             }}
           >
             {dataProfile?.name ?? t("store name")}
           </Text>
           <Text
-            className="font-medium"
+            className="font-medium my-1"
             style={{
-              color: appTheme.secondaryTextColor,
-              fontWeight: "condensedBold",
+              color: appTheme.fontMainColor,
+              fontWeight: "semibold",
+              padding: 3,
+              borderRadius: 70,
+              backgroundColor: appTheme.themeBackground,
             }}
           >
             {dataProfile?._id.substring(0, 9).toUpperCase() ?? t("store id")}
           </Text>
-        </BlurView>
+        </View>
       </View>
     </ImageBackground>
   );

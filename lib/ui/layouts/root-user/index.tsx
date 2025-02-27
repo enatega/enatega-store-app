@@ -10,6 +10,7 @@ import { changeLanguage } from "i18next";
 
 // Hooks
 import { useEffect } from "react";
+import { SafeAreaView } from "react-native";
 
 export default function RootUserLayout() {
   // Hooks
@@ -32,23 +33,25 @@ export default function RootUserLayout() {
     handleSetCurrentLanguage();
   }, []);
   return (
-    <Stack
-      initialRouteName="(un-protected)"
-      screenOptions={{
-        headerShown: false,
-        headerTintColor: appTheme.mainTextColor,
-        headerTitleStyle: { color: appTheme.mainTextColor },
-      }}
-    >
-      <Stack.Screen name="+not-found" />
-      <Stack.Screen
-        name="(protected)"
-        options={{
+    <SafeAreaView>
+      <Stack
+        initialRouteName="(un-protected)"
+        screenOptions={{
           headerShown: false,
-          presentation: "fullScreenModal",
+          headerTintColor: appTheme.mainTextColor,
+          headerTitleStyle: { color: appTheme.mainTextColor },
         }}
-      />
-      <Stack.Screen name="(un-protected)" options={{ headerShown: false }} />
-    </Stack>
+      >
+        <Stack.Screen name="+not-found" />
+        <Stack.Screen
+          name="(protected)"
+          options={{
+            headerShown: false,
+            presentation: "fullScreenModal",
+          }}
+        />
+        <Stack.Screen name="(un-protected)" options={{ headerShown: false }} />
+      </Stack>
+    </SafeAreaView>
   );
 }

@@ -39,11 +39,13 @@ import { router } from "expo-router";
 import { Alert, FlatList, Text, View } from "react-native";
 
 // Skeletons
+import { useApptheme } from "@/lib/context/theme.context";
 import { WalletScreenMainLoading } from "@/lib/ui/skeletons";
 import { useTranslation } from "react-i18next";
 
 export default function WalletMain() {
   // Hooks
+  const { appTheme } = useApptheme();
   const { t } = useTranslation();
 
   // States
@@ -204,13 +206,27 @@ export default function WalletMain() {
   if (isLoading) return <WalletScreenMainLoading />;
   else
     return (
-      <View className="flex flex-col justify-between items-center  w-[100%] h-[100%]">
+      <View
+        className="flex flex-col justify-between items-center  w-[100%] h-[100%]"
+        style={{ backgroundColor: appTheme.themeBackground }}
+      >
         {storeProfileData?.restaurant ? (
-          <View className="flex-1 flex flex-column gap-4 items-center bg-[#F3F4F6]">
-            <Text className="text-[18px] text-[#4B5563] font-[600] mt-12">
+          <View
+            className="flex-1 flex flex-column gap-4 items-center"
+            style={{ backgroundColor: appTheme.themeBackground }}
+          >
+            <Text
+              className="text-[18px] font-[600] mt-12"
+              style={{
+                color: appTheme.fontSecondColor,
+              }}
+            >
               {t("Current Balance")}
             </Text>
-            <Text className="font-semibold text-[32px]">
+            <Text
+              className="font-semibold text-[32px]"
+              style={{ color: appTheme.fontMainColor }}
+            >
               $
               {String(storeProfileData?.restaurant?.currentWalletAmount ?? "0")}
             </Text>
@@ -224,7 +240,13 @@ export default function WalletMain() {
         )}
         {storeCurrentWithdrawRequestData?.storeCurrentWithdrawRequest && (
           <View className="w-full h-full flex-1">
-            <Text className="font-bold text-lg bg-white p-5 mt-4">
+            <Text
+              className="font-bold text-lg p-5 mt-4"
+              style={{
+                backgroundColor: appTheme.themeBackground,
+                color: appTheme.fontMainColor,
+              }}
+            >
               {t("Pending Request")}
             </Text>
             <RecentTransaction
@@ -253,7 +275,13 @@ export default function WalletMain() {
             className="w-full h-full flex-1 basis-32 -mt-12"
             ListHeaderComponent={() => {
               return (
-                <Text className="font-bold text-lg bg-white p-5">
+                <Text
+                  className="font-bold text-lg p-5"
+                  style={{
+                    color: appTheme.fontMainColor,
+                    backgroundColor: appTheme.themeBackground,
+                  }}
+                >
                   {t("Recent Transactions")}
                 </Text>
               );

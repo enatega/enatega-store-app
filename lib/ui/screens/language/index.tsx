@@ -1,14 +1,17 @@
 // Core
-import { View } from "react-native";
+import { SafeAreaView } from "react-native";
 
 // Componnets
+import { useApptheme } from "@/lib/context/theme.context";
 import LanguageMain from "../../screen-components/home/language/view/main";
 
 const index = () => {
+  // Hooks
+  const { appTheme } = useApptheme();
   return (
-    <View>
+    <SafeAreaView style={{ backgroundColor: appTheme.themeBackground }}>
       <LanguageMain />
-    </View>
+    </SafeAreaView>
   );
 };
 

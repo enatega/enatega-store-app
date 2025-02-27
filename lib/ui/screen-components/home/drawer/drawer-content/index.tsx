@@ -39,7 +39,7 @@ export default function xCustomDrawerContent(
 
       contentContainerStyle={{
         backgroundColor: appTheme.themeBackground,
-        paddingBottom: 30,
+        paddingBottom: 20,
         paddingStart: 0,
         paddingEnd: 0,
         paddingTop: 0,

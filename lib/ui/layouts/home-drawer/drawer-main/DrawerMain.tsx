@@ -1,3 +1,4 @@
+import { useApptheme } from "@/lib/context/theme.context";
 import CustomDrawerContent from "@/lib/ui/screen-components/home/drawer/drawer-content";
 import {
   AboutIcon,
@@ -18,6 +19,7 @@ import { TouchableOpacity } from "react-native";
 
 export default function DrawerMain() {
   // Hooks
+  const { appTheme } = useApptheme();
   const { t } = useTranslation();
   return (
     <Drawer
@@ -26,7 +28,7 @@ export default function DrawerMain() {
       screenOptions={({ navigation }) => ({
         swipeEnabled: false,
         lazy: true,
-
+        headerTintColor: appTheme.fontMainColor,
         headerLeft: () => {
           return (
             <TouchableOpacity
@@ -35,7 +37,7 @@ export default function DrawerMain() {
               }}
               style={{ marginLeft: 16 }}
             >
-              <Ionicons name="menu" size={24} color="black" />
+              <Ionicons name="menu" size={24} color={appTheme.primary} />
             </TouchableOpacity>
           );
         },
@@ -64,20 +66,6 @@ export default function DrawerMain() {
           ),
         }}
       />
-      {/* <Drawer.Screen
-        name="profile"
-        options={{
-          drawerLabel: t("Profile"),
-          title: t("Profile"),
-          drawerIcon: ({ color, size }) => (
-            <UserIcon
-              color={color}
-              height={size}
-              width={size}
-            />
-          ),
-        }}
-      /> */}
       <Drawer.Screen
         name="work-schedule"
         options={{
