@@ -1,12 +1,12 @@
 // Interfaces
-import { useApptheme } from "@/lib/context/theme.context";
 import { IEarningStackProps } from "@/lib/utils/interfaces/earning.interface";
+// SVG
+import { RightArrowIcon } from "@/lib/ui/useable-components/svg";
 
-// Icons
-import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 
 // Core
+import { useApptheme } from "@/lib/context/theme.context";
 import { Text, TouchableOpacity, View } from "react-native";
 
 export default function EarningStack({
@@ -15,8 +15,8 @@ export default function EarningStack({
   setModalVisible,
   _id,
   earningsArray,
-  totalOrderAmount,
   totalDeliveries,
+  totalOrderAmount,
 }: IEarningStackProps) {
   // Hooks
   const { appTheme } = useApptheme();
@@ -34,28 +34,29 @@ export default function EarningStack({
       totalOrderAmount: totalOrderAmount,
     });
   }
+
   return (
-    <View className="flex flex-row justify-between items-center p-4 w-[95%] mx-auto my-3 border-b-gray-300 border-b-2">
-      <View className="flex flex-row gap-2 items-center flex-1">
-        <Text style={{ color: appTheme.fontSecondColor }}>{date}</Text>
-        <Text style={{ color: appTheme.fontMainColor }} className="font-bold">
+    <View
+      className="flex flex-row justify-between items-center p-4 w-[95%] mx-auto my-3  border-b-2"
+      style={{
+        borderBottomColor: appTheme.borderLineColor,
+        backgroundColor: appTheme.themeBackground,
+      }}
+    >
+      <View className="flex flex-row gap-2 items-center flex-2">
+        <Text style={{ color: appTheme.fontMainColor }}>{date}</Text>
+        <Text className="font-bold" style={{ color: appTheme.fontMainColor }}>
           {t("Total Earnings")}
         </Text>
       </View>
       <TouchableOpacity
-        className="flex flex-row gap-2 items-center flex-1"
+        className="flex flex-row gap-2 items-center flex-2"
         onPress={handleForwardPress}
-        accessibilityRole="button"
-        accessibilityLabel={`View details for earnings on ${date}`}
       >
-        <Text style={{ color: appTheme.fontMainColor }} className="font-bold">
-          ${earning}
+        <Text className="font-bold " style={{ color: appTheme.linkColor }}>
+          ${Number(earning)}
         </Text>
-        <Ionicons
-          name="arrow-forward"
-          size={23}
-          color={appTheme.fontMainColor}
-        />
+        <RightArrowIcon color={appTheme.linkColor} />
       </TouchableOpacity>
     </View>
   );

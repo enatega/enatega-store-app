@@ -14,7 +14,6 @@ import { TIMES } from "@/lib/utils/constants";
 import { ISetOrderTimeComponentProps } from "@/lib/utils/interfaces";
 
 // UI
-import FlashMessageComponent from "../flash-message";
 import SpinnerComponent from "../spinner";
 
 // Icons
@@ -46,7 +45,8 @@ const SetTimeScreenAndAcceptOrder = ({
 
       handleDismissModal();
     } catch (err) {
-      FlashMessageComponent({ message: err?.message ?? "Order accept failed" });
+      // FlashMessageComponent({ message: err?.message ?? "Order accept failed" });
+      console.log(err);
     } finally {
       handleDismissModal();
     }

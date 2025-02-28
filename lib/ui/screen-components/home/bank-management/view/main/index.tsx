@@ -160,7 +160,6 @@ export default function BankManagementMain() {
       dataProfile?.bussinessDetails &&
       Object.values(dataProfile?.bussinessDetails).length > 0
     ) {
-      console.warn(dataProfile?.bussinessDetails.accountNumber);
       setFormData({
         bankName: dataProfile?.bussinessDetails.bankName ?? "",
         accountName: dataProfile?.bussinessDetails.accountName ?? "",

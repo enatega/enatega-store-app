@@ -1,20 +1,20 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ApolloError, useMutation, useQuery } from "@apollo/client";
-import * as Notifications from "expo-notifications";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
 import { useContext, useState } from "react";
 
-import { AuthContext } from "../context/global/auth.context";
+import { Href, router } from "expo-router";
 import {
   DEFAULT_STORE_CREDS,
   STORE_LOGIN,
 } from "../api/graphql/mutation/login";
-import { Href, router } from "expo-router";
-import { FlashMessageComponent } from "../ui/useable-components";
-import { IStoreLoginCompleteResponse } from "../utils/interfaces/auth.interface";
-import { ROUTES } from "../utils/constants";
+import { AuthContext } from "../context/global/auth.context";
 import { setItem } from "../services";
+import { FlashMessageComponent } from "../ui/useable-components";
+import { ROUTES } from "../utils/constants";
+import { IStoreLoginCompleteResponse } from "../utils/interfaces/auth.interface";
 
 const useLogin = () => {
   const [creds, setCreds] = useState({ username: "", password: "" });
@@ -104,7 +104,7 @@ const useLogin = () => {
       // Perform mutation with the obtained data
       const { data } = await login({
         variables: {
-          username: username.toLowerCase(),
+          username: username,
           password: password,
           notificationToken: notificationToken,
         },

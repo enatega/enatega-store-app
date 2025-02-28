@@ -63,7 +63,6 @@ export default function AppThemeProvidor({
 
   // Handlers
   const toggleTheme = (val: app_theme) => {
-    console.warn({ val });
     const updatedVal = val === "light" ? "dark" : "light";
     setAppTheme(Colors[updatedVal]);
     setCurrentTheme(updatedVal);

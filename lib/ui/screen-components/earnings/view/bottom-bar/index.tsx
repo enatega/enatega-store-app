@@ -105,7 +105,7 @@ export default function EarningBottomBar({
 
         <View className="flex flex-row justify-between p-5">
           <Text
-            style={{ color: appTheme.primary }}
+            style={{ color: appTheme.linkColor }}
             className="text-md font-bold"
           >
             {t("Deliveries")}({totalDeliveries})
@@ -130,12 +130,16 @@ export default function EarningBottomBar({
             }}
           >
             <Text
-              style={{ color: appTheme.primary }}
+              style={{ color: appTheme.linkColor }}
               className="text-md font-bold"
             >
               ${totalEarnings}
             </Text>
-            <Ionicons name="arrow-forward" size={23} />
+            <Ionicons
+              name="arrow-forward"
+              size={23}
+              color={appTheme.linkColor}
+            />
           </TouchableOpacity>
         </View>
       </View>

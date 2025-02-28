@@ -129,9 +129,10 @@ export default function WorkScheduleMain() {
       });
     } catch (err) {
       const error = err as ApolloError;
-      FlashMessageComponent({
-        message: error?.message || t("Something went wrong"),
-      });
+      // FlashMessageComponent({
+      //   message: error?.message || t("Something went wrong"),
+      // });
+      console.log(error);
     }
   };
 

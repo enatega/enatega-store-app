@@ -1,4 +1,5 @@
 // Interfaces
+import { useApptheme } from "@/lib/context/theme.context";
 import { IStoreEarningsOrderProps } from "@/lib/utils/interfaces/rider-earnings.interface";
 import { useTranslation } from "react-i18next";
 
@@ -10,6 +11,7 @@ export default function OrderStack({
   amount,
 }: IStoreEarningsOrderProps) {
   // Hooks
+  const { appTheme } = useApptheme();
   const { t } = useTranslation();
 
   return (
@@ -25,7 +27,9 @@ export default function OrderStack({
         <Text className="bg-[#D1FAE5] rounded-xl p-1 text-[#065F46]">
           {t("Completed")}
         </Text>
-        <Text className="font-bold">${amount}</Text>
+        <Text className="font-bold" style={{ color: appTheme.fontMainColor }}>
+          ${amount}
+        </Text>
       </View>
     </View>
   );

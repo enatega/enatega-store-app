@@ -38,6 +38,7 @@ export const Colors = {
     borderLineColor: "rgb(181, 181, 181)",
     gray: "#e5e5e5",
     screenBackground: "#FFFF",
+    linkColor: "#0084d4",
   },
   dark: {
     primary: "#A5C616", // Slightly darker green to avoid too much brightness
@@ -73,5 +74,6 @@ export const Colors = {
     borderLineColor: "rgb(181, 181, 181)",
     tabNaviatorBackground: "#1F2937",
     gray: "#e5e5e5",
+    linkColor: "#0084d4",
   },
 };
