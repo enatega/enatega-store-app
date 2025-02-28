@@ -16,8 +16,13 @@ export default function NoRecordFound({
   const { t } = useTranslation();
   return (
     <View className="items-center flex flex-row my-24 justify-center">
-      <Text className="font-bold text-center">{t(msg)}</Text>
-      <Ionicons name="sad-outline" color={appTheme.iconColor} size={20} />
+      <Text
+        className="font-bold text-center"
+        style={{ color: appTheme.fontMainColor }}
+      >
+        {t(msg)}
+      </Text>
+      <Ionicons name="sad-outline" color={appTheme.primary} size={20} />
     </View>
   );
 }

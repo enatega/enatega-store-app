@@ -62,7 +62,8 @@ const LoginScreen = () => {
 
   return (
     <KeyboardAvoidingView
-      className="flex-1 bg-white justify-center"
+      className="flex-1 justify-center h-full w-full"
+      style={{ backgroundColor: appTheme.themeBackground }}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <SafeAreaView

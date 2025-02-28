@@ -495,7 +495,10 @@ export default function WorkScheduleMain() {
                               { backgroundColor: appTheme.themeBackground },
                             ]}
                           >
-                            <Text className="text-center">
+                            <Text
+                              className="text-center"
+                              style={{ color: appTheme.fontMainColor }}
+                            >
                               {slot.endTime.join(":")}
                             </Text>
                           </TouchableOpacity>
@@ -504,9 +507,17 @@ export default function WorkScheduleMain() {
                           {item.times.length > 1 && slotIndex !== 0 && (
                             <TouchableOpacity
                               onPress={() => removeSlot(index, slotIndex)}
-                              className="w-8 h-8 justify-center items-center border border-red-600 rounded-full"
+                              className="w-8 h-8 justify-center items-center border rounded-full"
+                              style={{
+                                borderColor: "#dc2626",
+                              }}
                             >
-                              <Text className="text-red-600 font-bold">−</Text>
+                              <Text
+                                style={{ color: "#dc2626" }}
+                                className="font-bold"
+                              >
+                                −
+                              </Text>
                             </TouchableOpacity>
                           )}
 
@@ -563,7 +574,7 @@ export default function WorkScheduleMain() {
               bottom: -80,
               left: 5,
               right: 5,
-              backgroundColor: "white",
+              backgroundColor: appTheme.themeBackground,
               shadowColor: "#000",
               shadowOpacity: 0.2,
               shadowRadius: 5,

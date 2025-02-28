@@ -175,8 +175,8 @@ export default function DocumentsSection() {
           <Switch
             containerStyle={{ width: "20%" }}
             switchWidthMultiplier={3}
-            activeText={"dark"}
-            inActiveText="light"
+            activeText={"Dark"}
+            inActiveText={"Light"}
             renderInsideCircle={() => {
               return (
                 <Ionicons
@@ -192,6 +192,8 @@ export default function DocumentsSection() {
               );
             }}
             circleActiveColor={appTheme.primary}
+            backgroundActive={appTheme.primary}
+            activeTextStyle={{ color: appTheme.black }}
             value={currentTheme === "dark"}
             onValueChange={() => toggleTheme(currentTheme as app_theme)}
           />

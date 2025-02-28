@@ -11,7 +11,7 @@ export default function WalletScreen() {
 
   return (
     <SafeAreaView
-      className="w-full items-center"
+      className="w-full h-full"
       style={{
         backgroundColor: appTheme.themeBackground,
       }}

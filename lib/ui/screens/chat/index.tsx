@@ -10,7 +10,10 @@ export default function Chat() {
   // Hooks
   const { appTheme } = useApptheme();
   return (
-    <SafeAreaView style={{ backgroundColor: appTheme.themeBackground }}>
+    <SafeAreaView
+      style={{ backgroundColor: appTheme.themeBackground }}
+      className="h-full w-full"
+    >
       <ChatHeader />
       <ChatMain />
     </SafeAreaView>

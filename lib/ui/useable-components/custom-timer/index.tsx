@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 interface TimerProps {
   duration: number; // Duration in seconds
 }
 
 const CountdownTimer: React.FC<TimerProps> = ({ duration }) => {
+  // States
   const [timeLeft, setTimeLeft] = useState(duration);
 
+  // UseEffects
   useEffect(() => {
     if (timeLeft <= 0) return;
 

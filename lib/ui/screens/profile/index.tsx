@@ -14,6 +14,7 @@ export default function ComponentName() {
       style={{
         backgroundColor: appTheme.screenBackground,
       }}
+      className="h-full w-full"
     >
       <ProfileHeader />
       <ProfileMain />

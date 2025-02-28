@@ -94,14 +94,14 @@ export default function EarningsMain() {
   if (isStoreEarningsLoading) return <EarningScreenMainLoading />;
 
   return (
-    <View className="bg-white">
+    <View style={{ backgroundColor: appTheme.themeBackground }}>
       <EarningsBarChart
         data={barData}
         width={700}
         height={200}
         frontColor={appTheme.primary}
         barStyle={{ marginTop: 15 }}
-        rulesColor={appTheme.secondaryTextColor}
+        rulesColor={appTheme.fontSecondColor}
         topLabelTextStyle={{ color: appTheme.primary }}
         xAxisLabelTextStyle={{
           display: "flex",
@@ -111,7 +111,13 @@ export default function EarningsMain() {
         yAxisTextStyle={{ fontSize: 8, color: appTheme.fontSecondColor }}
       />
       <View className="flex flex-row justify-between w-full px-4 py-4">
-        <Text className="text-xl text-black font-bold">
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "bold",
+            color: appTheme.fontMainColor,
+          }}
+        >
           {t("Recent Activity")}
         </Text>
         <TouchableOpacity
@@ -130,7 +136,13 @@ export default function EarningsMain() {
             );
           }}
         >
-          <Text className="text-sm text-[#3B82F6] font-bold">
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: "bold",
+              color: appTheme.primary,
+            }}
+          >
             {t("See More")}
           </Text>
         </TouchableOpacity>

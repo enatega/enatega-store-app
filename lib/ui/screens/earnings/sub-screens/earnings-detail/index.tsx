@@ -21,7 +21,10 @@ export default function EarningsDetailScreen() {
     endDate: "",
   });
   return (
-    <SafeAreaView style={{ backgroundColor: appTheme.themeBackground }}>
+    <SafeAreaView
+      style={{ backgroundColor: appTheme.themeBackground }}
+      className="h-full w-full"
+    >
       <EarningDetailsMain
         dateFilter={dateFilter}
         setDateFilter={setDateFilter}

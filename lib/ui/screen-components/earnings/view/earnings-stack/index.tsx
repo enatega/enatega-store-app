@@ -1,4 +1,5 @@
 // Interfaces
+import { useApptheme } from "@/lib/context/theme.context";
 import { IEarningStackProps } from "@/lib/utils/interfaces/earning.interface";
 
 // Icons
@@ -18,6 +19,7 @@ export default function EarningStack({
   totalDeliveries,
 }: IEarningStackProps) {
   // Hooks
+  const { appTheme } = useApptheme();
   const { t } = useTranslation();
 
   // Handlers
@@ -34,16 +36,26 @@ export default function EarningStack({
   }
   return (
     <View className="flex flex-row justify-between items-center p-4 w-[95%] mx-auto my-3 border-b-gray-300 border-b-2">
-      <View className="flex flex-row gap-2 items-center flex-2">
-        <Text>{date}</Text>
-        <Text className="font-bold">{t("Total Earnings")}</Text>
+      <View className="flex flex-row gap-2 items-center flex-1">
+        <Text style={{ color: appTheme.fontSecondColor }}>{date}</Text>
+        <Text style={{ color: appTheme.fontMainColor }} className="font-bold">
+          {t("Total Earnings")}
+        </Text>
       </View>
       <TouchableOpacity
-        className="flex flex-row gap-2 items-center flex-2"
+        className="flex flex-row gap-2 items-center flex-1"
         onPress={handleForwardPress}
+        accessibilityRole="button"
+        accessibilityLabel={`View details for earnings on ${date}`}
       >
-        <Text className="font-bold">${earning}</Text>
-        <Ionicons name="arrow-forward" size={23} />
+        <Text style={{ color: appTheme.fontMainColor }} className="font-bold">
+          ${earning}
+        </Text>
+        <Ionicons
+          name="arrow-forward"
+          size={23}
+          color={appTheme.fontMainColor}
+        />
       </TouchableOpacity>
     </View>
   );
