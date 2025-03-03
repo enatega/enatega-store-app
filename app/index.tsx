@@ -1,10 +1,10 @@
 import { Href, useRouter } from "expo-router";
-import { useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
+import { useEffect } from "react";
 
 // Constant
-import { STORE_TOKEN, ROUTES } from "@/lib/utils/constants";
 import useNotification from "@/lib/hooks/useNotification";
+import { ROUTES, STORE_TOKEN } from "@/lib/utils/constants";
 
 function App() {
   const router = useRouter();
@@ -14,10 +14,10 @@ function App() {
   const init = async () => {
     const token = await SecureStore.getItemAsync(STORE_TOKEN);
     if (token) {
-      router.navigate(ROUTES.home as Href);
-      return;
+      router.replace(ROUTES.home as Href);
+    } else {
+      router.replace(ROUTES.login as Href);
     }
-    router.navigate(ROUTES.login as Href);
   };
 
   useEffect(() => {

@@ -33,9 +33,9 @@ import FlashMessage from "react-native-flash-message";
 import InternetProvider from "@/lib/context/global/internet-provider";
 // UI
 import AppThemeProvidor from "@/lib/context/theme.context";
-import RootUserLayout from "@/lib/ui/layouts/root-user";
 import AnimatedSplashScreen from "@/lib/ui/useable-components/splash/AnimatedSplashScreen";
 import UnavailableStatus from "@/lib/ui/useable-components/unavailable-status";
+import { Slot } from "expo-router";
 
 initSentry();
 
@@ -73,7 +73,7 @@ function RootLayout() {
               <AuthProvider client={client}>
                 <UserProvider>
                   <UnavailableStatus />
-                  <RootUserLayout />
+                  <Slot />
                 </UserProvider>
               </AuthProvider>
             </ConfigurationProvider>

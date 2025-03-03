@@ -1,16 +1,19 @@
-import { useCallback, useEffect } from "react";
 import { useMutation, useQuery } from "@apollo/client";
-import { Platform } from "react-native";
-import * as Notifications from "expo-notifications";
-import * as Device from "expo-device";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
+import { useCallback, useEffect } from "react";
+import { Platform } from "react-native";
 
 // API
-import { SAVE_TOKEN, GET_RESTAURANT_BY_ID } from "@/lib/api/graphql";
+import { GET_RESTAURANT_BY_ID, SAVE_TOKEN } from "@/lib/api/graphql";
+import { useUserContext } from "../context/global/user.context";
 
 export default function useNotification() {
+  const { userId } = useUserContext();
   const { data } = useQuery(GET_RESTAURANT_BY_ID, {
     fetchPolicy: "network-only",
+    variables: { id: userId },
   });
   const [sendTokenToBackend, { loading }] = useMutation(SAVE_TOKEN);
 

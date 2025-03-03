@@ -1,5 +1,5 @@
 export const ROUTES = {
   home: "/(tabs)/home/orders",
-  login: "/login",
+  login: "/(un-protected)/login",
   location: "/location",
 };

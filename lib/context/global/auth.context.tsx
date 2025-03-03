@@ -42,7 +42,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
       // FlashMessageComponent({
       //   message: `Logout failed`,
       // });
-      console.log("Logout Error: ", e);
+      console.error("Logout Error: ", { e });
     }
   };
   async function checkAuth() {
