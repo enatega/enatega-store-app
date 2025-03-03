@@ -52,7 +52,7 @@
       "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
       "package": "multivendor.enatega.restaurant",
       "adaptiveIcon": {
-        "foregroundImage": "./lib/assets/images/adaptive-icon.png",
+        "foregroundImage": "./lib/assets/images/icon.png",
         "backgroundColor": "#ffffff"
       }
     },
