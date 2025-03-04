@@ -1,4 +1,5 @@
-import { View, Text } from "react-native";
+import { useApptheme } from "@/lib/context/theme.context";
+import { Text, View } from "react-native";
 import Modal from "react-native-modal";
 
 // Interface
@@ -12,6 +13,8 @@ export default function WelldoneComponent({
 }: IWellDoneComponentProps) {
   // Hooks
   const { t } = useTranslation();
+  const { appTheme } = useApptheme();
+
   return (
     <Modal
       isVisible={!!orderId}
@@ -20,15 +23,30 @@ export default function WelldoneComponent({
       coverScreen={false}
     >
       <View className="h-fit w-full bg-transparent justify-around items-center">
-        <View className="h-[120px] w-[95%] items-center justify-around bg-white border-white rounded-[16px]">
+        <View
+          className="h-[120px] w-[95%] items-center justify-around rounded-[16px]"
+          style={{
+            backgroundColor: appTheme.themeBackground,
+            borderColor: appTheme.borderLineColor,
+            borderWidth: 1,
+          }}
+        >
           <View>
-            <Text>{t("Icon Here")}</Text>
+            <Text style={{ color: appTheme.fontMainColor }}>
+              {t("Icon Here")}
+            </Text>
           </View>
           <View className="items-center">
-            <Text className="font-inter text-lg font-bold text-centertext-gray-900">
+            <Text
+              className="font-inter text-lg font-bold text-center"
+              style={{ color: appTheme.fontMainColor }}
+            >
               {t("Well Done Store")}
             </Text>
-            <Text className="font-inter text-sm font-normal leading-[22px] text-center">
+            <Text
+              className="font-inter text-sm font-normal leading-[22px] text-center"
+              style={{ color: appTheme.fontSecondColor }}
+            >
               {t("Order Number")} #{orderId} {status}
             </Text>
           </View>

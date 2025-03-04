@@ -189,7 +189,7 @@ export default function BankManagementMain() {
               <TextInput
                 className={`min-w-[100%] rounded-md border ${isError.field === "bankName" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
                 value={formData.bankName}
-                placeholder="Swiss Bank"
+                placeholder={t("Swiss Bank")}
                 style={{ color: appTheme.fontSecondColor }}
                 onChangeText={(val) => {
                   setIsError({ field: "", message: "" });
@@ -207,7 +207,7 @@ export default function BankManagementMain() {
               <TextInput
                 className={`min-w-[100%] rounded-md border ${isError.field === "accountName" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
                 value={formData.accountName}
-                placeholder="Micheal Kim"
+                placeholder={t("Account_Name_Placeholder")}
                 style={{ color: appTheme.fontSecondColor }}
                 onChangeText={(val) => {
                   setIsError({ field: "", message: "" });
@@ -220,12 +220,12 @@ export default function BankManagementMain() {
                 className="text-lg font-normal"
                 style={{ color: appTheme.fontMainColor }}
               >
-                IBAN / Swift / BSB
+                {t("IBAN_SWIFT_BSB")}
               </Text>
               <TextInput
                 className={`min-w-[100%] rounded-md border ${isError.field === "accountCode" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
                 value={formData.accountCode}
-                placeholder="PK33"
+                placeholder={t("IBAN_Placeholder")}
                 style={{ color: appTheme.fontSecondColor }}
                 onChangeText={(val) => {
                   setIsError({ field: "", message: "" });
@@ -255,7 +255,7 @@ export default function BankManagementMain() {
             </View>
             <View>
               <CustomContinueButton
-                title={areBankDetailsLoading ? "Please wait..." : "Confirm"}
+                title={areBankDetailsLoading ? t("Please wait") : t("Confirm")}
                 onPress={handleSubmit}
               />
             </View>

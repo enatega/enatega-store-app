@@ -38,6 +38,9 @@ export default function RootUserLayout() {
         initialRouteName="(un-protected)"
         screenOptions={{
           headerShown: false,
+          headerStyle: {
+            backgroundColor: appTheme.screenBackground,
+          },
           headerTintColor: appTheme.mainTextColor,
           headerTitleStyle: { color: appTheme.mainTextColor },
         }}

@@ -2,24 +2,32 @@
 import { ConfigurationContext } from "@/lib/context/global/configuration.context";
 
 // Hooks
+import { useApptheme } from "@/lib/context/theme.context";
 import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 // Core
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 
-const ItemDetails = ({ orderData: order }) => {
+import { IOrder, Item } from "@/lib/utils/interfaces/order.interface";
+
+interface ItemDetailsProps {
+  orderData: IOrder;
+}
+
+const ItemDetails = ({ orderData: order }: ItemDetailsProps) => {
   // Hooks
+  const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const configuration = useContext(ConfigurationContext);
 
   if (!order) return null;
 
   const itemAmount = useMemo(() => {
-    return order?.items?.reduce((sum, item) => {
-      return sum + item.quantity * item.variation.price;
+    return order?.items?.reduce((sum: number, item: Item) => {
+      return sum + (item.variation?.price ?? 0) * (item.quantity ?? 0);
     }, 0);
-  }, [order._id]);
+  }, [order?.items]);
 
   return (
     <View className="pb-4">
@@ -33,35 +41,50 @@ const ItemDetails = ({ orderData: order }) => {
       </View>
 
       <View className="flex-1 mt-2">
-        {order?.items?.map((item) => {
+        {order?.items?.map((item: Item) => {
           return (
             <View
               key={item._id}
-              className="flex-1 flex-row  justify-between items-start gap-x-2"
+              className="flex-1 flex-row justify-between items-start gap-x-2"
             >
-              <View className="h-[3.8rem] w-12 bg-gray-400 justify-center items-center">
-                <Text>I</Text>
+              <View
+                className="h-[3.8rem] w-12 justify-center items-center"
+                style={{ backgroundColor: appTheme.lowOpacityPrimaryColor }}
+              >
+                <Text style={{ color: appTheme.fontMainColor }}>I</Text>
               </View>
               <View className="flex-1">
                 <View>
-                  <Text className="font-[Inter] text-[14px] font-semibold text-left text-gray-900">
+                  <Text
+                    className="font-[Inter] text-[14px] font-semibold text-left"
+                    style={{ color: appTheme.fontMainColor }}
+                  >
                     {item?.title ?? "-"}
                   </Text>
                 </View>
                 <View>
-                  <Text className="font-[Inter] text-[12px] font-semibold text-left text-gray-600">
+                  <Text
+                    className="font-[Inter] text-[12px] font-semibold text-left"
+                    style={{ color: appTheme.fontSecondColor }}
+                  >
                     {item?.description ?? "-"}
                   </Text>
                 </View>
                 <View>
-                  <Text className="font-[Inter] text-[12px] font-semibold text-left text-gray-900">
+                  <Text
+                    className="font-[Inter] text-[12px] font-semibold text-left"
+                    style={{ color: appTheme.fontMainColor }}
+                  >
                     x{item?.quantity ?? "0"}
                   </Text>
                 </View>
               </View>
 
               <View>
-                <Text className="font-[Inter] text-[14px] font-semibold text-left text-gray-900">
+                <Text
+                  className="font-[Inter] text-[14px] font-semibold text-left"
+                  style={{ color: appTheme.fontMainColor }}
+                >
                   {configuration?.currencySymbol}
                   {item.variation?.price}
                 </Text>
@@ -72,15 +95,24 @@ const ItemDetails = ({ orderData: order }) => {
       </View>
 
       {/* Divider */}
-      <View className="flex-1 h-[1px] bg-gray-300 mb-4 mt-4" />
+      <View
+        className="flex-1 h-[1px] mb-4 mt-4"
+        style={{ backgroundColor: appTheme.borderLineColor }}
+      />
 
       {/* Order Amount */}
       <View className="flex-1 flex-row justify-between mb-4">
-        <Text className="font-[Inter] text-[16px] text-base font-[500] text-gray-600">
+        <Text
+          className="font-[Inter] text-[16px] text-base font-[500]"
+          style={{ color: appTheme.fontSecondColor }}
+        >
           {t("Total")}
         </Text>
         <View className="flex-row gap-x-1">
-          <Text className="font-[Inter] font-semibold text-left text-gray-900">
+          <Text
+            className="font-[Inter] font-semibold text-left"
+            style={{ color: appTheme.fontMainColor }}
+          >
             {configuration?.currencySymbol}
             {itemAmount}
           </Text>

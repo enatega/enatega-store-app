@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import {
-  View,
+  Dimensions,
+  FlatList,
   Platform,
   StyleSheet,
-  FlatList,
   Text,
-  Dimensions,
+  View,
 } from "react-native";
 // UI
 import CustomTab from "@/lib/ui/useable-components/custom-tab";
@@ -18,9 +18,10 @@ import { IOrderTabsComponentProps } from "@/lib/utils/interfaces";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
 
 // Hook
+import { useApptheme } from "@/lib/context/theme.context";
 import useOrders from "@/lib/hooks/useOrders";
-import { WalletIcon } from "@/lib/ui/useable-components/svg";
 import Order from "@/lib/ui/useable-components/order";
+import { WalletIcon } from "@/lib/ui/useable-components/svg";
 import { ORDER_TYPE } from "@/lib/utils/types";
 import { useTranslation } from "react-i18next";
 
@@ -32,6 +33,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
 
   // Hooks
   const { t } = useTranslation();
+  const { appTheme } = useApptheme();
   const {
     loading,
     error,
@@ -84,8 +86,8 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
 
   return (
     <View
-      className="pt-14 flex-1 items-center  bg-white pb-16"
-      style={style.contaienr}
+      className="pt-14 flex-1 items-center pb-16"
+      style={[style.container, { backgroundColor: appTheme.themeBackground }]}
     >
       <CustomTab
         options={ORDER_DISPATCH_TYPE}
@@ -95,7 +97,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
 
       {error ? (
         <View className="flex-1 justify-center items-center">
-          <Text className="text-2xl">
+          <Text style={{ color: appTheme.fontMainColor, fontSize: 24 }}>
             {t("Something went wrong Please refresh")}
           </Text>
         </View>
@@ -126,13 +128,26 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
                   alignItems: "center",
                 }}
               >
-                <WalletIcon height={100} width={100} />
+                <WalletIcon
+                  height={100}
+                  width={100}
+                  color={appTheme.fontMainColor}
+                />
                 {orders?.length === 0 ? (
-                  <Text className="font-[Inter] text-[18px] text-base font-[500] text-gray-600">
-                    {NO_ORDER_PROMPT[route.key]}
+                  <Text
+                    style={{
+                      color: appTheme.fontSecondColor,
+                      fontSize: 18,
+                      fontWeight: "500",
+                      fontFamily: "Inter",
+                    }}
+                  >
+                    {t(NO_ORDER_PROMPT[route.key])}
                   </Text>
                 ) : (
-                  <Text>{t("Pull down to refresh")}</Text>
+                  <Text style={{ color: appTheme.fontMainColor }}>
+                    {t("Pull down to refresh")}
+                  </Text>
                 )}
               </View>
             );
@@ -147,14 +162,22 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
             alignItems: "center",
           }}
         >
-          <WalletIcon height={100} width={100} />
-
+          <WalletIcon height={100} width={100} color={appTheme.fontMainColor} />
           {orders?.length === 0 ? (
-            <Text className="font-[Inter] text-[18px] text-base font-[500] text-gray-600">
-              {NO_ORDER_PROMPT[route.key]}
+            <Text
+              style={{
+                color: appTheme.fontSecondColor,
+                fontSize: 18,
+                fontWeight: "500",
+                fontFamily: "Inter",
+              }}
+            >
+              {t(NO_ORDER_PROMPT[route.key])}
             </Text>
           ) : (
-            <Text>{t("Pull down to refresh")}</Text>
+            <Text style={{ color: appTheme.fontMainColor }}>
+              {t("Pull down to refresh")}
+            </Text>
           )}
         </View>
       )}
@@ -165,7 +188,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
 export default HomeDeliveredOrdersMain;
 
 const style = StyleSheet.create({
-  contaienr: {
+  container: {
     paddingBottom: Platform.OS === "android" ? 50 : 80,
   },
 });

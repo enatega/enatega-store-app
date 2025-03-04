@@ -35,6 +35,7 @@ import InternetProvider from "@/lib/context/global/internet-provider";
 import AppThemeProvidor from "@/lib/context/theme.context";
 import AnimatedSplashScreen from "@/lib/ui/useable-components/splash/AnimatedSplashScreen";
 import UnavailableStatus from "@/lib/ui/useable-components/unavailable-status";
+
 import { Slot } from "expo-router";
 
 initSentry();

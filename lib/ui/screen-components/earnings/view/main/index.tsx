@@ -17,7 +17,7 @@ import { barDataItem } from "react-native-gifted-charts";
 import { STORE_EARNINGS_GRAPH } from "@/lib/apollo/queries/earnings.query";
 
 // Hooks
-import { QueryResult, useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
 // Expo
@@ -35,6 +35,28 @@ import EarningsBarChart from "../../bar-chart";
 import EarningStack from "../earnings-stack";
 
 export default function EarningsMain() {
+  // Set dates for the query
+  const getQueryDates = () => {
+    const endDate = new Date(); // Today
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - 6);
+
+    // Set start date to beginning of day
+    startDate.setHours(0, 0, 0, 0);
+
+    // Set end date to end of day
+    endDate.setHours(23, 59, 59, 999);
+
+    return { startDate, endDate };
+  };
+
+  // Constants
+  const queryPayload = {
+    page: 1,
+    limit: 5,
+    ...getQueryDates(),
+  };
+
   // States
   const [recentTransaction, setRecentTransaction] =
     useState<IStoreEarnings[]>();
@@ -45,28 +67,50 @@ export default function EarningsMain() {
   const { userId, setModalVisible } = useUserContext();
 
   // Queries
-  const { loading: isStoreEarningsLoading, data: storeEarningsData } = useQuery(
-    STORE_EARNINGS_GRAPH,
+  const [
+    fetchEarningsGraph,
+    { loading: isStoreEarningsLoading, data: storeEarningsData },
+  ] = useLazyQuery<
+    IStoreEarningsResponse,
     {
-      onError: (err) => {
-        console.error(err);
-        showMessage({
-          message:
-            err.graphQLErrors[0].message ||
-            err.networkError?.message ||
-            "Failed to fetch earnings",
-          type: "danger",
-          duration: 1000,
-        });
-      },
-      variables: {
-        storeId: userId ?? "",
-      },
+      storeId: string;
+      startDate: string;
+      endDate: string;
+      page: number;
+      limit: number;
+    }
+  >(STORE_EARNINGS_GRAPH, {
+    onError: (err) => {
+      console.error(err);
+      showMessage({
+        message:
+          err.graphQLErrors[0]?.message ||
+          err.networkError?.message ||
+          "Failed to fetch earnings",
+        type: "danger",
+        duration: 1000,
+      });
     },
-  ) as QueryResult<
-    IStoreEarningsResponse | undefined,
-    { storeId: string; startDate?: string; endDate?: string }
-  >;
+    fetchPolicy: "cache-and-network",
+  });
+
+  // Fetch data on component mount
+  useEffect(() => {
+    if (userId) {
+      const { startDate, endDate } = getQueryDates();
+
+      fetchEarningsGraph({
+        variables: {
+          storeId: userId,
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(), // End of today
+          page: queryPayload.page,
+          limit: queryPayload.limit,
+        },
+      });
+    }
+  }, [userId]);
+
   const barData: barDataItem[] =
     storeEarningsData?.storeEarningsGraph.earnings
       .slice(0, 7)
@@ -111,6 +155,7 @@ export default function EarningsMain() {
 
   // If loading
   if (isStoreEarningsLoading) return <EarningScreenMainLoading />;
+  console.log(storeEarningsData?.storeEarningsGraph.earnings);
   return (
     <GestureHandlerRootView
       style={{ backgroundColor: appTheme.themeBackground }}

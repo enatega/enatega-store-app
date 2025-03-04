@@ -36,7 +36,7 @@ export default function xCustomDrawerContent(
       key={currentTheme?.concat("Drawer_Content")}
       {...props}
       // scrollEnabled={false}
-
+      style={{ backgroundColor: appTheme.themeBackground }}
       contentContainerStyle={{
         backgroundColor: appTheme.themeBackground,
         paddingBottom: 20,
@@ -119,7 +119,7 @@ export default function xCustomDrawerContent(
                     {options.drawerIcon
                       ? options.drawerIcon({
                           color: isFocused
-                            ? appTheme.primary
+                            ? appTheme.iconColor
                             : appTheme.iconColor,
                           size: 16,
                           focused: true,

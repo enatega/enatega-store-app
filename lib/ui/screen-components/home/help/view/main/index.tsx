@@ -1,4 +1,8 @@
+import { useApptheme } from "@/lib/context/theme.context";
+import { FAQs } from "@/lib/utils/constants";
 import { FontAwesome } from "@expo/vector-icons";
+import * as Linking from "expo-linking";
+import { useFocusEffect } from "expo-router";
 import { useTranslation } from "react-i18next";
 import {
   FlatList,
@@ -9,12 +13,10 @@ import {
   View,
 } from "react-native";
 import HelpAccordian from "../../accordian";
-import { FAQs } from "@/lib/utils/constants";
-import { useFocusEffect } from "expo-router";
-import * as Linking from "expo-linking";
 
 export default function HelpMain() {
   const { t } = useTranslation();
+  const { appTheme } = useApptheme();
 
   const openWhatsAppChat = async () => {
     const phoneNumber = "+1(307)776%E2%80%918999";
@@ -44,7 +46,10 @@ export default function HelpMain() {
   });
 
   return (
-    <View className="flex flex-col w-full h-[95%] bg-gray-100 dark:bg-gray-900">
+    <View
+      className="flex flex-col w-full h-[95%]"
+      style={{ backgroundColor: appTheme.themeBackground }}
+    >
       <StatusBar barStyle="light-content" />
 
       <View className="flex w-full h-full items-start justify-start p-4">
@@ -56,21 +61,24 @@ export default function HelpMain() {
           ItemSeparatorComponent={() => <View className="h-4" />}
           renderItem={({ item }) => (
             <HelpAccordian heading={t(item.heading)}>
-              <Text className="text-gray-600 dark:text-gray-300">
+              <Text style={{ color: appTheme.fontSecondColor }}>
                 {t(item.description)}
               </Text>
             </HelpAccordian>
           )}
         />
 
-        <View className=" bottom-6 w-full flex items-center">
+        <View className="bottom-6 w-full flex items-center">
           <TouchableOpacity
             activeOpacity={0.7}
-            className="w-[90%] h-12 rounded-full bg-green-500 flex flex-row items-center justify-center gap-2 shadow-lg"
+            className="w-[90%] h-12 rounded-full flex flex-row items-center justify-center gap-2 shadow-lg"
+            style={{ backgroundColor: appTheme.primary }}
             onPress={openWhatsAppChat}
           >
-            <FontAwesome name="whatsapp" size={24} color="white" />
-            <Text className="text-white font-semibold text-lg">
+            <FontAwesome name="whatsapp" size={24} color={appTheme.white} />
+            <Text
+              style={{ color: appTheme.white, fontSize: 18, fontWeight: "600" }}
+            >
               {t("whatsAppText")}
             </Text>
           </TouchableOpacity>

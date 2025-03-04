@@ -118,15 +118,24 @@ const LoginScreen = () => {
                     />
                   </View>
                   {errors.username && (
-                    <Text className="mb-2 text-sm text-red-500">
+                    <Text
+                      style={{
+                        color: appTheme.textErrorColor,
+                        marginBottom: 8,
+                        fontSize: 14,
+                      }}
+                    >
                       {errors?.username}
                     </Text>
                   )}
 
                   {/* Password Input */}
                   <View
-                    className="flex-row items-center border rounded-lg px-3 bg-white mb-[-4]"
-                    style={{ backgroundColor: appTheme.themeBackground }}
+                    className="flex-row items-center border rounded-lg px-3 mb-[-4]"
+                    style={{
+                      backgroundColor: appTheme.themeBackground,
+                      borderColor: appTheme.borderLineColor,
+                    }}
                   >
                     <TextInput
                       className="flex-1 h-12 text-base"
@@ -144,19 +153,26 @@ const LoginScreen = () => {
                       <Icon
                         name={passwordVisible ? "eye-slash" : "eye"}
                         size={14}
-                        color="#000"
+                        color={appTheme.fontMainColor}
                       />
                     </TouchableOpacity>
                   </View>
                   {errors.password && (
-                    <Text className="mb-2 text-sm text-red-500">
+                    <Text
+                      style={{
+                        color: appTheme.textErrorColor,
+                        marginBottom: 8,
+                        fontSize: 14,
+                      }}
+                    >
                       {errors?.password}
                     </Text>
                   )}
 
                   {/* Login Button */}
                   <TouchableOpacity
-                    className="h-12 bg-green-500 rounded-3xl py-3 mt-10 w-full"
+                    className="h-12 rounded-3xl py-3 mt-10 w-full"
+                    style={{ backgroundColor: appTheme.primary }}
                     onPress={() => handleSubmit()}
                   >
                     {isLogging ? (

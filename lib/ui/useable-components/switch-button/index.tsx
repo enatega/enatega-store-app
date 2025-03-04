@@ -1,9 +1,11 @@
-import { View, Switch, TouchableOpacity } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Colors } from "@/lib/utils/constants";
+import { useApptheme } from "@/lib/context/theme.context";
 import { CustomSwitchProps } from "@/lib/utils/interfaces/custom-input-switch";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Switch, TouchableOpacity, View } from "react-native";
 
 const CustomSwitch = ({ value, onToggle, isDisabled }: CustomSwitchProps) => {
+  const { appTheme } = useApptheme();
+
   return (
     <TouchableOpacity
       disabled={isDisabled}
@@ -15,24 +17,30 @@ const CustomSwitch = ({ value, onToggle, isDisabled }: CustomSwitchProps) => {
         className="w-16 h-8 rounded-full flex-row items-center px-1"
         style={{
           backgroundColor: value
-            ? Colors.light.switchButtonColor
-            : Colors.light.secondaryTextColor,
+            ? appTheme.switchButtonColor
+            : appTheme.secondaryTextColor,
         }}
       >
         {value ? (
-          <View className="ml-auto mr-[1px] bg-white rounded-full h-[20px] w-[20px]">
+          <View
+            className="ml-auto mr-[1px] rounded-full h-[20px] w-[20px]"
+            style={{ backgroundColor: appTheme.white }}
+          >
             <MaterialIcons
               name="check"
               size={20}
-              color={Colors.light.switchButtonColor}
+              color={appTheme.switchButtonColor}
             />
           </View>
         ) : (
-          <View className="ml-[1px] bg-white rounded-full h-[20px] w-[20px]">
+          <View
+            className="ml-[1px] rounded-full h-[20px] w-[20px]"
+            style={{ backgroundColor: appTheme.white }}
+          >
             <MaterialIcons
               name="close"
               size={20}
-              color={Colors.light.secondaryTextColor}
+              color={appTheme.secondaryTextColor}
             />
           </View>
         )}
@@ -41,7 +49,7 @@ const CustomSwitch = ({ value, onToggle, isDisabled }: CustomSwitchProps) => {
           value={value}
           onValueChange={onToggle}
           trackColor={{ false: "transparent", true: "transparent" }}
-          thumbColor={"white"}
+          thumbColor={appTheme.white}
           className="absolute inset-0 w-full h-full opacity-0"
         />
       </View>

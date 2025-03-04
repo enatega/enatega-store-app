@@ -1,6 +1,7 @@
 // Providers
 import RestaurantProvider from "@/lib/context/global/restaurant";
 import { SoundProvider } from "@/lib/context/global/sound.context";
+import { useApptheme } from "@/lib/context/theme.context";
 
 // Expo
 import { Stack } from "expo-router";
@@ -10,6 +11,7 @@ import { StatusBar } from "expo-status-bar";
 import FlashMessage from "react-native-flash-message";
 
 export default function ProtectedLayout() {
+  const { appTheme } = useApptheme();
   return (
     <RestaurantProvider.Provider>
       <SoundProvider>
@@ -17,6 +19,10 @@ export default function ProtectedLayout() {
           <Stack
             screenOptions={{
               headerShown: false,
+              headerStyle: {
+                backgroundColor: appTheme.screenBackground,
+              },
+              headerTitleAlign: "center",
             }}
           >
             <Stack.Screen

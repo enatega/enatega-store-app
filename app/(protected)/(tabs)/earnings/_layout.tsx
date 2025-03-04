@@ -1,4 +1,5 @@
 import { useUserContext } from "@/lib/context/global/user.context";
+import { useApptheme } from "@/lib/context/theme.context";
 import EarningBottomBar from "@/lib/ui/screen-components/earnings/view/bottom-bar";
 import { Stack, usePathname } from "expo-router";
 import { useTranslation } from "react-i18next";
@@ -6,6 +7,7 @@ import { useTranslation } from "react-i18next";
 export default function StackLayout() {
   // Hooks
   const { t } = useTranslation();
+  const { appTheme } = useApptheme();
   const { modalVisible, setModalVisible } = useUserContext();
   const pathname = usePathname();
   return (
@@ -18,9 +20,12 @@ export default function StackLayout() {
             : pathname.startsWith("/earnings/earnings-order-details") ?
               t("Deliveries")
             : t("Earnings"),
-          headerBackTitle: "",
-          contentStyle: {
-            backgroundColor: "white",
+          headerBackTitle: t("Earnings"),
+          headerStyle: {
+            backgroundColor: appTheme.screenBackground,
+          },
+          headerTitleStyle: {
+            color: appTheme.fontMainColor,
           },
         }}
       >
@@ -28,7 +33,7 @@ export default function StackLayout() {
           name="index"
           options={{
             headerShown: true,
-            headerTitle: t("Earnings Order Details"),
+            headerTitle: t("Earnings"),
           }}
         />
         <Stack.Screen
@@ -39,10 +44,6 @@ export default function StackLayout() {
             headerBackTitle: t("Earnings"),
           }}
         />
-        {/* <Stack.Screen
-          name="/(routes)/earnings-details"
-          options={{ headerShown: true, headerTitle: "Earning Details" }}
-        />*/}
       </Stack>
       <EarningBottomBar
         totalDeliveries={modalVisible.totalDeliveries}

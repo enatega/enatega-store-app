@@ -1,4 +1,4 @@
-import { Colors } from "@/lib/utils/constants";
+import { useApptheme } from "@/lib/context/theme.context";
 import { Stack } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { Platform } from "react-native";
@@ -6,6 +6,8 @@ import { Platform } from "react-native";
 export default function OrderDetailLayour() {
   // Hooks
   const { t } = useTranslation();
+  const { appTheme } = useApptheme();
+
   return (
     <Stack
       screenOptions={{
@@ -16,9 +18,9 @@ export default function OrderDetailLayour() {
 
           default: {
             position: "absolute",
-            backgroundColor: Colors.light.white,
+            backgroundColor: appTheme.themeBackground,
             elevation: 0, // Shadow for Android
-            shadowColor: "white", // Shadow for iOS
+            shadowColor: appTheme.themeBackground, // Shadow for iOS
             shadowOpacity: 0,
             shadowRadius: 0,
           },

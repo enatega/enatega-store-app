@@ -1,9 +1,13 @@
 import { useUserContext } from "@/lib/context/global/user.context";
+import { useApptheme } from "@/lib/context/theme.context";
 import { usePathname } from "expo-router";
 import { Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
+import { useTranslation } from "react-i18next";
 export default function UnavailableStatus() {
+  // Hooks
+  const { t } = useTranslation();
+  const { appTheme } = useApptheme();
   const pathName = usePathname();
   const { dataProfile } = useUserContext();
   const insets = useSafeAreaInsets(); // Get Safe Area Insets
@@ -14,7 +18,7 @@ export default function UnavailableStatus() {
   return (
     <View
       style={{
-        backgroundColor: "rgba(0, 0, 0, 0.7)",
+        backgroundColor: appTheme.black,
         paddingTop: insets.top - 9, // Ensures it stays below the notch
         paddingHorizontal: 16,
         paddingBottom: 2,
@@ -24,7 +28,7 @@ export default function UnavailableStatus() {
       }}
     >
       <Text style={{ color: "white", textAlign: "center", fontWeight: "bold" }}>
-        You are currently unavailable.
+        {t("You are currently unavailable")}.
       </Text>
     </View>
   );

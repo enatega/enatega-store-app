@@ -46,6 +46,9 @@ export default function DrawerMain() {
         drawerActiveTintColor: Colors.light.mainTextColor,
         headerShadowVisible: false,
         headerTitleAlign: "center",
+        headerStyle: {
+          backgroundColor: appTheme.screenBackground,
+        },
         drawerStatusBarAnimation: "slide",
         drawerItemStyle: {
           borderRadius: 0,

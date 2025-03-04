@@ -20,7 +20,7 @@ const CustomTab = ({
     >
       <View
         className="h-[50px] w-full flex-row p-2 justify-center items-center space-x-2 rounded-[8px]"
-        style={{ backgroundColor: appTheme.fontMainColor }}
+        style={{ backgroundColor: appTheme.themeBackground }}
       >
         {options.map((option) => (
           <TouchableOpacity
@@ -29,7 +29,9 @@ const CustomTab = ({
             className={`h-full px-4 py-2 w-1/2 flex items-center justify-center rounded-[8px]`}
             style={{
               backgroundColor:
-                selectedTab === option ? appTheme.primary : appTheme.white,
+                selectedTab === option
+                  ? appTheme.primary
+                  : appTheme.themeBackground,
             }}
           >
             <Text

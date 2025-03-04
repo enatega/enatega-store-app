@@ -1,8 +1,20 @@
 import { gql } from "@apollo/client";
 
 export const STORE_EARNINGS_GRAPH = gql`
-  query StoreEarningsGraph($storeId: ID!) {
-    storeEarningsGraph(storeId: $storeId) {
+  query StoreEarningsGraph(
+    $storeId: ID!
+    $page: Int
+    $limit: Int
+    $startDate: String
+    $endDate: String
+  ) {
+    storeEarningsGraph(
+      storeId: $storeId
+      page: $page
+      limit: $limit
+      startDate: $startDate
+      endDate: $endDate
+    ) {
       totalCount
       earnings {
         _id

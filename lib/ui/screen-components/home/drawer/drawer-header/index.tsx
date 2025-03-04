@@ -44,7 +44,6 @@ const CustomDrawerHeader = () => {
   async function handleToggleAvailability() {
     try {
       await toggleAvailablity({ variables: { restaurantId: userId ?? "" } });
-      console.log("🚀 ~ CustomDrawerHeader ~ userId:", userId);
     } catch (error) {
       console.error("error whilte toggling availabibility", error);
     }
@@ -52,7 +51,7 @@ const CustomDrawerHeader = () => {
 
   return (
     <View
-      className="w-full -mt-6 h-[110px] flex-row justify-between p-4"
+      className="w-full -mt-0 h-[150px] flex-row justify-between p-4 pt-8"
       style={{ backgroundColor: appTheme.primary, marginTop: 1 }}
     >
       <View className="justify-between">

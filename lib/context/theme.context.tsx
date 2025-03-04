@@ -64,7 +64,7 @@ export default function AppThemeProvidor({
   // Handlers
   const toggleTheme = (val: app_theme) => {
     const updatedVal = val === "light" ? "dark" : "light";
-    setAppTheme(Colors[updatedVal]);
+    setAppTheme(Colors[updatedVal] ?? Colors.light);
     setCurrentTheme(updatedVal);
     // Appearance.setColorScheme(val === "light" ? "dark" : "light");
     AsyncStorage.setItem("app_theme", updatedVal);

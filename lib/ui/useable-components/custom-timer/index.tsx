@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
+// Hooks
+import { useApptheme } from "@/lib/context/theme.context";
+
 interface TimerProps {
   duration: number; // Duration in seconds
 }
 
 const CountdownTimer: React.FC<TimerProps> = ({ duration }) => {
+  // Hooks
+  const { appTheme } = useApptheme();
+
   // States
   const [timeLeft, setTimeLeft] = useState(duration);
 
@@ -40,19 +46,34 @@ const CountdownTimer: React.FC<TimerProps> = ({ duration }) => {
     <View style={styles.container}>
       <View style={styles.timerRow}>
         <View style={styles.box}>
-          <Text style={styles[isOverdue ? "timerTextEnd" : "timerText"]}>
+          <Text
+            style={[
+              styles[isOverdue ? "timerTextEnd" : "timerText"],
+              { color: appTheme.fontMainColor },
+            ]}
+          >
             {hours}
           </Text>
         </View>
         <Text style={styles.colon}>:</Text>
         <View style={styles.box}>
-          <Text style={styles[isOverdue ? "timerTextEnd" : "timerText"]}>
+          <Text
+            style={[
+              styles[isOverdue ? "timerTextEnd" : "timerText"],
+              { color: appTheme.fontMainColor },
+            ]}
+          >
             {minutes}
           </Text>
         </View>
         <Text style={styles.colon}>:</Text>
         <View style={styles.box}>
-          <Text style={styles[isOverdue ? "timerTextEnd" : "timerText"]}>
+          <Text
+            style={[
+              styles[isOverdue ? "timerTextEnd" : "timerText"],
+              { color: appTheme.fontMainColor },
+            ]}
+          >
             {seconds}
           </Text>
         </View>
