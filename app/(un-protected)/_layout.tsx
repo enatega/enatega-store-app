@@ -12,9 +12,13 @@ export default function UnProtectedLayout() {
           <Stack
             screenOptions={{
               headerShown: false,
+              gestureEnabled: false,
             }}
           >
-            <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="login"
+              options={{ headerShown: false }}
+            />
           </Stack>
         </>
       </SoundProvider>

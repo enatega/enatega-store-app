@@ -3,25 +3,26 @@ import { useUserContext } from "@/lib/context/global/user.context";
 import { FlashMessageComponent } from "@/lib/ui/useable-components";
 import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 
-import { ApolloError, useMutation } from "@apollo/client";
 import { WorkSchedule } from "@/lib/utils/interfaces";
+import { ApolloError, useMutation } from "@apollo/client";
 
-import { useState, useRef, useEffect } from "react";
+import { STORE_PROFILE } from "@/lib/apollo/queries";
+import { useApptheme } from "@/lib/context/theme.context";
+import { TWeekDays } from "@/lib/utils/types/restaurant";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  ScrollView,
-  TouchableWithoutFeedback,
   Animated,
   Dimensions,
+  FlatList,
+  ScrollView,
   StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from "react-native";
 import { Switch } from "react-native-switch";
-import { TWeekDays } from "@/lib/utils/types/restaurant";
-import { STORE_PROFILE } from "@/lib/apollo/queries";
 
 const { width } = Dimensions.get("window");
 
@@ -50,6 +51,7 @@ const timeOptions = generateTimeSlots();
 
 export default function WorkScheduleMain() {
   // Hooks
+  const { appTheme } = useApptheme();
   const { t } = useTranslation();
   // States
   const [schedule, setSchedule] = useState<WorkSchedule[]>();
@@ -127,9 +129,10 @@ export default function WorkScheduleMain() {
       });
     } catch (err) {
       const error = err as ApolloError;
-      FlashMessageComponent({
-        message: error?.message || t("Something went wrong"),
-      });
+      // FlashMessageComponent({
+      //   message: error?.message || t("Something went wrong"),
+      // });
+      console.log(error);
     }
   };
 
@@ -393,16 +396,30 @@ export default function WorkScheduleMain() {
   return (
     <TouchableWithoutFeedback onPress={closeDropdown}>
       <View className="flex-1 items-center">
-        <View className="p-2 bg-white h-[80%] w-full">
+        <View
+          className="p-2 h-[80%] w-full"
+          style={{ backgroundColor: appTheme.themeBackground }}
+        >
           <FlatList
             data={schedule}
             keyExtractor={(item) => item.day}
             scrollEnabled={true}
             renderItem={({ item, index }) => (
-              <View className="bg-gray-200 border border-gray-300 p-4 mb-3 rounded-lg">
+              <View
+                className=" border p-4 mb-3 rounded-lg"
+                style={{
+                  backgroundColor: appTheme.themeBackground,
+                  borderColor: appTheme.borderLineColor,
+                }}
+              >
                 {/* Day Header with Toggle */}
                 <View className="flex-row justify-between items-center">
-                  <Text className="text-lg font-bold">{t(item.day)}</Text>
+                  <Text
+                    className="text-lg font-bold"
+                    style={{ color: appTheme.fontMainColor }}
+                  >
+                    {t(item.day)}
+                  </Text>
                   <Switch
                     value={item.times.some((t) => !!t)}
                     onValueChange={() => toggleDay(index)}
@@ -410,8 +427,8 @@ export default function WorkScheduleMain() {
                     inActiveText={""}
                     circleSize={20}
                     barHeight={25}
-                    backgroundActive={"#4CAF50"}
-                    backgroundInactive={"#ccc"}
+                    backgroundActive={appTheme.primary}
+                    backgroundInactive={appTheme.gray}
                     circleBorderWidth={0}
                   />
                 </View>
@@ -443,17 +460,26 @@ export default function WorkScheduleMain() {
                                 type: "start",
                               })
                             }
-                            className={`w-[40%] bg-white p-2 rounded-md`}
-                            style={
-                              isStartTapped ? style.tappedSlot : style.slot
-                            }
+                            className={`w-[40%] p-2 rounded-md`}
+                            style={[
+                              isStartTapped ? style.tappedSlot : style.slot,
+                              { backgroundColor: appTheme.themeBackground },
+                            ]}
                           >
-                            <Text className="text-center">
+                            <Text
+                              className="text-center"
+                              style={{ color: appTheme.fontMainColor }}
+                            >
                               {slot.startTime.join(":")}
                             </Text>
                           </TouchableOpacity>
 
-                          <Text className="mx-">-</Text>
+                          <Text
+                            className="mx-"
+                            style={{ color: appTheme.fontMainColor }}
+                          >
+                            -
+                          </Text>
 
                           {/* End Time Button */}
                           <TouchableOpacity
@@ -464,10 +490,16 @@ export default function WorkScheduleMain() {
                                 type: "end",
                               })
                             }
-                            className="w-[40%] bg-white p-2 rounded-md"
-                            style={isEndTapped ? style.tappedSlot : style.slot}
+                            className="w-[40%] p-2 rounded-md"
+                            style={[
+                              isEndTapped ? style.tappedSlot : style.slot,
+                              { backgroundColor: appTheme.themeBackground },
+                            ]}
                           >
-                            <Text className="text-center">
+                            <Text
+                              className="text-center"
+                              style={{ color: appTheme.fontMainColor }}
+                            >
                               {slot.endTime.join(":")}
                             </Text>
                           </TouchableOpacity>
@@ -476,9 +508,17 @@ export default function WorkScheduleMain() {
                           {item.times.length > 1 && slotIndex !== 0 && (
                             <TouchableOpacity
                               onPress={() => removeSlot(index, slotIndex)}
-                              className="w-8 h-8 justify-center items-center border border-red-600 rounded-full"
+                              className="w-8 h-8 justify-center items-center border rounded-full"
+                              style={{
+                                borderColor: "#dc2626",
+                              }}
                             >
-                              <Text className="text-red-600 font-bold">−</Text>
+                              <Text
+                                style={{ color: "#dc2626" }}
+                                className="font-bold"
+                              >
+                                −
+                              </Text>
                             </TouchableOpacity>
                           )}
 
@@ -486,9 +526,16 @@ export default function WorkScheduleMain() {
                           {slotIndex === 0 && (
                             <TouchableOpacity
                               onPress={() => addSlot(index)}
-                              className="w-8 h-8 justify-center items-center border border-green-500 rounded-full"
+                              className="w-8 h-8 justify-center items-center border rounded-full"
+                              style={{
+                                backgroundColor: appTheme.themeBackground,
+                                borderColor: appTheme.primary,
+                              }}
                             >
-                              <Text className="text-green-500 font-bold text-center">
+                              <Text
+                                className=" font-bold text-center"
+                                style={{ color: appTheme.primary }}
+                              >
                                 +
                               </Text>
                             </TouchableOpacity>
@@ -503,14 +550,17 @@ export default function WorkScheduleMain() {
           />
         </View>
         <TouchableOpacity
-          className="h-12 w-full bg-green-500 rounded-3xl py-3"
-          style={{ width: width * 0.9 }}
+          className="h-12 w-full rounded-3xl py-3"
+          style={{ width: width * 0.9, backgroundColor: appTheme.primary }}
           onPress={() => onHandlerSubmit()}
         >
           {isUpatingSchedule ? (
             <SpinnerComponent />
           ) : (
-            <Text className="text-center text-white text-lg font-medium">
+            <Text
+              className="text-center text-lg font-medium"
+              style={{ color: appTheme.fontMainColor }}
+            >
               {t("Update Schedule")}
             </Text>
           )}
@@ -525,7 +575,7 @@ export default function WorkScheduleMain() {
               bottom: -80,
               left: 5,
               right: 5,
-              backgroundColor: "white",
+              backgroundColor: appTheme.themeBackground,
               shadowColor: "#000",
               shadowOpacity: 0.2,
               shadowRadius: 5,
@@ -545,7 +595,10 @@ export default function WorkScheduleMain() {
               ],
             }}
           >
-            <Text className="font-[Inter] text-lg font-bold mb-2">
+            <Text
+              className="font-[Inter] text-lg font-bold mb-2"
+              style={{ color: appTheme.fontMainColor }}
+            >
               {t("Select Time Slot")}
             </Text>
             <ScrollView
@@ -567,9 +620,13 @@ export default function WorkScheduleMain() {
                       time,
                     )
                   }
-                  className="p-2 border-b border-gray-300"
+                  className="p-2 border-b "
+                  style={{ borderColor: appTheme.borderLineColor }}
                 >
-                  <Text className="font-[Inter] text-center text-lg">
+                  <Text
+                    className="font-[Inter] text-center text-lg"
+                    style={{ color: appTheme.fontMainColor }}
+                  >
                     {time}
                   </Text>
                 </TouchableOpacity>

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import { useState } from "react";
+import { Pressable, Text, TouchableOpacity, View } from "react-native";
 
 // Hooks
 import useAcceptOrder from "@/lib/hooks/useAcceptOrder";
@@ -15,9 +15,10 @@ import { ISetOrderTimeComponentProps } from "@/lib/utils/interfaces";
 
 // UI
 import SpinnerComponent from "../spinner";
-import FlashMessageComponent from "../flash-message";
 
 // Icons
+import { useApptheme } from "@/lib/context/theme.context";
+import { useTranslation } from "react-i18next";
 import { CircleCrossIcon } from "../svg";
 
 const SetTimeScreenAndAcceptOrder = ({
@@ -25,6 +26,10 @@ const SetTimeScreenAndAcceptOrder = ({
   orderId,
   handleDismissModal,
 }: ISetOrderTimeComponentProps) => {
+  // Hooks
+  const { appTheme } = useApptheme();
+  const { t } = useTranslation();
+
   // States
   const [selectedTime, setSelectedTime] = useState(TIMES[0]);
 
@@ -40,7 +45,8 @@ const SetTimeScreenAndAcceptOrder = ({
 
       handleDismissModal();
     } catch (err) {
-      FlashMessageComponent({ message: err?.message ?? "Order accept failed" });
+      // FlashMessageComponent({ message: err?.message ?? "Order accept failed" });
+      console.log(err);
     } finally {
       handleDismissModal();
     }
@@ -49,8 +55,11 @@ const SetTimeScreenAndAcceptOrder = ({
   return (
     <View className="flex-1items-center justify-center px-4 pb-8">
       <View className="mt-4 mb-4 text-center flex-row justify-between items-center">
-        <Text className="flex-1 text-center text-[16px] text-black font-[600]">
-          Set Preparation Time
+        <Text
+          className="flex-1 text-center text-[16px] font-[600]"
+          style={{ color: appTheme.fontMainColor }}
+        >
+          {t("Set Preparation Time")}
         </Text>
         <TouchableOpacity onPress={handleDismissModal}>
           <CircleCrossIcon width={24} height={24} />
@@ -63,14 +72,15 @@ const SetTimeScreenAndAcceptOrder = ({
             <Pressable
               key={index}
               onPress={() => setSelectedTime(time)}
-              className={`h-fit justify-center items-center  p-4 rounded-[8px] ${
-                selectedTime === time ? "bg-[#90E36D]" : "bg-gray-100"
-              }`}
+              className={`h-fit justify-center items-center  p-4 rounded-[8px] `}
+              style={{
+                backgroundColor:
+                  selectedTime === time ? appTheme.primary : appTheme.white,
+              }}
             >
               <Text
-                className={`text-[Inter] text-center items-center text-[14px] font-medium ${
-                  selectedTime === time ? "text-black" : "text-black"
-                }`}
+                className={`text-[Inter] text-center items-center text-[14px] font-medium`}
+                style={{ color: appTheme.fontMainColor }}
               >
                 {`${time} mins`}
               </Text>
@@ -81,13 +91,17 @@ const SetTimeScreenAndAcceptOrder = ({
 
       <View>
         <TouchableOpacity
-          className="h-12 bg-[#90E36D] rounded-3xl py-3"
+          className="h-12 rounded-3xl py-3"
+          style={{ backgroundColor: appTheme.primary }}
           onPress={onAcceptOrderHandler}
         >
           {loadingAcceptOrder || loadingRing ? (
-            <SpinnerComponent color="white" />
+            <SpinnerComponent color={appTheme.primary} />
           ) : (
-            <Text className="text-center text-white text-lg font-medium">
+            <Text
+              className="text-center text-lg font-medium"
+              style={{ color: appTheme.black }}
+            >
               Done
             </Text>
           )}

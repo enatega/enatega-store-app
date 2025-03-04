@@ -1,20 +1,21 @@
-import { View, Text, Image } from "react-native";
-import { useTranslation } from "react-i18next";
-import { useState } from "react";
-import { Colors } from "@/lib/utils/constants";
-import CustomSwitch from "@/lib/ui/useable-components/switch-button";
-import { useUserContext } from "@/lib/context/global/user.context";
 import { UPDATE_AVAILABILITY } from "@/lib/apollo/mutations/rider.mutation";
-import { MutationTuple, useMutation } from "@apollo/client";
 import { STORE_PROFILE } from "@/lib/apollo/queries";
-import { showMessage } from "react-native-flash-message";
+import { useUserContext } from "@/lib/context/global/user.context";
+import { useApptheme } from "@/lib/context/theme.context";
+import CustomSwitch from "@/lib/ui/useable-components/switch-button";
 import { IStoreProfile } from "@/lib/utils/interfaces";
+import { MutationTuple, useMutation } from "@apollo/client";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Image, Text, View } from "react-native";
+import { showMessage } from "react-native-flash-message";
 
 const CustomDrawerHeader = () => {
   // States
   const [isEnabled, setIsEnabled] = useState(true);
 
-  // Hook
+  // Hooks
+  const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const { dataProfile, userId } = useUserContext();
 
@@ -24,8 +25,8 @@ const CustomDrawerHeader = () => {
       { query: STORE_PROFILE, variables: { restaurantId: userId } },
     ],
     onCompleted: () => {
-      if (dataProfile?.available) {
-        setIsEnabled(dataProfile?.available);
+      if (dataProfile?.isAvailable) {
+        setIsEnabled(dataProfile?.isAvailable);
       }
     },
     onError: (error) => {
@@ -37,16 +38,26 @@ const CustomDrawerHeader = () => {
           t("Unable to update availability"),
       });
     },
-  }) as MutationTuple<IStoreProfile | undefined, { id: string }>;
+  }) as MutationTuple<IStoreProfile | undefined, { restaurantId: string }>;
+
+  // Handlers
+  async function handleToggleAvailability() {
+    try {
+      await toggleAvailablity({ variables: { restaurantId: userId ?? "" } });
+    } catch (error) {
+      console.error("error whilte toggling availabibility", error);
+    }
+  }
+
   return (
     <View
-      className="w-full -mt-6 h-[110px] flex-row justify-between p-4"
-      style={{ backgroundColor: Colors.light.primary }}
+      className="w-full -mt-0 h-[150px] flex-row justify-between p-4 pt-8"
+      style={{ backgroundColor: appTheme.primary, marginTop: 1 }}
     >
       <View className="justify-between">
         <View
           className="w-[54px] h-[54px] rounded-full items-center justify-center overflow-hidden"
-          style={{ backgroundColor: Colors.light.white }}
+          style={{ backgroundColor: appTheme.white }}
         >
           {dataProfile?.logo ? (
             <Image
@@ -59,7 +70,7 @@ const CustomDrawerHeader = () => {
             <Text
               className="text-[16px] font-semibold"
               style={{
-                color: Colors.light.primary,
+                color: appTheme.primary,
               }}
             >
               {dataProfile?.name
@@ -80,7 +91,7 @@ const CustomDrawerHeader = () => {
           <Text
             className="font-semibold text-[16px]"
             style={{
-              color: Colors.light.black,
+              color: appTheme.black,
             }}
           >
             {dataProfile?.name ?? t("store name")}
@@ -88,7 +99,7 @@ const CustomDrawerHeader = () => {
           <Text
             className="font-medium"
             style={{
-              color: Colors.light.secondaryTextColor,
+              color: appTheme.secondaryTextColor,
             }}
           >
             {dataProfile?._id?.substring(0, 9)?.toUpperCase() ?? t("store id")}
@@ -99,20 +110,18 @@ const CustomDrawerHeader = () => {
       <View className="items-end justify-end gap-2">
         <Text
           className="text-md"
-          style={{ color: Colors.light.secondaryTextColor }}
+          style={{ color: appTheme.secondaryTextColor }}
         >
           {t("Availability")}
         </Text>
         <CustomSwitch
-          value={dataProfile?.available ?? isEnabled}
+          value={dataProfile?.isAvailable ?? isEnabled}
           isDisabled={loading}
-          onToggle={async () =>
-            await toggleAvailablity({ variables: { id: userId ?? "" } })
-          }
+          onToggle={handleToggleAvailability}
         />
         <Text
           className="text-xs font-medium"
-          style={{ color: Colors.light.secondaryTextColor }}
+          style={{ color: appTheme.secondaryTextColor }}
         >
           {isEnabled ? t("available") : t("notAvailable")}
         </Text>

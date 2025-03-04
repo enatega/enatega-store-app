@@ -2,14 +2,15 @@
 import { IWithdrawModalProps } from "@/lib/utils/interfaces/withdraw.interface";
 
 // Core
-import { Text } from "react-native";
+import { Text, TextInput, View } from "react-native";
 import { ReactNativeModal } from "react-native-modal";
-import { View } from "react-native";
-import { TextInput } from "react-native";
-import { useState } from "react";
 
 // Components
 import { CustomContinueButton } from "@/lib/ui/useable-components";
+
+// Hooks
+import { useApptheme } from "@/lib/context/theme.context";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export default function WithdrawModal({
@@ -21,12 +22,13 @@ export default function WithdrawModal({
   setAmountErrMsg,
   withdrawRequestLoading,
 }: IWithdrawModalProps) {
+  // Hooks
+  const { appTheme } = useApptheme();
+  const { t } = useTranslation();
+
   // States
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [ModalMarginTop, setModalMargintTop] = useState(480);
-
-  // Hooks
-  const { t } = useTranslation();
 
   // Handlers
   function handleTextChange(val: string) {
@@ -43,10 +45,10 @@ export default function WithdrawModal({
       }}
       useNativeDriver={true}
       style={{
-        maxHeight: 350,
+        maxHeight: 370,
         width: "100%",
         height: "100%",
-        backgroundColor: "#fff",
+        backgroundColor: appTheme.themeBackground,
         borderRadius: 20,
         padding: 5,
         alignItems: "center",
@@ -62,14 +64,30 @@ export default function WithdrawModal({
       }}
     >
       <View className="flex flex-col justify-between h-[75%] p-2 items-center w-full">
-        <View className="flex flex-row justify-between w-full  border-b-gray-300 border-b">
-          <Text className="font-bold text-lg py-2">
+        <View
+          className="flex flex-row justify-between w-full border-b"
+          style={{ borderBottomColor: appTheme.borderLineColor }}
+        >
+          <Text
+            className="font-bold text-lg py-2"
+            style={{ color: appTheme.fontMainColor }}
+          >
             {t("Available Amount")}
           </Text>
-          <Text className="font-bold text-lg">${currentTotal}</Text>
+          <Text
+            className="font-bold text-lg"
+            style={{ color: appTheme.fontMainColor }}
+          >
+            ${currentTotal}
+          </Text>
         </View>
         <View className=" flex flex-col gap-3 w-full">
-          <Text className="font-bold text-lg">{t("Enter Amount")}</Text>
+          <Text
+            className="font-bold text-lg"
+            style={{ color: appTheme.fontMainColor }}
+          >
+            {t("Enter Amount")}
+          </Text>
           <TextInput
             value={withdrawAmount}
             onChangeText={(val) => handleTextChange(val)}
@@ -79,7 +97,8 @@ export default function WithdrawModal({
             placeholder="$0.00"
             keyboardType="number-pad"
             returnKeyType="done"
-            className={`${amountErrMsg ? "border-red-600" : "border-gray-300"} border w-full h-12 rounded p-3 placeholder:text-black`}
+            style={{ color: appTheme.fontMainColor }}
+            className={`${amountErrMsg ? "border-red-600" : "border-gray-300"} border w-full h-12 rounded p-3  placeholder:text-gray-500`}
           />
           {amountErrMsg && (
             <Text className="text-red-500 text-sm">{amountErrMsg}</Text>
@@ -96,6 +115,7 @@ export default function WithdrawModal({
                 setWithdrawAmount(""),
               )
             }
+            style={{ marginTop: 20 }}
           />
         </View>
       </View>

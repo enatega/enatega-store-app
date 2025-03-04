@@ -1,11 +1,4 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-// Core
-import { Appearance } from "react-native";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
 
@@ -30,19 +23,20 @@ import "@/i18next";
 import "../global.css";
 
 // Hooks
-import { useColorScheme } from "@/lib/hooks/useColorScheme";
-import { useFonts } from "expo-font";
 import { UserProvider } from "@/lib/context/global/user.context";
-import { useEffect } from "react";
-import { Stack } from "expo-router";
+import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
 import FlashMessage from "react-native-flash-message";
 
 // PRoviders
 import InternetProvider from "@/lib/context/global/internet-provider";
 // UI
+import AppThemeProvidor from "@/lib/context/theme.context";
 import AnimatedSplashScreen from "@/lib/ui/useable-components/splash/AnimatedSplashScreen";
 import UnavailableStatus from "@/lib/ui/useable-components/unavailable-status";
+
+import { Slot } from "expo-router";
 
 initSentry();
 
@@ -51,7 +45,6 @@ SplashScreen.preventAutoHideAsync();
 
 function RootLayout() {
   // Hooks
-  const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../lib/assets/fonts/SpaceMono-Regular.ttf"),
     Inter: require("../lib/assets/fonts/Inter.ttf"),
@@ -70,45 +63,27 @@ function RootLayout() {
     return null;
   }
 
-  Appearance.setColorScheme("light"); // Forces light mode
+  // Appearance.setColorScheme("light"); // Forces light mode
 
   return (
-    <>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <AnimatedSplashScreen>
-          <InternetProvider>
-            <ApolloProvider client={client}>
-              <ConfigurationProvider>
-                <AuthProvider client={client}>
-                  <UserProvider>
-                    <UnavailableStatus />
-                    <Stack
-                      initialRouteName="(un-protected)"
-                      screenOptions={{ headerShown: false }}
-                    >
-                      <Stack.Screen name="+not-found" />
-                      <Stack.Screen
-                        name="(protected)"
-                        options={{
-                          headerShown: false,
-                          presentation: "fullScreenModal",
-                        }}
-                      />
-                      <Stack.Screen
-                        name="(un-protected)"
-                        options={{ headerShown: false }}
-                      />
-                    </Stack>
-                  </UserProvider>
-                </AuthProvider>
-              </ConfigurationProvider>
-            </ApolloProvider>
-          </InternetProvider>
-        </AnimatedSplashScreen>
-      </ThemeProvider>
+    <AppThemeProvidor>
+      <AnimatedSplashScreen>
+        <InternetProvider>
+          <ApolloProvider client={client}>
+            <ConfigurationProvider>
+              <AuthProvider client={client}>
+                <UserProvider>
+                  <UnavailableStatus />
+                  <Slot />
+                </UserProvider>
+              </AuthProvider>
+            </ConfigurationProvider>
+          </ApolloProvider>
+        </InternetProvider>
+      </AnimatedSplashScreen>
       <StatusBar style="auto" />
       <FlashMessage position="center" />
-    </>
+    </AppThemeProvidor>
   );
 }
 

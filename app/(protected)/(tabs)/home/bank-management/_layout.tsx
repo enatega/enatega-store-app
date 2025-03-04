@@ -1,6 +1,9 @@
 import { Stack } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 export default function Layout() {
+  // Hooks
+  const { t } = useTranslation();
   return (
     <Stack
       screenOptions={{
@@ -12,7 +15,7 @@ export default function Layout() {
       <Stack.Screen
         name="index" // This is the name of the page and must match the url from root
         options={{
-          title: "Bank Management",
+          title: t("Bank Management"),
         }}
       />
     </Stack>

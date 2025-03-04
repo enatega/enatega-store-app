@@ -1,6 +1,5 @@
 // Core
-import { TouchableOpacity, View } from "react-native";
-import { Text } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 // Contexts
 import { useUserContext } from "@/lib/context/global/user.context";
@@ -18,7 +17,7 @@ import { barDataItem } from "react-native-gifted-charts";
 import { STORE_EARNINGS_GRAPH } from "@/lib/apollo/queries/earnings.query";
 
 // Hooks
-import { QueryResult, useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
 // Expo
@@ -28,44 +27,97 @@ import { router } from "expo-router";
 import { EarningScreenMainLoading } from "@/lib/ui/skeletons";
 
 // Components
-import EarningStack from "../earnings-stack";
-import EarningsBarChart from "../../bar-chart";
-import { NoRecordFound } from "@/lib/ui/useable-components";
+import { useApptheme } from "@/lib/context/theme.context";
+import { useEffect, useState } from "react";
 import { showMessage } from "react-native-flash-message";
+import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
+import EarningsBarChart from "../../bar-chart";
+import EarningStack from "../earnings-stack";
 
 export default function EarningsMain() {
+  // Set dates for the query
+  const getQueryDates = () => {
+    const endDate = new Date(); // Today
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - 6);
+
+    // Set start date to beginning of day
+    startDate.setHours(0, 0, 0, 0);
+
+    // Set end date to end of day
+    endDate.setHours(23, 59, 59, 999);
+
+    return { startDate, endDate };
+  };
+
+  // Constants
+  const queryPayload = {
+    page: 1,
+    limit: 5,
+    ...getQueryDates(),
+  };
+
+  // States
+  const [recentTransaction, setRecentTransaction] =
+    useState<IStoreEarnings[]>();
+
   // Hooks
+  const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const { userId, setModalVisible } = useUserContext();
 
   // Queries
-  const { loading: isStoreEarningsLoading, data: storeEarningsData } = useQuery(
-    STORE_EARNINGS_GRAPH,
+  const [
+    fetchEarningsGraph,
+    { loading: isStoreEarningsLoading, data: storeEarningsData },
+  ] = useLazyQuery<
+    IStoreEarningsResponse,
     {
-      onError: (err) => {
-        console.error(err);
-        showMessage({
-          message:
-            err.graphQLErrors[0].message ||
-            err.networkError?.message ||
-            "Failed to fetch earnings",
-          type: "danger",
-          duration: 1000,
-        });
-      },
-      variables: {
-        storeId: userId ?? "",
-      },
+      storeId: string;
+      startDate: string;
+      endDate: string;
+      page: number;
+      limit: number;
+    }
+  >(STORE_EARNINGS_GRAPH, {
+    onError: (err) => {
+      console.error(err);
+      showMessage({
+        message:
+          err.graphQLErrors[0]?.message ||
+          err.networkError?.message ||
+          "Failed to fetch earnings",
+        type: "danger",
+        duration: 1000,
+      });
     },
-  ) as QueryResult<
-    IStoreEarningsResponse | undefined,
-    { storeId: string; startDate?: string; endDate?: string }
-  >;
+    fetchPolicy: "cache-and-network",
+  });
+
+  // Fetch data on component mount
+  useEffect(() => {
+    if (userId) {
+      const { startDate, endDate } = getQueryDates();
+
+      fetchEarningsGraph({
+        variables: {
+          storeId: userId,
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(), // End of today
+          page: queryPayload.page,
+          limit: queryPayload.limit,
+        },
+      });
+    }
+  }, [userId]);
+
   const barData: barDataItem[] =
     storeEarningsData?.storeEarningsGraph.earnings
       .slice(0, 7)
       .map((earning: IStoreEarnings) => ({
-        value: earning.totalEarningsSum,
+        value: earning.totalEarningsSum.toString().startsWith("-")
+          ? Number(-earning.totalEarningsSum)
+          : earning.totalEarningsSum,
         label: earning._id,
         topLabelComponent: () => {
           return (
@@ -78,26 +130,59 @@ export default function EarningsMain() {
                 wordWrap: "wrap",
               }}
             >
-              ${earning.totalEarningsSum}
+              $
+              {earning.totalEarningsSum.toString().startsWith("-")
+                ? Number(-earning.totalEarningsSum)
+                : earning.totalEarningsSum}
             </Text>
           );
         },
       })) ?? ([] as barDataItem[]);
 
+  // UseEffects
+  useEffect(() => {
+    if (storeEarningsData?.storeEarningsGraph?.earnings?.length) {
+      const sortedTransactions = [
+        ...storeEarningsData.storeEarningsGraph.earnings,
+      ].sort(
+        (a, b) =>
+          new Date(String(b?.date)).setHours(0, 0, 0, 0) -
+          new Date(String(a?.date)).setHours(23, 59, 59, 999),
+      );
+      setRecentTransaction(sortedTransactions);
+    }
+  }, [storeEarningsData?.storeEarningsGraph?.earnings?.length]);
+
   // If loading
   if (isStoreEarningsLoading) return <EarningScreenMainLoading />;
-
+  console.log(storeEarningsData?.storeEarningsGraph.earnings);
   return (
-    <View className="bg-white">
+    <GestureHandlerRootView
+      style={{ backgroundColor: appTheme.themeBackground }}
+    >
       <EarningsBarChart
         data={barData}
-        width={1000}
-        height={270}
-        frontColor="#8fe36e"
-        disableScroll={true}
+        width={700}
+        height={200}
+        frontColor={appTheme.primary}
+        barStyle={{ marginTop: 15 }}
+        rulesColor={appTheme.fontSecondColor}
+        topLabelTextStyle={{ color: appTheme.primary }}
+        xAxisLabelTextStyle={{
+          display: "flex",
+          fontSize: 9,
+          color: appTheme.fontMainColor,
+        }}
+        yAxisTextStyle={{ fontSize: 8, color: appTheme.fontSecondColor }}
       />
       <View className="flex flex-row justify-between w-full px-4 py-4">
-        <Text className="text-xl text-black font-bold">
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "bold",
+            color: appTheme.fontMainColor,
+          }}
+        >
           {t("Recent Activity")}
         </Text>
         <TouchableOpacity
@@ -116,30 +201,48 @@ export default function EarningsMain() {
             );
           }}
         >
-          <Text className="text-sm text-[#3B82F6] font-bold">
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: "bold",
+              color: appTheme.linkColor,
+            }}
+          >
             {t("See More")}
           </Text>
         </TouchableOpacity>
       </View>
       <View>
-        {storeEarningsData?.storeEarningsGraph?.earnings?.length === 0 &&
-          !isStoreEarningsLoading && <NoRecordFound />}
-        {storeEarningsData?.storeEarningsGraph?.earnings?.length &&
-          storeEarningsData?.storeEarningsGraph?.earnings
-            ?.slice(0, 4)
-            ?.map((earning: IStoreEarnings, index) => (
+        <FlatList
+          data={recentTransaction}
+          contentContainerStyle={{ paddingBottom: 30 }}
+          contentContainerClassName="scroll-smooth"
+          keyExtractor={(item) => item._id}
+          style={{ height: "55%" }}
+          ListEmptyComponent={
+            <Text
+              className="block mx-auto font-bold text-center w-full my-12 "
+              style={{ color: appTheme.fontSecondColor }}
+            >
+              {t("No record found")}
+            </Text>
+          }
+          renderItem={(info) => {
+            return (
               <EarningStack
-                date={earning.date}
-                earning={earning.totalEarningsSum}
-                totalDeliveries={earning.earningsArray.length}
-                _id={earning._id}
-                earningsArray={earning.earningsArray}
-                key={index}
-                totalOrderAmount={earning.totalOrderAmount}
+                date={info?.item?._id}
+                earning={info?.item?.totalEarningsSum}
+                totalDeliveries={info?.item?.earningsArray.length}
+                _id={info?.item?._id}
+                totalOrderAmount={info?.item?.totalOrderAmount}
+                earningsArray={info?.item?.earningsArray}
+                key={info.index}
                 setModalVisible={setModalVisible}
               />
-            ))}
+            );
+          }}
+        />
       </View>
-    </View>
+    </GestureHandlerRootView>
   );
 }

@@ -1,8 +1,13 @@
-import { Colors } from "@/lib/utils/constants";
+import { useApptheme } from "@/lib/context/theme.context";
 import { Stack } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { Platform } from "react-native";
 
 export default function LoginLayour() {
+  // Hooks
+  const { t } = useTranslation();
+  const { appTheme } = useApptheme();
+
   return (
     <Stack
       screenOptions={{
@@ -13,9 +18,9 @@ export default function LoginLayour() {
 
           default: {
             position: "absolute",
-            backgroundColor: Colors.light.white,
+            backgroundColor: appTheme.themeBackground,
             elevation: 0, // Shadow for Android
-            shadowColor: "white", // Shadow for iOS
+            shadowColor: appTheme.themeBackground, // Shadow for iOS
             shadowOpacity: 0,
             shadowRadius: 0,
           },
@@ -26,7 +31,7 @@ export default function LoginLayour() {
         name="index"
         options={{
           headerShown: false,
-          title: "Chat",
+          title: t("Chat"),
           headerTitleAlign: "center",
           headerShadowVisible: false,
         }}

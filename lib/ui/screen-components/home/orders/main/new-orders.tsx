@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  View,
+  Dimensions,
+  FlatList,
   Platform,
   StyleSheet,
-  FlatList,
   Text,
-  Dimensions,
+  View,
 } from "react-native";
 // UI
 import CustomTab from "@/lib/ui/useable-components/custom-tab";
@@ -18,18 +18,19 @@ import { IOrderTabsComponentProps } from "@/lib/utils/interfaces";
 import { IOrder } from "@/lib/utils/interfaces/order.interface";
 
 // Hook
+import { useApptheme } from "@/lib/context/theme.context";
 import useOrders from "@/lib/hooks/useOrders";
-import { WalletIcon } from "@/lib/ui/useable-components/svg";
 import Order from "@/lib/ui/useable-components/order";
+import SetTimeScreenAndAcceptOrder from "@/lib/ui/useable-components/set-order-accept-time";
+import { WalletIcon } from "@/lib/ui/useable-components/svg";
 import { ORDER_TYPE } from "@/lib/utils/types";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import SetTimeScreenAndAcceptOrder from "@/lib/ui/useable-components/set-order-accept-time";
 import { useTranslation } from "react-i18next";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const { height } = Dimensions.get("window");
 
@@ -39,6 +40,7 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
 
   // Hooks
   const { t } = useTranslation();
+  const { appTheme } = useApptheme();
   const {
     loading,
     error,
@@ -104,8 +106,11 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
     <GestureHandlerRootView style={style.gestureContainer}>
       <BottomSheetModalProvider>
         <View
-          className="pt-14 flex-1 items-center  bg-white pb-16"
-          style={style.contaienr}
+          className="pt-14 flex-1 items-center pb-16"
+          style={[
+            style.container,
+            { backgroundColor: appTheme.themeBackground },
+          ]}
         >
           <CustomTab
             options={ORDER_DISPATCH_TYPE}
@@ -115,7 +120,7 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
 
           {error ? (
             <View className="flex-1 justify-center items-center">
-              <Text className="text-2xl">
+              <Text style={{ color: appTheme.fontMainColor, fontSize: 24 }}>
                 {t("Something went wrong Please refresh")}
               </Text>
             </View>
@@ -151,7 +156,11 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
                       alignItems: "center",
                     }}
                   >
-                    <WalletIcon height={100} width={100} />
+                    <WalletIcon
+                      height={100}
+                      width={100}
+                      color={appTheme.fontMainColor}
+                    />
                     {orders?.length === 0 ? (
                       <Text className="font-[Inter] text-[18px] text-base font-[500] text-gray-600">
                         {t(NO_ORDER_PROMPT[route.key])}
@@ -172,11 +181,15 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
                 alignItems: "center",
               }}
             >
-              <WalletIcon height={100} width={100} />
+              <WalletIcon
+                height={100}
+                width={100}
+                color={appTheme.fontMainColor}
+              />
 
               {orders?.length === 0 ? (
                 <Text className="font-[Inter] text-[18px] text-base font-[500] text-gray-600">
-                  {NO_ORDER_PROMPT[route.key]}
+                  {t(NO_ORDER_PROMPT[route.key])}
                 </Text>
               ) : (
                 <Text>{t("Pull down to refresh")}</Text>
@@ -187,10 +200,14 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
 
         <BottomSheetModal
           ref={bottomSheetModalRef}
-
-          // onChange={handleSheetChanges}
+          style={{ backgroundColor: appTheme.themeBackground }}
         >
-          <BottomSheetView style={style.contentContainer}>
+          <BottomSheetView
+            style={[
+              style.contentContainer,
+              { backgroundColor: appTheme.themeBackground },
+            ]}
+          >
             {selectedOrder?._id && (
               <SetTimeScreenAndAcceptOrder
                 id={selectedOrder?._id ?? ""}
@@ -208,7 +225,7 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
 export default HomeNewOrdersMain;
 
 const style = StyleSheet.create({
-  contaienr: {
+  container: {
     paddingBottom: Platform.OS === "android" ? 50 : 80,
   },
   gestureContainer: {

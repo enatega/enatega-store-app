@@ -1,16 +1,16 @@
 // Core
-import { useEffect, useState } from "react";
 import { Formik } from "formik";
+import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 // React Native
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 // Components
 import SpinnerComponent from "@/lib/ui/useable-components/spinner";
@@ -21,6 +21,7 @@ import { SignInSchema } from "@/lib/utils/schema";
 // Hook
 import useLogin from "@/lib/hooks/useLogin";
 // Interface
+import { useApptheme } from "@/lib/context/theme.context";
 import { ILoginInitialValues } from "@/lib/utils/interfaces";
 import { useTranslation } from "react-i18next";
 
@@ -35,6 +36,7 @@ const LoginScreen = () => {
   const [initialValues, setInitialValues] = useState(initial);
 
   // Hooks
+  const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const { onLogin, creds, isLogging } = useLogin();
 
@@ -60,10 +62,15 @@ const LoginScreen = () => {
 
   return (
     <KeyboardAvoidingView
-      className="flex-1 bg-white justify-center"
+      className="flex-1 justify-center h-full w-full"
+      style={{ backgroundColor: appTheme.themeBackground }}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <SafeAreaView>
+      <SafeAreaView
+        style={{
+          backgroundColor: appTheme.themeBackground,
+        }}
+      >
         <ScrollView
           showsVerticalScrollIndicator={false}
           // contentContainerStyle={{ height: height * 1 }}
@@ -78,21 +85,31 @@ const LoginScreen = () => {
               return (
                 <View className="mt-24 p-5 items-start gap-y-2">
                   {/* Icon */}
-                  <Icon name="envelope" size={30} color="#000" />
+                  <Icon name="envelope" size={30} color={appTheme.primary} />
 
                   {/* Title */}
-                  <Text className="text-center text-xl font-semibold  text-black">
+                  <Text
+                    className="text-center text-xl font-semibold"
+                    style={{ color: appTheme.fontMainColor }}
+                  >
                     {t("Enter Your Credentials to login")}
                   </Text>
-                  <Text className="text-center text-sm text-gray-500 mb-5">
+                  <Text
+                    className="text-center text-sm mb-5"
+                    style={{ color: appTheme.fontSecondColor }}
+                  >
                     {t("We'll check if you have an account")}
                   </Text>
 
                   {/* Email Input */}
 
-                  <View className="flex-row items-center border border-gray-300 rounded-lg px-3 bg-white mb-[-4]">
+                  <View
+                    className="flex-row items-center border rounded-lg px-3 bg-white mb-[-4]"
+                    style={{ backgroundColor: appTheme.themeBackground }}
+                  >
                     <TextInput
-                      className="flex-1 h-12 text-base text-black"
+                      className="flex-1 h-12 text-bas"
+                      style={{ color: appTheme.fontMainColor }}
                       placeholder={t("Email")}
                       keyboardType="email-address"
                       value={values.username}
@@ -101,15 +118,28 @@ const LoginScreen = () => {
                     />
                   </View>
                   {errors.username && (
-                    <Text className="mb-2 text-sm text-red-500">
+                    <Text
+                      style={{
+                        color: appTheme.textErrorColor,
+                        marginBottom: 8,
+                        fontSize: 14,
+                      }}
+                    >
                       {errors?.username}
                     </Text>
                   )}
 
                   {/* Password Input */}
-                  <View className="flex-row items-center border border-gray-300 rounded-lg px-3 bg-white mb-[-4]">
+                  <View
+                    className="flex-row items-center border rounded-lg px-3 mb-[-4]"
+                    style={{
+                      backgroundColor: appTheme.themeBackground,
+                      borderColor: appTheme.borderLineColor,
+                    }}
+                  >
                     <TextInput
-                      className="flex-1 h-12 text-base text-black"
+                      className="flex-1 h-12 text-base"
+                      style={{ color: appTheme.fontMainColor }}
                       placeholder={t("Password")}
                       secureTextEntry={!passwordVisible}
                       value={values.password}
@@ -123,25 +153,35 @@ const LoginScreen = () => {
                       <Icon
                         name={passwordVisible ? "eye-slash" : "eye"}
                         size={14}
-                        color="#000"
+                        color={appTheme.fontMainColor}
                       />
                     </TouchableOpacity>
                   </View>
                   {errors.password && (
-                    <Text className="mb-2 text-sm text-red-500">
+                    <Text
+                      style={{
+                        color: appTheme.textErrorColor,
+                        marginBottom: 8,
+                        fontSize: 14,
+                      }}
+                    >
                       {errors?.password}
                     </Text>
                   )}
 
                   {/* Login Button */}
                   <TouchableOpacity
-                    className="h-12 bg-green-500 rounded-3xl py-3 mt-10 w-full"
+                    className="h-12 rounded-3xl py-3 mt-10 w-full"
+                    style={{ backgroundColor: appTheme.primary }}
                     onPress={() => handleSubmit()}
                   >
                     {isLogging ? (
                       <SpinnerComponent />
                     ) : (
-                      <Text className="text-center text-white text-lg font-medium">
+                      <Text
+                        className="text-center  text-lg font-medium"
+                        style={{ color: appTheme.fontMainColor }}
+                      >
                         {t("Login")}
                       </Text>
                     )}

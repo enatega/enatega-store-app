@@ -1,13 +1,30 @@
+import { useApptheme } from "@/lib/context/theme.context";
 import { Stack } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 export default function StackLayout() {
+  // Hooks
+  const { t } = useTranslation();
+  const { appTheme } = useApptheme();
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: appTheme.screenBackground,
+        },
+        headerTitleStyle: {
+          color: appTheme.fontMainColor,
+        },
+      }}
+    >
       <Stack.Screen
         name="index"
-        options={{ headerShown: true, headerTitle: "Wallet" }}
+        options={{ headerShown: true, headerTitle: t("Wallet") }}
       />
-      <Stack.Screen name="(routes)/success" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="(routes)/success"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 }

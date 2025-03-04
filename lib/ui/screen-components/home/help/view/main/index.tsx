@@ -1,4 +1,8 @@
+import { useApptheme } from "@/lib/context/theme.context";
+import { FAQs } from "@/lib/utils/constants";
 import { FontAwesome } from "@expo/vector-icons";
+import * as Linking from "expo-linking";
+import { useFocusEffect } from "expo-router";
 import { useTranslation } from "react-i18next";
 import {
   FlatList,
@@ -9,56 +13,29 @@ import {
   View,
 } from "react-native";
 import HelpAccordian from "../../accordian";
-import { FAQs } from "@/lib/utils/constants";
-import { useFocusEffect } from "expo-router";
-import * as Linking from "expo-linking";
 
 export default function HelpMain() {
   const { t } = useTranslation();
-
-  const openWhatsAppStore = () => {
-    const appStoreUrl =
-      "https://apps.apple.com/app/whatsapp-messenger/id310633997";
-    const playStoreUrl =
-      "https://play.google.com/store/apps/details?id=com.whatsapp";
-
-    const storeUrl = Platform.OS === "ios" ? appStoreUrl : playStoreUrl;
-
-    Linking.canOpenURL(storeUrl)
-      .then((supported) => {
-        if (supported) {
-          Linking.openURL(storeUrl);
-        } else {
-          console.error("Cannot open URL:", storeUrl);
-        }
-      })
-      .catch((err) => console.error("Error opening URL:", err));
-  };
+  const { appTheme } = useApptheme();
 
   const openWhatsAppChat = async () => {
-    try {
-      const phoneNumber = "+1(307)776%E2%80%918999";
+    const phoneNumber = "+1(307)776%E2%80%918999";
 
-      if (Platform.OS === "android") {
-        const androidUrl = `whatsapp://send?phone=${phoneNumber}`;
-        const status = await Linking.openURL(androidUrl);
-
-        if (!status) {
-          openWhatsAppStore();
-        }
-      } else if (Platform.OS === "ios") {
-        const iosUrl = `https://wa.me/${phoneNumber.replace("+", "")}`;
-
+    if (Platform.OS === "android") {
+      const androidUrl = `whatsapp://send?phone=${phoneNumber}`;
+      Linking.openURL(androidUrl);
+    } else if (Platform.OS === "ios") {
+      const iosUrl = `https://wa.me/${phoneNumber.replace("+", "")}`;
+      try {
         const supported = await Linking.canOpenURL(iosUrl);
         if (supported) {
           await Linking.openURL(iosUrl);
         } else {
-          openWhatsAppStore();
+          console.log("WhatsApp is not installed on the device");
         }
+      } catch (error) {
+        console.error("Error opening URL", error);
       }
-    } catch (error) {
-      console.error("Error opening URL", error);
-      openWhatsAppStore();
     }
   };
 
@@ -69,33 +46,39 @@ export default function HelpMain() {
   });
 
   return (
-    <View className="flex-1 w-full bg-gray-100 dark:bg-gray-900">
+    <View
+      className="flex flex-col w-full h-[95%]"
+      style={{ backgroundColor: appTheme.themeBackground }}
+    >
       <StatusBar barStyle="light-content" />
 
-      <View className="h-[90%] p-4">
+      <View className="flex w-full h-full items-start justify-start p-4">
         <FlatList
           className="flex flex-col w-[99%] ml-1 overflow-x-hidden"
           data={FAQs}
           keyExtractor={(item) => "Faq-" + item.id}
-          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
           ItemSeparatorComponent={() => <View className="h-4" />}
           renderItem={({ item }) => (
             <HelpAccordian heading={t(item.heading)}>
-              <Text className="text-gray-600 dark:text-gray-300">
+              <Text style={{ color: appTheme.fontSecondColor }}>
                 {t(item.description)}
               </Text>
             </HelpAccordian>
           )}
         />
 
-        <View className="w-full flex items-center mt-4">
+        <View className="bottom-6 w-full flex items-center">
           <TouchableOpacity
             activeOpacity={0.7}
-            className="w-[90%] h-12 rounded-full bg-green-500 flex flex-row items-center justify-center gap-2 shadow-lg"
+            className="w-[90%] h-12 rounded-full flex flex-row items-center justify-center gap-2 shadow-lg"
+            style={{ backgroundColor: appTheme.primary }}
             onPress={openWhatsAppChat}
           >
-            <FontAwesome name="whatsapp" size={24} color="white" />
-            <Text className="text-white font-semibold text-lg">
+            <FontAwesome name="whatsapp" size={24} color={appTheme.white} />
+            <Text
+              style={{ color: appTheme.white, fontSize: 18, fontWeight: "600" }}
+            >
               {t("whatsAppText")}
             </Text>
           </TouchableOpacity>

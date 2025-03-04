@@ -1,41 +1,49 @@
+import { useUserContext } from "@/lib/context/global/user.context";
+import { useApptheme } from "@/lib/context/theme.context";
 import EarningBottomBar from "@/lib/ui/screen-components/earnings/view/bottom-bar";
 import { Stack, usePathname } from "expo-router";
-import { useUserContext } from "@/lib/context/global/user.context";
+import { useTranslation } from "react-i18next";
 
 export default function StackLayout() {
+  // Hooks
+  const { t } = useTranslation();
+  const { appTheme } = useApptheme();
   const { modalVisible, setModalVisible } = useUserContext();
   const pathname = usePathname();
   return (
     <>
       <Stack
         screenOptions={{
-          headerTitle: pathname.startsWith("/earnings/earnings-detail")
-            ? "Earnings Summary"
-            : pathname.startsWith("/earnings/earnings-order-details")
-              ? "Deliveries"
-              : "Earnings",
-          headerBackTitle: "",
-          contentStyle: {
-            backgroundColor: "white",
+          headerTitle:
+            pathname.startsWith("/earnings/earnings-detail") ?
+              t("Earnings Summary")
+            : pathname.startsWith("/earnings/earnings-order-details") ?
+              t("Deliveries")
+            : t("Earnings"),
+          headerBackTitle: t("Earnings"),
+          headerStyle: {
+            backgroundColor: appTheme.screenBackground,
+          },
+          headerTitleStyle: {
+            color: appTheme.fontMainColor,
           },
         }}
       >
         <Stack.Screen
           name="index"
-          options={{ headerShown: true, headerTitle: "Earnings Order Details" }}
+          options={{
+            headerShown: true,
+            headerTitle: t("Earnings"),
+          }}
         />
         <Stack.Screen
           name="(routes)"
           options={{
             headerShown: true,
-            headerTitle: "Earnings Order Details",
-            headerBackTitle: "Earnings",
+            headerTitle: t("Earnings Order Details"),
+            headerBackTitle: t("Earnings"),
           }}
         />
-        {/* <Stack.Screen
-          name="/(routes)/earnings-details"
-          options={{ headerShown: true, headerTitle: "Earning Details" }}
-        />*/}
       </Stack>
       <EarningBottomBar
         totalDeliveries={modalVisible.totalDeliveries}

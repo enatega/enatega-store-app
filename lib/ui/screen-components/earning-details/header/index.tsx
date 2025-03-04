@@ -12,9 +12,10 @@ import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 import { IStoreEarningsResponse } from "@/lib/utils/interfaces/rider-earnings.interface";
 
 // Core
+import { useApptheme } from "@/lib/context/theme.context";
 import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
+import { Text, View } from "react-native";
 
 export default function EarningDetailsHeader() {
   // States
@@ -24,6 +25,7 @@ export default function EarningDetailsHeader() {
   });
 
   // Hooks
+  const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const { userId } = useUserContext();
 
@@ -58,18 +60,52 @@ export default function EarningDetailsHeader() {
 
   if (isRiderEarningsLoading) return <SpinnerComponent />;
   return (
-    <View className="bg-gray-100 py-3 border border-gray-100">
-      <Text className="left-5 text-xl font-semibold">{t("Summary")}</Text>
+    <View
+      style={{
+        backgroundColor: appTheme.themeBackground,
+        borderColor: appTheme.borderLineColor,
+        borderWidth: 1,
+        paddingVertical: 12,
+      }}
+    >
+      <Text
+        className="left-5 text-xl font-semibold"
+        style={{ color: appTheme.fontMainColor }}
+      >
+        {t("Summary").length > 15
+          ? t("Summary").substring(0, 15)
+          : t("Summary")}
+      </Text>
       <View className="flex flex-row justify-between items-center p-5">
         <View className="flex gap-2 items-center">
-          <Text className="text-lg text-black">{t("Total Earnings")}</Text>
-          <Text className="font-semibold text-lg text-start self-start">
+          <Text className="text-lg" style={{ color: appTheme.fontMainColor }}>
+            {t("Total Earnings").length > 15
+              ? t("Total Earnings")
+              : t("Total Earnings")}
+          </Text>
+          <Text
+            className="font-semibold text-lg text-start self-start"
+            style={{ color: appTheme.fontMainColor }}
+          >
             ${storeEarningsGrandTotal.earnings}
           </Text>
         </View>
-        <View className="flex gap-2 items-center border-l-2 border-l-gray-200 pl-3">
-          <Text className="text-lg text-black">{t("Total Deliveries")}</Text>
-          <Text className="font-semibold text-lg text-start self-start">
+        <View
+          className="flex gap-2 items-center pl-3"
+          style={{
+            borderLeftWidth: 2,
+            borderLeftColor: appTheme.borderLineColor,
+          }}
+        >
+          <Text className="text-lg" style={{ color: appTheme.fontMainColor }}>
+            {t("Total Deliveries").length > 15
+              ? t("Total Deliveries")
+              : t("Total Deliveries")}
+          </Text>
+          <Text
+            className="font-semibold text-lg text-start self-start"
+            style={{ color: appTheme.fontMainColor }}
+          >
             {storeEarningsGrandTotal.totalDeliveries}
           </Text>
         </View>

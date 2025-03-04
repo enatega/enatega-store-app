@@ -1,4 +1,5 @@
 // Components
+import { useApptheme } from "@/lib/context/theme.context";
 import EarningDetailsMain from "@/lib/ui/screen-components/earning-details/view";
 
 // Interfaces
@@ -11,12 +12,19 @@ import { useState } from "react";
 import { SafeAreaView } from "react-native";
 
 export default function EarningsDetailScreen() {
+  // Hooks
+  const { appTheme } = useApptheme();
+
+  // States
   const [dateFilter, setDateFilter] = useState<IDateFilter>({
     startDate: "",
     endDate: "",
   });
   return (
-    <SafeAreaView className="bg-white">
+    <SafeAreaView
+      style={{ backgroundColor: appTheme.themeBackground }}
+      className="h-full w-full"
+    >
       <EarningDetailsMain
         dateFilter={dateFilter}
         setDateFilter={setDateFilter}

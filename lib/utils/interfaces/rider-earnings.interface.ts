@@ -29,6 +29,7 @@ export interface IStoreEarningsResponse {
 export interface IStoreEarningsOrderProps {
   amount: number;
   orderId: string;
+  isLast: boolean;
 }
 
 export interface IDateFilter {

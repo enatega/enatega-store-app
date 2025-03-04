@@ -1,24 +1,25 @@
-import { Drawer } from "expo-router/drawer";
-import { Colors } from "@/lib/utils/constants";
+import { useApptheme } from "@/lib/context/theme.context";
 import CustomDrawerContent from "@/lib/ui/screen-components/home/drawer/drawer-content";
 import {
-  LanguageIcon,
-  UserIcon,
-  HomeIcon,
   AboutIcon,
   CardIcon,
   HelpIcon,
-  PrivacyIcon,
+  HomeIcon,
+  LanguageIcon,
   PageIcon,
+  PrivacyIcon,
 } from "@/lib/ui/useable-components/svg";
-import { TouchableOpacity } from "react-native";
-import { DrawerActions } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
 import ScheduleIcon from "@/lib/ui/useable-components/svg/schedule";
+import { Colors } from "@/lib/utils/constants";
+import { Ionicons } from "@expo/vector-icons";
+import { DrawerActions } from "@react-navigation/native";
+import { Drawer } from "expo-router/drawer";
 import { useTranslation } from "react-i18next";
+import { TouchableOpacity } from "react-native";
 
 export default function DrawerMain() {
   // Hooks
+  const { appTheme } = useApptheme();
   const { t } = useTranslation();
   return (
     <Drawer
@@ -27,7 +28,7 @@ export default function DrawerMain() {
       screenOptions={({ navigation }) => ({
         swipeEnabled: false,
         lazy: true,
-
+        headerTintColor: appTheme.fontMainColor,
         headerLeft: () => {
           return (
             <TouchableOpacity
@@ -36,7 +37,7 @@ export default function DrawerMain() {
               }}
               style={{ marginLeft: 16 }}
             >
-              <Ionicons name="menu" size={24} color="black" />
+              <Ionicons name="menu" size={24} color={appTheme.primary} />
             </TouchableOpacity>
           );
         },
@@ -45,6 +46,9 @@ export default function DrawerMain() {
         drawerActiveTintColor: Colors.light.mainTextColor,
         headerShadowVisible: false,
         headerTitleAlign: "center",
+        headerStyle: {
+          backgroundColor: appTheme.screenBackground,
+        },
         drawerStatusBarAnimation: "slide",
         drawerItemStyle: {
           borderRadius: 0,
@@ -62,16 +66,6 @@ export default function DrawerMain() {
           title: t("Orders"),
           drawerIcon: ({ color, size }) => (
             <HomeIcon color={color} height={size} width={size} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="profile"
-        options={{
-          drawerLabel: t("Profile"),
-          title: t("Profile"),
-          drawerIcon: ({ color, size }) => (
-            <UserIcon color={color} height={size} width={size} />
           ),
         }}
       />

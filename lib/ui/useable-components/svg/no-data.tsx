@@ -1,24 +1,18 @@
+import { useApptheme } from "@/lib/context/theme.context";
+import { IconProps } from "@/lib/utils/interfaces/icon.interface";
 import { FC } from "react";
-import { Svg, Path } from "react-native-svg";
+import Svg, { Path } from "react-native-svg";
 
-interface IconProps {
-  width?: number;
-  height?: number;
-  color?: string;
-}
+const NoDataIcon: FC<IconProps> = ({ width = 16, height = 16 }) => {
+  const { appTheme } = useApptheme();
 
-const NoDataIcon: FC<IconProps> = ({
-  width = 16,
-  height = 16,
-  color = "#111827",
-}) => {
   return (
     <Svg
       // className="mx-auto mb-4 text-gray-400"
       width={width}
       height={height}
       fill="none"
-      stroke={color}
+      stroke={appTheme.fontMainColor}
       viewBox="0 0 24 24"
     >
       <Path

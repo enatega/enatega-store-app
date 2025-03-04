@@ -2,6 +2,7 @@
 import { UPDATE_BUSINESS_DETAILS } from "@/lib/apollo/mutations/rider.mutation";
 import { STORE_PROFILE } from "@/lib/apollo/queries/store.query";
 import { useUserContext } from "@/lib/context/global/user.context";
+import { useApptheme } from "@/lib/context/theme.context";
 import { CustomContinueButton } from "@/lib/ui/useable-components";
 
 // Hooks
@@ -12,16 +13,17 @@ import { Alert, KeyboardAvoidingView, ScrollView } from "react-native";
 
 // Core
 import {
-  TouchableWithoutFeedback,
+  Keyboard,
   Text,
   TextInput,
+  TouchableWithoutFeedback,
   View,
-  Keyboard,
 } from "react-native";
 import { showMessage } from "react-native-flash-message";
 
 export default function BankManagementMain() {
   // Hooks
+  const { appTheme } = useApptheme();
   const { t } = useTranslation();
 
   // Contexts
@@ -82,7 +84,9 @@ export default function BankManagementMain() {
           message: "",
         });
       },
-      refetchQueries: [{ query: STORE_PROFILE, variables: { id: userId } }],
+      refetchQueries: [
+        { query: STORE_PROFILE, variables: { restaurantId: userId } },
+      ],
     },
   );
 
@@ -135,7 +139,7 @@ export default function BankManagementMain() {
           bussinessDetails: {
             bankName: formData.bankName,
             accountName: formData.accountName,
-            accountNumber: Number(formData.accountNumber),
+            accountNumber: String(formData.accountNumber),
             accountCode: formData.accountCode,
           },
         },
@@ -176,11 +180,17 @@ export default function BankManagementMain() {
             contentContainerClassName={`flex flex-col justify-between items-center w-full ${keyboardVisible ? "h-full" : "h-[85%]"} my-6 px-4`}
           >
             <View className="flex flex-col w-full items-start justify-start gap-2">
-              <Text className="text-lg font-normal">{t("Bank Name")}</Text>
+              <Text
+                className="text-lg font-normal"
+                style={{ color: appTheme.fontMainColor }}
+              >
+                {t("Bank Name")}
+              </Text>
               <TextInput
                 className={`min-w-[100%] rounded-md border ${isError.field === "bankName" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
                 value={formData.bankName}
-                placeholder="Swiss Bank"
+                placeholder={t("Swiss Bank")}
+                style={{ color: appTheme.fontSecondColor }}
                 onChangeText={(val) => {
                   setIsError({ field: "", message: "" });
                   handleChange("bankName", val);
@@ -188,11 +198,17 @@ export default function BankManagementMain() {
               />
             </View>
             <View className="flex flex-col w-full items-start justify-start gap-2">
-              <Text className="text-lg font-normal">{t("Account Name")}</Text>
+              <Text
+                className="text-lg font-normal"
+                style={{ color: appTheme.fontMainColor }}
+              >
+                {t("Account Name")}
+              </Text>
               <TextInput
                 className={`min-w-[100%] rounded-md border ${isError.field === "accountName" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
                 value={formData.accountName}
-                placeholder="Micheal Kim"
+                placeholder={t("Account_Name_Placeholder")}
+                style={{ color: appTheme.fontSecondColor }}
                 onChangeText={(val) => {
                   setIsError({ field: "", message: "" });
                   handleChange("accountName", val);
@@ -200,11 +216,17 @@ export default function BankManagementMain() {
               />
             </View>
             <View className="flex flex-col w-full items-start justify-start gap-2">
-              <Text className="text-lg font-normal">IBAN / Swift / BSB</Text>
+              <Text
+                className="text-lg font-normal"
+                style={{ color: appTheme.fontMainColor }}
+              >
+                {t("IBAN_SWIFT_BSB")}
+              </Text>
               <TextInput
                 className={`min-w-[100%] rounded-md border ${isError.field === "accountCode" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
                 value={formData.accountCode}
-                placeholder="PK33"
+                placeholder={t("IBAN_Placeholder")}
+                style={{ color: appTheme.fontSecondColor }}
                 onChangeText={(val) => {
                   setIsError({ field: "", message: "" });
                   handleChange("accountCode", val);
@@ -212,11 +234,19 @@ export default function BankManagementMain() {
               />
             </View>
             <View className="flex flex-col w-full items-start justify-start gap-2">
-              <Text className="text-lg font-normal">{t("Account Number")}</Text>
+              <Text
+                className="text-lg font-normal"
+                style={{ color: appTheme.fontMainColor }}
+              >
+                {t("Account Number")}
+              </Text>
               <TextInput
                 className={`min-w-[100%] rounded-md border ${isError.field === "accountNumber" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
                 value={formData.accountNumber}
                 placeholder="7838246824682346"
+                keyboardType="number-pad"
+                textContentType="password"
+                style={{ color: appTheme.fontSecondColor }}
                 onChangeText={(val) => {
                   setIsError({ field: "", message: "" });
                   handleChange("accountNumber", val);
@@ -225,7 +255,7 @@ export default function BankManagementMain() {
             </View>
             <View>
               <CustomContinueButton
-                title={areBankDetailsLoading ? "Please wait..." : "Confirm"}
+                title={areBankDetailsLoading ? t("Please wait") : t("Confirm")}
                 onPress={handleSubmit}
               />
             </View>
