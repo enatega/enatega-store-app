@@ -261,6 +261,7 @@ export const ar = {
   "Theme": "المظهر",
   "Dark": "داكن",
   "Light": "فاتح",
+  "Your wallet is currently empty": "محفظتك فارغة حالياً",
   "You have an existing withdrawal request": "لديك طلب سحب قائم",
   "Please wait for it to be processed": "يرجى الانتظار حتى تتم معالجته",
   "You are currently unavailable": "أنت غير متاح حاليا",

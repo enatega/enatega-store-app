@@ -272,4 +272,5 @@ export const en = {
   "You have an existing withdrawal request": "You have an existing withdrawal request",
   "Please wait for it to be processed": "Please wait for it to be processed",
   "You are currently unavailable": "You are currently unavailable",
+  "Your wallet is currently empty": "Your wallet is currently empty",
 };

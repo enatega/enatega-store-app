@@ -268,7 +268,8 @@ export const km = {
   "Theme": "រូបរាង",
   "Dark": "ងងឹត",
   "Light": "ភ្លឺ",
+  "Your wallet is currently empty": "កាបូបរបស់អ្នកទទេនៅពេលនេះ",
   "You have an existing withdrawal request": "អ្នកមានសំណើដកប្រាក់ដែលមានស្រាប់",
   "Please wait for it to be processed": "សូមរង់ចាំវាត្រូវបានដំណើរការ",
-  "You are currently unavailable": "អ្នកមានស្រាប់នៅឡើយទេ"
+  "You are currently unavailable": "អ្នកមិនអាចប្រើបានទេនៅពេលនេះ"
 };

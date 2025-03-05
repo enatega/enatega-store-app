@@ -266,6 +266,7 @@ export const de = {
   "Theme": "Design",
   "Dark": "Dunkel",
   "Light": "Hell",
+  "Your wallet is currently empty": "Ihre Wallet ist derzeit leer",
   "You have an existing withdrawal request": "Sie haben bereits eine Auszahlungsanfrage",
   "Please wait for it to be processed": "Bitte warten Sie, bis diese bearbeitet wurde",
   "You are currently unavailable": "Sie sind derzeit nicht verfügbar",

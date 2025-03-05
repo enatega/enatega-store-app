@@ -271,7 +271,8 @@ export const he = {
   "Theme": "ערכת נושא",
   "Dark": "כהה",
   "Light": "בהיר",
+  "Your wallet is currently empty": "הארנק שלך ריק כרגע",
   "You have an existing withdrawal request": "יש לך בקשת משיכה קיימת",
   "Please wait for it to be processed": "אנא המתן לעיבוד הבקשה",
-  "You are currently unavailable": "אתה כעת לא זמין",
+  "You are currently unavailable": "אתה לא זמין כרגע",
 };

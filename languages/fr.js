@@ -288,7 +288,8 @@ export const fr = {
   "Theme": "Thème",
   "Dark": "Sombre",
   "Light": "Clair",
-  "You have an existing withdrawal request": "Vous avez déjà une demande de retrait en cours",
+  "Your wallet is currently empty": "Votre portefeuille est actuellement vide",
+  "You have an existing withdrawal request": "Vous avez une demande de retrait en cours",
   "Please wait for it to be processed": "Veuillez attendre qu'elle soit traitée",
   "You are currently unavailable": "Vous êtes actuellement indisponible",
 };
