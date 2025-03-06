@@ -3,13 +3,21 @@ import { loadDevMessages, loadErrorMessages } from "@apollo/client/dev";
 
 // Core
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as SecureStore from "expo-secure-store";
 import React, { useEffect, useState } from "react";
 
-// Interfaces§
+// Constants
 import { STORE_TOKEN } from "@/lib/utils/constants";
+
+// Interfaces
 import { IAuthContext, IAuthProviderProps } from "@/lib/utils/interfaces";
+
+// Expo
+import * as Localization from "expo-localization";
 import { router } from "expo-router";
+import * as SecureStore from "expo-secure-store";
+
+// I18n
+import { changeLanguage } from "i18next";
 
 export const AuthContext = React.createContext<IAuthContext>(
   {} as IAuthContext,
@@ -19,7 +27,9 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
   client,
   children,
 }) => {
-  // State
+  // States
+
+  const [isSelected, setIsSelected] = useState("");
   const [token, setToken] = useState<string>("");
   const setTokenAsync = async (token: string) => {
     await SecureStore.setItemAsync(STORE_TOKEN, token);
@@ -27,6 +37,21 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
     setToken(token);
   };
 
+  // Handlers
+  const handleSetCurrentLanguage = async () => {
+    try {
+      const lng = await AsyncStorage.getItem("lang");
+      const systemLanguage = Localization.locale.split("-")[0];
+
+      if (lng || systemLanguage) {
+        changeLanguage(systemLanguage ?? lng);
+        // changeLanguage(lng);
+        setIsSelected(systemLanguage ?? lng);
+      }
+    } catch (error) {
+      console.error({ error });
+    }
+  };
   const logout = async () => {
     try {
       client.stop();
@@ -59,6 +84,11 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
       await logout();
     }
   }
+
+  // UseEffects
+  useEffect(() => {
+    handleSetCurrentLanguage();
+  }, []);
   useEffect(() => {
     checkAuth();
   }, []);
@@ -74,6 +104,8 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
     token: token ?? "",
     logout,
     setTokenAsync,
+    isSelected,
+    setIsSelected,
   };
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;

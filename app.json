@@ -61,11 +61,7 @@
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION"
       ],
-      "package": "multivendor.enatega.restaurant",
-      "adaptiveIcon": {
-        "foregroundImage": "./lib/assets/images/icon.png",
-        "backgroundColor": "#ffffff"
-      }
+      "package": "multivendor.enatega.resturant"
     },
     "extra": {
       "eas": {

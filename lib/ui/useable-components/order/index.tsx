@@ -510,6 +510,34 @@ const Order = ({
                 </TouchableOpacity>
               </View>
             )}
+            {order.orderStatus === "ACCEPTED" && order.isPickedUp && (
+              <View className="flex-row gap-x-4 w-full mt-10">
+                {/* Hand Order to Rider */}
+                <TouchableOpacity
+                  className="flex-1 h-16 items-center justify-center rounded-[30px]"
+                  style={{
+                    backgroundColor: appTheme.primary,
+                    borderWidth: 1,
+                    borderColor: appTheme.primary,
+                  }}
+                  onPress={() => onPickupOrder()}
+                >
+                  {loadingPicked ? (
+                    <SpinnerComponent color={appTheme.white} />
+                  ) : (
+                    <Text
+                      style={{
+                        color: appTheme.white,
+                        fontSize: 18,
+                        fontWeight: "500",
+                      }}
+                    >
+                      {t("Deliver Order to Customer")}
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+            )}
           </>
         )}
       </View>

@@ -81,7 +81,7 @@ export default function EarningsMain() {
     }
   >(STORE_EARNINGS_GRAPH, {
     onError: (err) => {
-      console.error(err);
+      console.log(err);
       showMessage({
         message:
           err.graphQLErrors[0]?.message ||
@@ -155,7 +155,6 @@ export default function EarningsMain() {
 
   // If loading
   if (isStoreEarningsLoading) return <EarningScreenMainLoading />;
-  console.log(storeEarningsData?.storeEarningsGraph.earnings);
   return (
     <GestureHandlerRootView
       style={{ backgroundColor: appTheme.themeBackground }}

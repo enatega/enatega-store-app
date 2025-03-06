@@ -24,7 +24,6 @@ export default function EarningsOrderDetailsMain() {
   const { storeOrdersEarnings } = useUserContext();
 
   // UseEffects
-  // UseEffects
   useEffect(() => {
     if (storeOrdersEarnings?.length) {
       const sortedOrderEarnings = [...storeOrdersEarnings].sort(
