@@ -71,7 +71,7 @@ export default function ProfileHeader() {
             className={`font-semibold xs`}
             style={{
               color: appTheme.fontMainColor,
-              fontWeight: "semibolds",
+              fontWeight: "semibold",
               padding: 3,
               borderRadius: 70,
               backgroundColor: appTheme.themeBackground,

@@ -71,18 +71,21 @@ export default function EarningDetailsMain({
     setIsFiltering(true);
     // Validation
     if (!dateFilter.startDate) {
+      setIsFiltering(false);
       return showMessage({
         message: t("Please select a start date"),
         type: "danger",
         duration: 1000,
       });
     } else if (!dateFilter.endDate) {
+      setIsFiltering(false);
       return showMessage({
         message: t("Please select an end date"),
         type: "danger",
         duration: 1000,
       });
     } else if (new Date(dateFilter.startDate) > new Date(dateFilter.endDate)) {
+      setIsFiltering(false);
       return showMessage({
         message: t("Start date cannot be after end date"),
         type: "danger",
@@ -90,6 +93,7 @@ export default function EarningDetailsMain({
       });
     }
     if (!userId) {
+      setIsFiltering(false);
       return showMessage({
         message: t("Please log in to view your earnings"),
         type: "danger",

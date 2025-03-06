@@ -25,18 +25,12 @@ export default function ProtectedLayout() {
               headerTitleAlign: "center",
             }}
           >
-            <Stack.Screen
-              name="(tabs)"
-              options={{ headerShown: false }}
-            />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
               name="order-detail"
               options={{ headerShown: false }}
             />
-            <Stack.Screen
-              name="chat"
-              options={{ headerShown: false }}
-            />
+            <Stack.Screen name="chat" options={{ headerShown: false }} />
           </Stack>
 
           <StatusBar style="auto" />

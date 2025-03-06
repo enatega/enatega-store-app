@@ -104,8 +104,11 @@ const LoginScreen = () => {
                   {/* Email Input */}
 
                   <View
-                    className="flex-row items-center border rounded-lg px-3 bg-white mb-[-4]"
-                    style={{ backgroundColor: appTheme.themeBackground }}
+                    className="flex-row items-center border rounded-lg px-3  mb-[-4]"
+                    style={{
+                      backgroundColor: appTheme.themeBackground,
+                      borderColor: appTheme.borderLineColor,
+                    }}
                   >
                     <TextInput
                       className="flex-1 h-12 text-bas"

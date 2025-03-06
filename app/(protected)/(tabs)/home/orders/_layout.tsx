@@ -29,8 +29,9 @@ export default function Layout() {
           >
             <Text
               style={{
-                color:
-                  focused ? appTheme.fontMainColor : appTheme.fontSecondColor,
+                color: focused
+                  ? appTheme.fontMainColor
+                  : appTheme.fontSecondColor,
                 fontWeight: 500,
                 fontSize: 14,
                 fontFamily: "Inter",
@@ -86,27 +87,27 @@ export default function Layout() {
         name="index"
         options={{
           title:
-            t("New Orders").length > 13 ?
-              t("New Orders").substring(0, 13).concat("..")
-            : t("New Orders"),
+            t("New Orders").length > 13
+              ? t("New Orders").substring(0, 13).concat("..")
+              : t("New Orders"),
         }}
       />
       <Tabs.Screen
         name="processing"
         options={{
           title:
-            t("Processing").length > 13 ?
-              t("Processing").substring(0, 13).concat("..")
-            : t("Processing"),
+            t("Processing").length > 13
+              ? t("Processing").substring(0, 13).concat("..")
+              : t("Processing"),
         }}
       />
       <Tabs.Screen
         name="delivered"
         options={{
           title:
-            t("Delivered").length > 13 ?
-              t("Delivered").substring(0, 13).concat("..")
-            : t("Delivered"),
+            t("Delivered").length > 13
+              ? t("Delivered").substring(0, 13).concat("..")
+              : t("Delivered"),
         }}
       />
     </Tabs>

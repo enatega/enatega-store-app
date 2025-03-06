@@ -27,6 +27,14 @@ const ThemeContext = createContext<AppThemeContext>({
   appTheme: Colors.light,
 });
 
+function useApptheme() {
+  const context = useContext(ThemeContext);
+  if (context === undefined) {
+    throw new Error("useApptheme must be used within a AppThemeProvidor");
+  }
+  return context;
+}
+
 export default function AppThemeProvidor({
   children,
 }: {
@@ -88,4 +96,4 @@ export default function AppThemeProvidor({
   );
 }
 
-export const useApptheme = () => useContext(ThemeContext);
+export { useApptheme };

@@ -14,12 +14,11 @@ export default function StackLayout() {
     <>
       <Stack
         screenOptions={{
-          headerTitle:
-            pathname.startsWith("/earnings/earnings-detail") ?
-              t("Earnings Summary")
-            : pathname.startsWith("/earnings/earnings-order-details") ?
-              t("Deliveries")
-            : t("Earnings"),
+          headerTitle: pathname.startsWith("/earnings/earnings-detail")
+            ? t("Earnings Summary")
+            : pathname.startsWith("/earnings/earnings-order-details")
+              ? t("Deliveries")
+              : t("Earnings"),
           headerBackTitle: t("Earnings"),
           headerStyle: {
             backgroundColor: appTheme.screenBackground,

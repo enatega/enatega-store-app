@@ -63,8 +63,6 @@ function RootLayout() {
     return null;
   }
 
-  // Appearance.setColorScheme("light"); // Forces light mode
-
   return (
     <AppThemeProvidor>
       <AnimatedSplashScreen>

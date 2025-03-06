@@ -6,9 +6,7 @@
     "version": "1.1.37",
     "orientation": "portrait",
     "icon": "./lib/assets/images/icon.png",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -38,18 +36,13 @@
         }
       ]
     ],
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "multivendor.enatega.restaurant",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "$(PRODUCT_NAME) uses your location for features like finding orders nearby and tracking customer orders!",
-        "UIBackgroundModes": [
-          "remote-notification"
-        ],
+        "UIBackgroundModes": ["remote-notification"],
         "ITSAppUsesNonExemptEncryption": false,
         "UIRequiresFullScreen": true
       }
@@ -57,10 +50,7 @@
     "android": {
       "versionCode": 44,
       "googleServicesFile": "./google-services.json",
-      "permissions": [
-        "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION"
-      ],
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
       "package": "multivendor.enatega.resturant"
     },
     "extra": {

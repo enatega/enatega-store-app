@@ -28,6 +28,7 @@ import {
   STORE_BY_ID,
   STORE_CURRENT_WITHDRAW_REQUEST,
   STORE_EARNINGS,
+  STORE_PROFILE,
   STORE_TRANSACTIONS_HISTORY,
 } from "@/lib/apollo/queries/store.query";
 import { GraphQLError } from "graphql";
@@ -47,11 +48,11 @@ export default function WalletMain() {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
+  const { userId } = useUserContext();
 
   // States
   const [isBottomModalOpen, setIsBottomModalOpen] = useState(false);
   const [amountErrMsg, setAmountErrMsg] = useState("");
-  const { userId } = useUserContext();
 
   // Queries
   const { fetch: fetchStoreEarnings, loading: isStoreEarningsLoading } =
@@ -115,7 +116,6 @@ export default function WalletMain() {
           message: t("Successfully created the withdraw request"),
         });
         setIsBottomModalOpen(false);
-        // setIsModalVisible(true)
         router.push({
           pathname: "/(protected)/(tabs)/wallet/(routes)/success",
         });
@@ -139,6 +139,16 @@ export default function WalletMain() {
         {
           query: STORE_BY_ID,
           variables: { id: userId },
+          fetchPolicy: "network-only",
+        },
+        {
+          query: STORE_CURRENT_WITHDRAW_REQUEST,
+          variables: { storeId: userId },
+          fetchPolicy: "network-only",
+        },
+        {
+          query: STORE_PROFILE,
+          variables: { userId: userId },
           fetchPolicy: "network-only",
         },
         {
@@ -168,6 +178,7 @@ export default function WalletMain() {
       await createWithDrawRequest({
         variables: {
           requestAmount: withdrawAmount,
+          userId: userId,
         },
       });
     } catch (error) {

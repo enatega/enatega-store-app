@@ -1,10 +1,10 @@
-// Contexts
-import { ConfigurationContext } from "@/lib/context/global/configuration.context";
-
 // Hooks
 import { useApptheme } from "@/lib/context/theme.context";
 import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+
+// Contexts
+import { ConfigurationContext } from "@/lib/context/global/configuration.context";
 
 // Core
 import { Text, View } from "react-native";
