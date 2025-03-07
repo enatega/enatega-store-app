@@ -91,8 +91,12 @@ export default function HelpMain() {
           keyExtractor={(item) => "Faq-" + item.id}
           showsHorizontalScrollIndicator={false}
           ItemSeparatorComponent={() => <View className="h-4" />}
-          renderItem={({ item }) => (
-            <HelpAccordian heading={t(item.heading)}>
+          renderItem={({ item, index }) => (
+            <HelpAccordian
+              heading={t(item.heading)}
+              key={index + "_accordian_help"}
+              isLast={index === FAQs.length - 1}
+            >
               <Text style={{ color: appTheme.fontSecondColor }}>
                 {t(item.description)}
               </Text>
