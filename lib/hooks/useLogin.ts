@@ -69,6 +69,7 @@ const useLogin = () => {
       // Get notification permisssions
       const settings = await Notifications.getPermissionsAsync();
       let notificationPermissions = { ...settings };
+      console.log({ notificationPermissions, isDevice: Device.isDevice });
 
       // Request notification permissions if not granted or not provisional on iOS
       if (
@@ -101,6 +102,7 @@ const useLogin = () => {
           })
         ).data;
       }
+
       // Perform mutation with the obtained data
       const { data } = await login({
         variables: {
@@ -116,7 +118,7 @@ const useLogin = () => {
         await AsyncStorage.setItem(
           "store-id",
           data.restaurantLogin?.restaurantId ||
-            storeLoginData.restaurantLogin?.restaurantId,
+            storeLoginData.restaurantLogin?.restaurantId
         );
       }
     } catch (err) {
