@@ -1,16 +1,15 @@
 import { Href, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Constants from "expo-constants";
 
 // Constant
 import useNotification from "@/lib/hooks/useNotification";
 import { ROUTES, STORE_TOKEN } from "@/lib/utils/constants";
+import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 
 function App() {
   const notificationRef = useRef(true);
-  // console.log("isAvailable",isAvailable)
-  const [, setNotificationStatus] = useState(false);
   const router = useRouter();
   const {
     restaurantData,
@@ -66,35 +65,46 @@ function App() {
 
   useEffect(() => {
     const checkToken = async () => {
-      if (restaurantData) {
-        setNotificationStatus(restaurantData?.restaurant?.enableNotification);
+      try {
+        if (!restaurantData) return;
+
         if (
           restaurantData?.restaurant?.enableNotification &&
           notificationRef?.current
         ) {
           const permissionStatus = await getPermission();
           if (permissionStatus.granted) {
-            setNotificationStatus(true);
             const token = (
               await getExpoPushToken({
                 projectId: Constants?.expoConfig?.extra?.eas.projectId,
               })
             ).data;
-            sendTokenToBackend({ variables: { token, isEnabled: true } });
+
+            try {
+              sendTokenToBackend({
+                variables: { token, isEnabled: true },
+                onCompleted: () => {
+                  init();
+                },
+                onError: () => {
+                  init();
+                },
+              });
+            } catch (err) {
+              init();
+            }
           }
         }
         notificationRef.current = false;
+      } catch (err) {
+        console.log({ checkToken: JSON.stringify(err, null, 2) });
+        init();
       }
     };
     checkToken();
   }, [restaurantData]);
 
-  useEffect(() => {
-    init();
-    // onInitNotification();
-  }, []);
-
-  return <></>;
+  return <SpinnerComponent />;
 }
 
 export default App;
