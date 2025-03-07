@@ -1,19 +1,32 @@
 import { useUserContext } from "@/lib/context/global/user.context";
 import { useApptheme } from "@/lib/context/theme.context";
 import { usePathname } from "expo-router";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useTranslation } from "react-i18next";
 export default function UnavailableStatus() {
   // Hooks
   const { t } = useTranslation();
   const { appTheme } = useApptheme();
   const pathName = usePathname();
   const { dataProfile } = useUserContext();
-  const insets = useSafeAreaInsets(); // Get Safe Area Insets
+  const insets = useSafeAreaInsets();
+
+  // States
+  const [isAvailable, setIsAvailable] = useState(true);
+
+  // UseEffects
+  useEffect(() => {
+    if (dataProfile?.isAvailable) {
+      setIsAvailable(true);
+    } else {
+      setIsAvailable(false);
+    }
+  }, [dataProfile?.isAvailable]);
 
   if (pathName === "/login") return null;
-  if (dataProfile?.isAvailable) return null;
+  if (isAvailable) return null;
 
   return (
     <View

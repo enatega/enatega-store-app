@@ -1,6 +1,6 @@
-import { Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useContext } from "react";
+import { Platform } from "react-native";
 
 // Hooks
 import useOrders from "./useOrders";
@@ -20,12 +20,12 @@ export default function usePrintOrder() {
   const { printer, setPrinter } = useContext(Restaurant.Context);
   const { loading, error, data } = useOrders();
 
-  const printOrder = async (id) => {
+  const printOrder = async (id: string) => {
     if (!loading && !error) {
       const order = data.restaurantOrders.find(
         (order: IOrder) => order._id === id,
       );
-      const result = await printAsync(
+      await printAsync(
         { ...order, currencySymbol: configuration?.currencySymbol },
         Platform.OS === "ios" ? (printer ? printer.url : null) : null,
       );

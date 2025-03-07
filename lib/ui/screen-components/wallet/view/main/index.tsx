@@ -218,12 +218,12 @@ export default function WalletMain() {
   else
     return (
       <View
-        className="flex flex-col justify-between items-center  w-[100%] h-[100%]"
+        className="flex flex-col justify-between items-center -top-8  w-[100%] h-[110%] "
         style={{ backgroundColor: appTheme.themeBackground }}
       >
         {storeProfileData?.restaurant ? (
           <View
-            className="flex-1 flex flex-column gap-4 items-center"
+            className="flex-1 flex flex-column gap-2 items-center top-0"
             style={{ backgroundColor: appTheme.themeBackground }}
           >
             <Text
@@ -250,9 +250,9 @@ export default function WalletMain() {
           <NoRecordFound msg={t("Your wallet is currently empty")} />
         )}
         {storeCurrentWithdrawRequestData?.storeCurrentWithdrawRequest && (
-          <View className="w-full h-full flex-1">
+          <View className="w-full h-40 -top-8">
             <Text
-              className="font-bold text-lg p-5 mt-4"
+              className="font-bold text-lg p-5 mt-2"
               style={{
                 backgroundColor: appTheme.themeBackground,
                 color: appTheme.fontMainColor,

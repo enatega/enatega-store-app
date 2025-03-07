@@ -17,15 +17,27 @@ export default function EarningsDetailStacks({
 }: IStoreEarningsDetailProps) {
   const { appTheme } = useApptheme();
 
-  const renderItem = ({ item: earning }: { item: IStoreEarnings }) => (
+  const renderItem = ({
+    item: earning,
+    index,
+  }: {
+    item: IStoreEarnings;
+    index: number;
+  }) => (
     <EarningStack
       totalDeliveries={earning.earningsArray.length}
-      date={earning.date}
+      date={earning._id}
       earning={earning.totalEarningsSum}
       _id={earning._id}
       earningsArray={earning.earningsArray}
       totalOrderAmount={earning.totalOrderAmount}
       setModalVisible={setModalVisible}
+      isLast={
+        storeEarningsData?.storeEarningsGraph?.earnings
+          ? storeEarningsData?.storeEarningsGraph?.earnings?.length - 1 ===
+            index
+          : false
+      }
     />
   );
 
@@ -44,7 +56,7 @@ export default function EarningsDetailStacks({
     >
       <FlatList
         data={storeEarningsData?.storeEarningsGraph?.earnings ?? []}
-        renderItem={renderItem}
+        renderItem={({ item, index }) => renderItem({ item, index })}
         scrollEnabled={
           (storeEarningsData?.storeEarningsGraph?.earnings?.length ?? 0) > 0
         }

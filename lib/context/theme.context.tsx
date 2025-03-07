@@ -1,3 +1,12 @@
+// Hooks
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+
 // Constants
 import { Colors } from "@/lib/utils/constants";
 
@@ -8,15 +17,6 @@ import { app_theme } from "@/lib/utils/types/theme";
 // React Native AsyncStorage
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// Hooks
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-
 // Core
 import { Appearance } from "react-native";
 
@@ -26,14 +26,6 @@ const ThemeContext = createContext<AppThemeContext>({
   toggleTheme: () => {},
   appTheme: Colors.light,
 });
-
-function useApptheme() {
-  const context = useContext(ThemeContext);
-  if (context === undefined) {
-    throw new Error("useApptheme must be used within a AppThemeProvidor");
-  }
-  return context;
-}
 
 export default function AppThemeProvidor({
   children,
@@ -83,10 +75,14 @@ export default function AppThemeProvidor({
   }, [colorScheme]);
 
   useEffect(() => {
-    Appearance.addChangeListener(({ colorScheme }) => {
+    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
       setCurrentTheme(colorScheme as app_theme);
     });
-  }, [Appearance]);
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
   return (
     <ThemeContext.Provider
       value={{ toggleTheme, currentTheme: currentTheme, appTheme }}
@@ -96,4 +92,4 @@ export default function AppThemeProvidor({
   );
 }
 
-export { useApptheme };
+export const useApptheme = () => useContext(ThemeContext);

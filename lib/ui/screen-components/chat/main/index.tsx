@@ -10,17 +10,9 @@ import { Bubble, GiftedChat, Send } from "react-native-gifted-chat";
 export default function ChatMain() {
   // Hooks
   const { t } = useTranslation();
-  const {
-    messages,
-    onSend,
-    // image,
-    // setImage,
-    inputMessage,
-    setInputMessage,
-    profile,
-  } = useChatScreen();
-
   const { appTheme } = useApptheme();
+  const { messages, onSend, inputMessage, setInputMessage, profile } =
+    useChatScreen();
 
   // const filterImages = (src) => {
   //   setImage(image.filter((item) => item !== src));

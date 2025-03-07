@@ -17,6 +17,7 @@ export default function EarningStack({
   earningsArray,
   totalDeliveries,
   totalOrderAmount,
+  isLast,
 }: IEarningStackProps) {
   // Hooks
   const { appTheme } = useApptheme();
@@ -41,6 +42,7 @@ export default function EarningStack({
       style={{
         borderBottomColor: appTheme.borderLineColor,
         backgroundColor: appTheme.themeBackground,
+        marginBottom: isLast ? 300 : 0,
       }}
     >
       <View className="flex flex-row gap-2 items-center flex-2">

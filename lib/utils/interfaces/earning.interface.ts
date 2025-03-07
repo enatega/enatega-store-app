@@ -13,6 +13,7 @@ export interface IEarningStackProps {
   earningsArray: IStoreEarningsArray[];
   totalDeliveries: number;
   totalOrderAmount: number;
+  isLast?: boolean;
 }
 export interface IEarningBottomProps {
   totalEarnings: number;
