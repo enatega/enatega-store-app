@@ -1,11 +1,13 @@
 import { useApptheme } from "@/lib/context/theme.context";
 import { Text, TouchableOpacity } from "react-native";
 import { TouchableOpacityProps } from "react-native-gesture-handler";
+import CustomSpinner from "../custom-spinner";
 
 export default function CustomContinueButton({
   title,
+  isLoading,
   ...props
-}: { title: string } & TouchableOpacityProps) {
+}: { title: string; isLoading?: boolean } & TouchableOpacityProps) {
   // Hooks
   const { appTheme } = useApptheme();
   return (
@@ -14,9 +16,13 @@ export default function CustomContinueButton({
       className="py-5 min-w-96 lg:px-52 rounded-[80] items-center justify-center my-auto mt-8"
       style={{ backgroundColor: appTheme.primary }}
     >
-      <Text className="text-[16px]" style={{ color: appTheme.black }}>
-        {title}
-      </Text>
+      {isLoading ? (
+        <CustomSpinner />
+      ) : (
+        <Text className="text-[16px]" style={{ color: appTheme.black }}>
+          {title}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 }
