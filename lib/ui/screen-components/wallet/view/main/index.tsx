@@ -10,7 +10,6 @@ import {
 // Components
 import {
   CustomContinueButton,
-  FlashMessageComponent,
   NoRecordFound,
 } from "@/lib/ui/useable-components";
 import WithdrawModal from "../form";
@@ -43,6 +42,7 @@ import { Alert, FlatList, Text, View } from "react-native";
 import { useApptheme } from "@/lib/context/theme.context";
 import { WalletScreenMainLoading } from "@/lib/ui/skeletons";
 import { useTranslation } from "react-i18next";
+import { showMessage } from "react-native-flash-message";
 
 export default function WalletMain() {
   // Hooks
@@ -112,22 +112,23 @@ export default function WalletMain() {
   const [createWithDrawRequest, { loading: createWithDrawRequestLoading }] =
     useMutation(CREATE_WITHDRAW_REQUEST, {
       onCompleted: () => {
-        FlashMessageComponent({
+        setIsBottomModalOpen(false);
+        showMessage({
           message: t("Successfully created the withdraw request"),
         });
-        setIsBottomModalOpen(false);
         router.push({
           pathname: "/(protected)/(tabs)/wallet/(routes)/success",
         });
       },
       onError: (error) => {
+        setIsBottomModalOpen(false);
         Alert.alert(t("Warning"), error.message, [
           {
             onPress: () => setIsBottomModalOpen(false),
             text: t("Okay"),
           },
         ]);
-        FlashMessageComponent({
+        return showMessage({
           message:
             error.message ||
             error.graphQLErrors[0].message ||

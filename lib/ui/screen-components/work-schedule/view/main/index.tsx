@@ -1,6 +1,5 @@
 import { UPDATE_WORK_SCHEDULE } from "@/lib/apollo/mutations/work-schedule";
 import { useUserContext } from "@/lib/context/global/user.context";
-import { FlashMessageComponent } from "@/lib/ui/useable-components";
 import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 
 import { WorkSchedule } from "@/lib/utils/interfaces";
@@ -22,6 +21,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import { showMessage } from "react-native-flash-message";
 import { Switch } from "react-native-switch";
 
 const { width } = Dimensions.get("window");
@@ -82,16 +82,16 @@ export default function WorkScheduleMain() {
       ],
     },
   );
+
   // Handler
   const onHandlerSubmit = async () => {
     try {
       // Check for overlapping slots
       const overlapping_day = hasOverlappingSlots(schedule ?? []);
       if (overlapping_day) {
-        FlashMessageComponent({
+        return showMessage({
           message: `${t(overlapping_day)} ${t("has overlapping slots")}.`,
         });
-        return;
       }
 
       // Clean the work schedule before submitting
@@ -108,20 +108,21 @@ export default function WorkScheduleMain() {
         !cleanedWorkSchedule.length ||
         cleanedWorkSchedule.every((day) => !day.times.length)
       ) {
-        FlashMessageComponent({ message: t("No valid slots to submit") });
-        return;
+        return showMessage({
+          message: t("No valid slots to submit"),
+        });
       }
 
       const scheduleInput = transformSchedule(cleanedWorkSchedule);
       await updateSchedule({
         variables: scheduleInput,
         onCompleted: () => {
-          FlashMessageComponent({
+          showMessage({
             message: t("Work Schedule has been updated successfully"),
           });
         },
         onError: (error) => {
-          FlashMessageComponent({
+          return showMessage({
             message:
               error.graphQLErrors[0]?.message ?? t("Something went wrong"),
           });
@@ -129,9 +130,6 @@ export default function WorkScheduleMain() {
       });
     } catch (err) {
       const error = err as ApolloError;
-      // FlashMessageComponent({
-      //   message: error?.message || t("Something went wrong"),
-      // });
       console.log(error);
     }
   };
@@ -248,20 +246,18 @@ export default function WorkScheduleMain() {
           ? `${slot.endTime[0] || "00"}:${slot.endTime[1] || "00"}`
           : slot.endTime;
         if (slot?.endTime && newTime >= timeToMinutes(endTimeStr)) {
-          FlashMessageComponent({
+          return showMessage({
             message: "Start time must be earlier than end time",
           });
-          return;
         }
       } else if (type === "endTime") {
         const startTimeStr = Array.isArray(slot.startTime)
           ? `${slot.startTime[0] || "00"}:${slot.startTime[1] || "00"}`
           : slot.startTime;
         if (slot?.startTime && newTime <= timeToMinutes(startTimeStr)) {
-          FlashMessageComponent({
+          return showMessage({
             message: "End time must be greater than start time",
           });
-          return;
         }
       }
 
@@ -290,10 +286,9 @@ export default function WorkScheduleMain() {
       );
 
       if (isOverlapping) {
-        FlashMessageComponent({
+        return showMessage({
           message: t("Time slot overlaps with another existing slot"),
         });
-        return;
       }
 
       // Update the time value as an array [HH, MM]
