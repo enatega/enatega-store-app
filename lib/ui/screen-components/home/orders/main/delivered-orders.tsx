@@ -38,7 +38,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
     loading,
     error,
     data,
-    activeOrders,
+    deliveredOrders,
     refetch,
     currentTab,
     setCurrentTab,
@@ -55,7 +55,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
     if (loading || error) return;
     if (!data) return;
 
-    const _orders = activeOrders?.filter((order) =>
+    const _orders = deliveredOrders?.filter((order) =>
       currentTab === ORDER_DISPATCH_TYPE[0]
         ? !order?.isPickedUp
         : order?.isPickedUp,
@@ -93,6 +93,10 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
         options={ORDER_DISPATCH_TYPE}
         selectedTab={currentTab}
         setSelectedTab={setCurrentTab}
+        deliveryCount={
+          deliveredOrders?.filter((o) => !o.isPickedUp).length ?? 0
+        }
+        pickupCount={deliveredOrders?.filter((o) => !!o.isPickedUp).length ?? 0}
       />
 
       {error ? (

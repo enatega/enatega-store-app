@@ -93,6 +93,12 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
         options={ORDER_DISPATCH_TYPE}
         selectedTab={currentTab}
         setSelectedTab={setCurrentTab}
+        deliveryCount={
+          processingOrders?.filter((o) => !o.isPickedUp).length ?? 0
+        }
+        pickupCount={
+          processingOrders?.filter((o) => !!o.isPickedUp).length ?? 0
+        }
       />
 
       {error ? (
