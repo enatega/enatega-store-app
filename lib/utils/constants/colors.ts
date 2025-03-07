@@ -39,6 +39,7 @@ export const Colors = {
     gray: "#e5e5e5",
     screenBackground: "#FFFF",
     linkColor: "#0084d4",
+    error: "#ef4444",
   },
   dark: {
     primary: "#A5C616", // Slightly darker green to avoid too much brightness
@@ -75,5 +76,6 @@ export const Colors = {
     tabNaviatorBackground: "#1F2937",
     gray: "#e5e5e5",
     linkColor: "#0084d4",
+    error: "#ef4444",
   },
 };

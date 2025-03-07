@@ -114,6 +114,8 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
         >
           <CustomTab
             options={ORDER_DISPATCH_TYPE}
+            deliveryCount={activeOrders?.filter((o) => !o.isPickedUp).length}
+            pickupCount={activeOrders?.filter((o) => !!o.isPickedUp).length}
             selectedTab={currentTab}
             setSelectedTab={setCurrentTab}
           />
