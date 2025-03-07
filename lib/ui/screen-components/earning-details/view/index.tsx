@@ -37,34 +37,43 @@ export default function EarningDetailsMain({
   // States
   const [isFiltering, setIsFiltering] = useState(false);
   const [isDateFilterVisible, setIsDateFilterVisible] = useState(false);
+  const [pagination] = useState({
+    page: 1,
+    limit: 10,
+  });
 
   // Contexts
   const { setModalVisible, userId } = useUserContext();
 
   // Queries
-  const {
-    loading: isStoreEarningsLoading,
-    data: storeEarningsData,
-    refetch: fetchStoreEarnings,
-  } = useQuery(STORE_EARNINGS_GRAPH, {
-    onError: (err) => {
-      console.error(err);
-      showMessage({
-        message:
-          err.graphQLErrors[0].message ||
-          err.networkError?.message ||
-          "Failed to fetch earnings",
-        type: "danger",
-        duration: 1000,
-      });
-    },
-    variables: {
-      storeId: userId ?? "",
-    },
-  }) as QueryResult<
-    IStoreEarningsResponse | undefined,
-    { storeId: string; startDate?: string; endDate?: string }
-  >;
+  const { loading: isStoreEarningsLoading, refetch: fetchStoreEarnings } =
+    useQuery(STORE_EARNINGS_GRAPH, {
+      onError: (err) => {
+        console.error(err);
+        showMessage({
+          message:
+            err.graphQLErrors[0].message ||
+            err.networkError?.message ||
+            "Failed to fetch earnings",
+          type: "danger",
+          duration: 1000,
+        });
+      },
+      variables: {
+        storeId: userId ?? "",
+        page: pagination.page,
+        limit: pagination.limit,
+      },
+    }) as QueryResult<
+      IStoreEarningsResponse | undefined,
+      {
+        storeId: string;
+        startDate?: string;
+        endDate?: string;
+        page: number;
+        limit: number;
+      }
+    >;
 
   // Handlers
   async function handleDateFilterSubmit() {
@@ -106,6 +115,8 @@ export default function EarningDetailsMain({
       storeId: userId,
       startDate: dateFilter.startDate,
       endDate: dateFilter.endDate,
+      page: pagination.page,
+      limit: pagination.limit,
     });
 
     setIsFiltering(false);
@@ -126,11 +137,7 @@ export default function EarningDetailsMain({
         refetchDeafult={fetchStoreEarnings}
       />
       <EarningDetailsHeader />
-      <EarningsDetailStacks
-        isStoreEarningsLoading={isStoreEarningsLoading}
-        storeEarningsData={storeEarningsData}
-        setModalVisible={setModalVisible}
-      />
+      <EarningsDetailStacks setModalVisible={setModalVisible} userId={userId} />
     </View>
   );
 }
