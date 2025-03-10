@@ -78,11 +78,12 @@ const CustomDrawerHeader = () => {
                 ?.substring(0, 1)
                 ?.toUpperCase()
                 ?.concat(
-                  "",
-                  dataProfile?.name
-                    ?.split(" ")[1]
-                    ?.substring(0, 1)
-                    ?.toUpperCase(),
+                  dataProfile?.name?.split(" ")[1]?.length > 0
+                    ? dataProfile?.name
+                        ?.split(" ")[1]
+                        ?.substring(0, 1)
+                        ?.toUpperCase()
+                    : "",
                 ) ?? "JS"}
             </Text>
           )}

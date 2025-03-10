@@ -9,7 +9,7 @@ import { CustomContinueButton } from "@/lib/ui/useable-components";
 import { useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, KeyboardAvoidingView, ScrollView } from "react-native";
+import { Alert, FlatList, KeyboardAvoidingView } from "react-native";
 
 // Core
 import {
@@ -174,93 +174,112 @@ export default function BankManagementMain() {
   return (
     <View>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <KeyboardAvoidingView>
-          <ScrollView
-            scrollEnabled={keyboardVisible}
-            contentContainerClassName={`flex flex-col justify-between items-center w-full ${keyboardVisible ? "h-full" : "h-[85%]"} my-6 px-4`}
-          >
-            <View className="flex flex-col w-full items-start justify-start gap-2">
-              <Text
-                className="text-lg font-normal"
-                style={{ color: appTheme.fontMainColor }}
+        {/* <ScrollView
+          scrollEnabled={keyboardVisible}
+          contentContainerClassName={`flex flex-col justify-between items-center w-full ${keyboardVisible ? "h-[100%]" : "h-[85%]"} my-6 px-4`}
+        > */}
+        <KeyboardAvoidingView
+          className={`${keyboardVisible ? "h-[100%] " : "h-[85%"}`}
+        >
+          <FlatList
+            data={[
+              <View
+                className={`flex flex-col w-full items-start justify-start  gap-2`}
               >
-                {t("Bank Name")}
-              </Text>
-              <TextInput
-                className={`min-w-[100%] rounded-md border ${isError.field === "bankName" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
-                value={formData.bankName}
-                placeholder={t("Swiss Bank")}
-                style={{ color: appTheme.fontSecondColor }}
-                onChangeText={(val) => {
-                  setIsError({ field: "", message: "" });
-                  handleChange("bankName", val);
-                }}
-              />
-            </View>
-            <View className="flex flex-col w-full items-start justify-start gap-2">
-              <Text
-                className="text-lg font-normal"
-                style={{ color: appTheme.fontMainColor }}
-              >
-                {t("Account Name")}
-              </Text>
-              <TextInput
-                className={`min-w-[100%] rounded-md border ${isError.field === "accountName" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
-                value={formData.accountName}
-                placeholder={t("Account_Name_Placeholder")}
-                style={{ color: appTheme.fontSecondColor }}
-                onChangeText={(val) => {
-                  setIsError({ field: "", message: "" });
-                  handleChange("accountName", val);
-                }}
-              />
-            </View>
-            <View className="flex flex-col w-full items-start justify-start gap-2">
-              <Text
-                className="text-lg font-normal"
-                style={{ color: appTheme.fontMainColor }}
-              >
-                {t("IBAN_SWIFT_BSB")}
-              </Text>
-              <TextInput
-                className={`min-w-[100%] rounded-md border ${isError.field === "accountCode" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
-                value={formData.accountCode}
-                placeholder={t("IBAN_Placeholder")}
-                style={{ color: appTheme.fontSecondColor }}
-                onChangeText={(val) => {
-                  setIsError({ field: "", message: "" });
-                  handleChange("accountCode", val);
-                }}
-              />
-            </View>
-            <View className="flex flex-col w-full items-start justify-start gap-2">
-              <Text
-                className="text-lg font-normal"
-                style={{ color: appTheme.fontMainColor }}
-              >
-                {t("Account Number")}
-              </Text>
-              <TextInput
-                className={`min-w-[100%] rounded-md border ${isError.field === "accountNumber" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
-                value={formData.accountNumber}
-                placeholder="7838246824682346"
-                keyboardType="number-pad"
-                textContentType="password"
-                style={{ color: appTheme.fontSecondColor }}
-                onChangeText={(val) => {
-                  setIsError({ field: "", message: "" });
-                  handleChange("accountNumber", val);
-                }}
-              />
-            </View>
-            <View>
-              <CustomContinueButton
-                title={areBankDetailsLoading ? t("Please wait") : t("Confirm")}
-                onPress={handleSubmit}
-              />
-            </View>
-          </ScrollView>
+                <Text
+                  className="text-lg font-normal"
+                  style={{
+                    color: appTheme.fontMainColor,
+                  }}
+                >
+                  {t("Bank Name")}
+                </Text>
+                <TextInput
+                  className={`min-w-[100%] rounded-md border ${isError.field === "bankName" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2 `}
+                  value={formData.bankName}
+                  placeholder={t("Swiss Bank")}
+                  style={{
+                    color: appTheme.fontSecondColor,
+                  }}
+                  placeholderTextColor={appTheme.fontSecondColor}
+                  onChangeText={(val) => {
+                    setIsError({ field: "", message: "" });
+                    handleChange("bankName", val);
+                  }}
+                />
+              </View>,
+              <View className="flex flex-col w-full items-start justify-start gap-2">
+                <Text
+                  className="text-lg font-normal"
+                  style={{ color: appTheme.fontMainColor }}
+                >
+                  {t("Account Name")}
+                </Text>
+                <TextInput
+                  className={`min-w-[100%] rounded-md border ${isError.field === "accountName" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
+                  value={formData.accountName}
+                  placeholder={t("Account_Name_Placeholder")}
+                  style={{ color: appTheme.fontSecondColor }}
+                  placeholderTextColor={appTheme.fontSecondColor}
+                  onChangeText={(val) => {
+                    setIsError({ field: "", message: "" });
+                    handleChange("accountName", val);
+                  }}
+                />
+              </View>,
+              <View className="flex flex-col w-full items-start justify-start gap-2">
+                <Text
+                  className="text-lg font-normal"
+                  style={{ color: appTheme.fontMainColor }}
+                >
+                  {t("IBAN_SWIFT_BSB")}
+                </Text>
+                <TextInput
+                  className={`min-w-[100%] rounded-md border ${isError.field === "accountCode" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
+                  value={formData.accountCode}
+                  placeholder={t("IBAN_Placeholder")}
+                  style={{ color: appTheme.fontSecondColor }}
+                  placeholderTextColor={appTheme.fontSecondColor}
+                  onChangeText={(val) => {
+                    setIsError({ field: "", message: "" });
+                    handleChange("accountCode", val);
+                  }}
+                />
+              </View>,
+              <View className="flex flex-col w-full items-start justify-start gap-2">
+                <Text
+                  className="text-lg font-normal"
+                  style={{ color: appTheme.fontMainColor }}
+                >
+                  {t("Account Number")}
+                </Text>
+                <TextInput
+                  className={`min-w-[100%] rounded-md border ${isError.field === "accountNumber" ? "border-red-600 border-2" : "border-2 border-gray-300"} p-3 my-2`}
+                  value={formData.accountNumber}
+                  placeholder="7838246824682346"
+                  keyboardType="number-pad"
+                  textContentType="password"
+                  style={{ color: appTheme.fontSecondColor }}
+                  placeholderTextColor={appTheme.fontSecondColor}
+                  onChangeText={(val) => {
+                    setIsError({ field: "", message: "" });
+                    handleChange("accountNumber", val);
+                  }}
+                />
+              </View>,
+              <View>
+                <CustomContinueButton
+                  title={
+                    areBankDetailsLoading ? t("Please wait") : t("Confirm")
+                  }
+                  onPress={handleSubmit}
+                />
+              </View>,
+            ]}
+            renderItem={({ item }) => item}
+          />
         </KeyboardAvoidingView>
+        {/* </ScrollView> */}
       </TouchableWithoutFeedback>
     </View>
   );

@@ -62,7 +62,11 @@ const RootLayout = () => {
           href: "/(protected)/(tabs)/home/orders",
           title: t("Home"),
           tabBarIcon: ({ color }) => (
-            <HomeIcon color={color} width={25} height={25} />
+            <HomeIcon
+              color={color}
+              width={25}
+              height={25}
+            />
           ),
         }}
       />
@@ -71,7 +75,11 @@ const RootLayout = () => {
         options={{
           title: t("Wallet"),
           tabBarIcon: ({ color }) => (
-            <WalletIcon color={color} width={25} height={25} />
+            <WalletIcon
+              color={color}
+              width={25}
+              height={25}
+            />
           ),
         }}
       />
@@ -80,7 +88,11 @@ const RootLayout = () => {
         options={{
           title: t("Earnings"),
           tabBarIcon: ({ color }) => (
-            <CurrencyIcon color={color} width={25} height={25} />
+            <CurrencyIcon
+              color={color}
+              width={25}
+              height={25}
+            />
           ),
         }}
       />
@@ -89,7 +101,11 @@ const RootLayout = () => {
         options={{
           title: t("Profile"),
           tabBarIcon: ({ color }) => (
-            <PersonIcon color={color} width={25} height={25} />
+            <PersonIcon
+              color={color}
+              width={25}
+              height={25}
+            />
           ),
         }}
       />

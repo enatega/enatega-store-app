@@ -24,4 +24,6 @@ export interface IEarningBottomProps {
 export interface IStoreEarningsDetailProps {
   setModalVisible: Dispatch<SetStateAction<IStoreEarnings & { bool: boolean }>>;
   userId: string | undefined | null;
+  storeEarnings?: IStoreEarnings[];
+  isLoading: boolean;
 }
