@@ -30,6 +30,7 @@ export interface IStoreEarningsOrderProps {
   amount: number;
   orderId: string;
   isLast: boolean;
+  date: string;
 }
 
 export interface IDateFilter {

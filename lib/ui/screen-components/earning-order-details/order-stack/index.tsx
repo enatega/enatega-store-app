@@ -23,6 +23,7 @@ export default function OrderStack({
         </Text>
         <Text style={{ color: appTheme.fontMainColor }}>{t("Payment")}</Text>
       </View>
+
       <View className="flex flex-col gap-3 p-1 justify-center  items-end">
         <Text className="bg-[#D1FAE5] rounded-xl p-1 text-[#065F46]">
           {t("Completed")}

@@ -4,13 +4,14 @@ import { View } from "react-native";
 // Interfaces
 import {
   IEarningDetailsMainProps,
+  IStoreEarnings,
   IStoreEarningsResponse,
 } from "@/lib/utils/interfaces/rider-earnings.interface";
 
 // Hooks
 import { useUserContext } from "@/lib/context/global/user.context";
 import { QueryResult, useQuery } from "@apollo/client";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 // GraphQL
@@ -37,6 +38,9 @@ export default function EarningDetailsMain({
   // States
   const [isFiltering, setIsFiltering] = useState(false);
   const [isDateFilterVisible, setIsDateFilterVisible] = useState(false);
+  const [storeEarnings, setStoreEarnings] = useState<IStoreEarnings[]>(
+    [] as IStoreEarnings[],
+  );
 
   // Contexts
   const { setModalVisible, userId } = useUserContext();
@@ -117,6 +121,20 @@ export default function EarningDetailsMain({
     setIsFiltering(false);
     setIsDateFilterVisible(false);
   }
+  const sortedEarnings = useMemo(() => {
+    if (!storeEarningsGraphData?.storeEarningsGraph?.earnings?.length)
+      return [];
+    return [...storeEarningsGraphData.storeEarningsGraph.earnings].sort(
+      (a, b) =>
+        new Date(String(a._id)).setHours(0, 0, 0, 0) -
+        new Date(String(b._id)).setHours(23, 59, 59, 999),
+    );
+  }, [storeEarningsGraphData?.storeEarningsGraph.earnings]);
+  useEffect(() => {
+    if (sortedEarnings.length) {
+      setStoreEarnings(sortedEarnings);
+    }
+  }, [sortedEarnings.length]);
   // If loading
   if (isStoreEarningsLoading || isFiltering)
     return <EarningsSummaryMainLoading />;
@@ -135,7 +153,7 @@ export default function EarningDetailsMain({
       <EarningsDetailStacks
         setModalVisible={setModalVisible}
         userId={userId}
-        storeEarnings={storeEarningsGraphData?.storeEarningsGraph.earnings}
+        storeEarnings={storeEarnings}
         isLoading={isStoreEarningsLoading}
       />
     </View>

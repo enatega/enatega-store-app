@@ -21,11 +21,6 @@ export default function EarningsDetailStacks({
   storeEarnings,
   isLoading,
 }: IStoreEarningsDetailProps) {
-  // const [pagination, setPagination] = useState({
-  //   page: 1,
-  //   limit: 10,
-  // });
-
   // Hooks
   const { appTheme } = useApptheme();
 
@@ -54,16 +49,6 @@ export default function EarningsDetailStacks({
     return <NoRecordFound />;
   };
 
-  // Handlers
-  // const handleScrollEndDrag = () => {
-  //   if (storeEarningsData?.storeEarningsGraph?.earnings?.length === 0) return;
-  //   if (isStoreEarningsLoading) return;
-  //   setPagination((prev) => ({
-  //     ...prev,
-  //     page: prev.page + 1,
-  //   }));
-  // };
-
   return (
     <View
       className="h-full border-t-2"
@@ -76,21 +61,6 @@ export default function EarningsDetailStacks({
         data={storeEarnings ?? []}
         renderItem={({ item, index }) => renderItem({ item, index })}
         scrollEnabled={true}
-        // onScrollEndDrag={handleScrollEndDrag}
-        // onMomentumScrollEnd={handleScrollEndDrag}
-        // ListFooterComponent={() => {
-        //   if (isLoadingMore && storeEarningsDataState?.length > 0) {
-        //     return (
-        //       <View>
-        //         {[...Array(3)].map((_, index) => (
-        //           <EarningStackSkeleton key={index + "skeleton"} />
-        //         ))}
-        //       </View>
-        //     );
-        //   } else {
-        //     return <Fragment></Fragment>;
-        //   }
-        // }}
         showsVerticalScrollIndicator={false}
         className="scroll-smooth"
         keyExtractor={(item) => item._id}

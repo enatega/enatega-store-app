@@ -51,6 +51,7 @@ export default function EarningsOrderDetailsMain() {
               key={info.index}
               amount={info.item.totalOrderAmount}
               orderId={info.item.orderDetails.orderId}
+              date={info.item.date}
             />
           );
         }}
