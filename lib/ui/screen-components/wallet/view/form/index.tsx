@@ -92,8 +92,8 @@ export default function WithdrawModal({
             value={withdrawAmount}
             onChangeText={(val) => handleTextChange(val)}
             maxLength={9999999}
-            onFocus={() => setModalMargintTop(120)}
-            onBlur={() => setModalMargintTop(480)}
+            onFocus={() => setModalMargintTop(100)}
+            onBlur={() => setModalMargintTop(40)}
             placeholder="$0.00"
             keyboardType="number-pad"
             returnKeyType="done"
