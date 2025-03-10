@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
@@ -7,15 +7,23 @@ import { Platform } from "react-native";
 
 // API
 import { GET_RESTAURANT_BY_ID, SAVE_TOKEN } from "@/lib/api/graphql";
-import { useUserContext } from "../context/global/user.context";
 
 export default function useNotification() {
-  const { userId } = useUserContext();
-  const { data } = useQuery(GET_RESTAURANT_BY_ID, {
+  const [getStore, { data }] = useLazyQuery(GET_RESTAURANT_BY_ID, {
     fetchPolicy: "network-only",
-    variables: { id: userId },
+    // variables: { id: userId },
   });
   const [sendTokenToBackend, { loading }] = useMutation(SAVE_TOKEN);
+
+  // Handler
+  const onGetStoreData = async () => {
+    const userId = await AsyncStorage.getItem("store-id");
+
+    if (!userId) return;
+    await getStore({
+      variables: { id: userId },
+    });
+  };
 
   // Notification Handler
   async function registerForPushNotificationsAsync() {
@@ -48,7 +56,7 @@ export default function useNotification() {
         handleNotification: async () => {
           return {
             shouldShowAlert: false, // Prevent the app from closing
-            shouldPlaySound: true,
+            shouldPlaySound: false,
             shouldSetBadge: false,
           };
         },
@@ -72,7 +80,7 @@ export default function useNotification() {
         // });
         // const order = data.riderOrders.find((o: IOrder) => o._id === _id);
         const lastNotificationHandledId = await AsyncStorage.getItem(
-          "@lastNotificationHandledId",
+          "@lastNotificationHandledId"
         );
         if (lastNotificationHandledId === _id) return;
         await AsyncStorage.setItem("@lastNotificationHandledId", _id);
@@ -80,7 +88,7 @@ export default function useNotification() {
         // router.setParams({ itemId: _id, order });
       }
     },
-    [],
+    []
   );
 
   // Use Effect
@@ -94,6 +102,7 @@ export default function useNotification() {
   useEffect(() => {
     registerForPushNotification();
     registerForPushNotificationsAsync();
+    onGetStoreData();
   }, []);
 
   return {

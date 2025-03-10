@@ -68,7 +68,7 @@ export interface IStoreProfile {
   deliveryTime: string;
   tax: number;
   notificationToken: string;
-  enableNotification: string;
+  enableNotification: boolean;
   shopType: string;
   tags: string;
   phone: string;
