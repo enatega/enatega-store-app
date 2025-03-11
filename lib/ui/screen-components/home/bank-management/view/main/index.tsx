@@ -172,7 +172,7 @@ export default function BankManagementMain() {
   }, [dataProfile?.bussinessDetails, areBankDetailsLoading]);
 
   return (
-    <View>
+    <View className="w-[95%] mx-auto">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         {/* <ScrollView
           scrollEnabled={keyboardVisible}
