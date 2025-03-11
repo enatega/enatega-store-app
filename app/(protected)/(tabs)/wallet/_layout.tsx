@@ -15,6 +15,7 @@ export default function StackLayout() {
         headerTitleStyle: {
           color: appTheme.fontMainColor,
         },
+        headerTitleAlign: "center",
       }}
     >
       <Stack.Screen

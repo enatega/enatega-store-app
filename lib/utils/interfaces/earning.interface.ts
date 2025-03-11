@@ -2,7 +2,6 @@ import { Dispatch, SetStateAction } from "react";
 import {
   IStoreEarnings,
   IStoreEarningsArray,
-  IStoreEarningsResponse,
 } from "./rider-earnings.interface";
 
 export interface IEarningStackProps {
@@ -13,6 +12,7 @@ export interface IEarningStackProps {
   earningsArray: IStoreEarningsArray[];
   totalDeliveries: number;
   totalOrderAmount: number;
+  isLast?: boolean;
 }
 export interface IEarningBottomProps {
   totalEarnings: number;
@@ -22,7 +22,8 @@ export interface IEarningBottomProps {
 }
 
 export interface IStoreEarningsDetailProps {
-  storeEarningsData: IStoreEarningsResponse | undefined;
-  isStoreEarningsLoading: boolean;
   setModalVisible: Dispatch<SetStateAction<IStoreEarnings & { bool: boolean }>>;
+  userId: string | undefined | null;
+  storeEarnings?: IStoreEarnings[];
+  isLoading: boolean;
 }

@@ -5,13 +5,13 @@ import { useApptheme } from "@/lib/context/theme.context";
 
 // Expo
 import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
+import { StatusBar, StatusBarStyle } from "expo-status-bar";
 
 // React Native Flash Message
 import FlashMessage from "react-native-flash-message";
 
 export default function ProtectedLayout() {
-  const { appTheme } = useApptheme();
+  const { appTheme, currentTheme } = useApptheme();
   return (
     <RestaurantProvider.Provider>
       <SoundProvider>
@@ -38,8 +38,11 @@ export default function ProtectedLayout() {
               options={{ headerShown: false }}
             />
           </Stack>
-
-          <StatusBar style="auto" />
+          {/* <Stack.Screen
+            name="bank-management"
+            options={{ headerShown: true }}
+          /> */}
+          <StatusBar style={currentTheme as StatusBarStyle} />
           <FlashMessage position="bottom" />
         </>
       </SoundProvider>

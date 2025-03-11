@@ -1,4 +1,5 @@
 // Utils
+import { useApptheme } from "@/lib/context/theme.context";
 import { CustomContinueButton } from "@/lib/ui/useable-components";
 import { Colors } from "@/lib/utils/constants";
 
@@ -30,6 +31,7 @@ export default function EarningDetailsDateFilter({
 }: IEarningDetailsMainProps & IEarningsDateFilterProps) {
   // Hooks
   const { t } = useTranslation();
+  const { appTheme } = useApptheme();
 
   // Handlers
   const handleDayPress = (day: DateData) => {
@@ -108,7 +110,9 @@ export default function EarningDetailsDateFilter({
         >
           <View className="flex flex-row items-center gap-2">
             <Ionicons name="filter" color={Colors.light.primary} size={25} />
-            <Text>{t("Date Filter")}</Text>
+            <Text style={{ color: appTheme.fontMainColor }}>
+              {t("Date Filter")}
+            </Text>
           </View>
         </TouchableOpacity>
         {(dateFilter.startDate || dateFilter.endDate) && (
@@ -123,7 +127,9 @@ export default function EarningDetailsDateFilter({
           >
             <View className="flex flex-row items-center gap-2">
               <Ionicons name="remove-sharp" color={"red"} size={25} />
-              <Text>{t("Clear Filters")}</Text>
+              <Text style={{ color: appTheme.fontSecondColor }}>
+                {t("Clear Filters")}
+              </Text>
             </View>
           </TouchableOpacity>
         )}

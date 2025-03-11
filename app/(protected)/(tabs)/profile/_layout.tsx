@@ -9,6 +9,7 @@ export default function ProfileLayout() {
   return (
     <Stack
       screenOptions={{
+        headerTitleAlign: "center",
         headerStyle: {
           backgroundColor: appTheme.screenBackground,
         },

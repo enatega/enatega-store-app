@@ -21,12 +21,10 @@ export default function StackLayout() {
               t("Deliveries")
             : t("Earnings"),
           headerBackTitle: t("Earnings"),
-          headerStyle: {
-            backgroundColor: appTheme.screenBackground,
-          },
-          headerTitleStyle: {
-            color: appTheme.fontMainColor,
-          },
+          headerTitleAlign: "center",
+          headerTintColor: appTheme.fontMainColor,
+          headerTitleStyle: { color: appTheme.fontMainColor },
+          headerStyle: { backgroundColor: appTheme.themeBackground },
         }}
       >
         <Stack.Screen

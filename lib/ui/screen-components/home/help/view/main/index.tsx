@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { showMessage } from "react-native-flash-message";
 import HelpAccordian from "../../accordian";
 
 export default function HelpMain() {
@@ -19,26 +20,57 @@ export default function HelpMain() {
   const { appTheme } = useApptheme();
 
   const openWhatsAppChat = async () => {
-    const phoneNumber = "+1(307)776%E2%80%918999";
+    const phoneNumber = "+14232600408";
 
     if (Platform.OS === "android") {
       const androidUrl = `whatsapp://send?phone=${phoneNumber}`;
-      Linking.openURL(androidUrl);
+
+      try {
+        const supported = Linking.canOpenURL(androidUrl);
+        console.log("🚀 ~ openWhatsAppChat ~ supported:", supported);
+        if (supported) {
+          await Linking.openURL(androidUrl);
+          console.log("WhatsApp opened successfully");
+        }
+      } catch (error) {
+        console.log(error);
+        return showMessage({
+          type: "info",
+          message:
+            "WhatsApp is not installed on the device, please install it first and then try again.",
+          duration: 1000,
+          animated: true,
+          animationDuration: 500,
+        });
+      }
     } else if (Platform.OS === "ios") {
       const iosUrl = `https://wa.me/${phoneNumber.replace("+", "")}`;
+      console.log("Attempting to open URL:", iosUrl);
+
       try {
-        const supported = await Linking.canOpenURL(iosUrl);
+        const supported = Linking.canOpenURL(iosUrl);
+        console.log("Can open URL:", supported);
+
         if (supported) {
           await Linking.openURL(iosUrl);
         } else {
-          console.log("WhatsApp is not installed on the device");
+          console.log(
+            "WhatsApp is not installed on the device, please install it first and then try again.",
+          );
         }
       } catch (error) {
-        console.error("Error opening URL", error);
+        console.log(error);
+        return showMessage({
+          type: "info",
+          message:
+            "WhatsApp is not installed on the device, please install it first and then try again.",
+          duration: 1000,
+          animated: true,
+          animationDuration: 500,
+        });
       }
     }
   };
-
   useFocusEffect(() => {
     if (Platform.OS === "android") {
       StatusBar.setBackgroundColor("white");
@@ -59,8 +91,12 @@ export default function HelpMain() {
           keyExtractor={(item) => "Faq-" + item.id}
           showsHorizontalScrollIndicator={false}
           ItemSeparatorComponent={() => <View className="h-4" />}
-          renderItem={({ item }) => (
-            <HelpAccordian heading={t(item.heading)}>
+          renderItem={({ item, index }) => (
+            <HelpAccordian
+              heading={t(item.heading)}
+              key={index + "_accordian_help"}
+              isLast={index === FAQs.length - 1}
+            >
               <Text style={{ color: appTheme.fontSecondColor }}>
                 {t(item.description)}
               </Text>

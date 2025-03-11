@@ -28,7 +28,7 @@ export default function WithdrawModal({
 
   // States
   const [withdrawAmount, setWithdrawAmount] = useState("");
-  const [ModalMarginTop, setModalMargintTop] = useState(480);
+  const [ModalMarginTop, setModalMargintTop] = useState(400);
 
   // Handlers
   function handleTextChange(val: string) {
@@ -45,7 +45,7 @@ export default function WithdrawModal({
       }}
       useNativeDriver={true}
       style={{
-        maxHeight: 370,
+        maxHeight: 400,
         width: "100%",
         height: "100%",
         backgroundColor: appTheme.themeBackground,
@@ -92,8 +92,8 @@ export default function WithdrawModal({
             value={withdrawAmount}
             onChangeText={(val) => handleTextChange(val)}
             maxLength={9999999}
-            onFocus={() => setModalMargintTop(200)}
-            onBlur={() => setModalMargintTop(480)}
+            onFocus={() => setModalMargintTop(100)}
+            onBlur={() => setModalMargintTop(40)}
             placeholder="$0.00"
             keyboardType="number-pad"
             returnKeyType="done"

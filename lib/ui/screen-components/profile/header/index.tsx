@@ -52,15 +52,16 @@ export default function ProfileHeader() {
                 }}
               >
                 {dataProfile?.name
-                  .split(" ")[0]
-                  .substring(0, 1)
-                  .toUpperCase()
-                  .concat(
-                    "",
-                    dataProfile?.name
-                      .split(" ")[1]
-                      .substring(0, 1)
-                      .toUpperCase(),
+                  ?.split(" ")[0]
+                  ?.substring(0, 1)
+                  ?.toUpperCase()
+                  ?.concat(
+                    dataProfile?.name?.split(" ")[1]?.length > 0
+                      ? dataProfile?.name
+                          ?.split(" ")[1]
+                          ?.substring(0, 1)
+                          ?.toUpperCase()
+                      : "",
                   ) ?? "JS"}
               </Text>
             )}
@@ -71,7 +72,7 @@ export default function ProfileHeader() {
             className={`font-semibold xs`}
             style={{
               color: appTheme.fontMainColor,
-              fontWeight: "semibolds",
+              fontWeight: "semibold",
               padding: 3,
               borderRadius: 70,
               backgroundColor: appTheme.themeBackground,

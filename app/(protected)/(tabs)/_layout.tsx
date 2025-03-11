@@ -59,6 +59,7 @@ const RootLayout = () => {
       <Tabs.Screen
         name="home"
         options={{
+          href: "/(protected)/(tabs)/home/orders",
           title: t("Home"),
           tabBarIcon: ({ color }) => (
             <HomeIcon

@@ -10,7 +10,6 @@ import {
 // Components
 import {
   CustomContinueButton,
-  FlashMessageComponent,
   NoRecordFound,
 } from "@/lib/ui/useable-components";
 import WithdrawModal from "../form";
@@ -28,6 +27,7 @@ import {
   STORE_BY_ID,
   STORE_CURRENT_WITHDRAW_REQUEST,
   STORE_EARNINGS,
+  STORE_PROFILE,
   STORE_TRANSACTIONS_HISTORY,
 } from "@/lib/apollo/queries/store.query";
 import { GraphQLError } from "graphql";
@@ -42,16 +42,17 @@ import { Alert, FlatList, Text, View } from "react-native";
 import { useApptheme } from "@/lib/context/theme.context";
 import { WalletScreenMainLoading } from "@/lib/ui/skeletons";
 import { useTranslation } from "react-i18next";
+import { showMessage } from "react-native-flash-message";
 
 export default function WalletMain() {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
+  const { userId } = useUserContext();
 
   // States
   const [isBottomModalOpen, setIsBottomModalOpen] = useState(false);
   const [amountErrMsg, setAmountErrMsg] = useState("");
-  const { userId } = useUserContext();
 
   // Queries
   const { fetch: fetchStoreEarnings, loading: isStoreEarningsLoading } =
@@ -111,23 +112,23 @@ export default function WalletMain() {
   const [createWithDrawRequest, { loading: createWithDrawRequestLoading }] =
     useMutation(CREATE_WITHDRAW_REQUEST, {
       onCompleted: () => {
-        FlashMessageComponent({
+        setIsBottomModalOpen(false);
+        showMessage({
           message: t("Successfully created the withdraw request"),
         });
-        setIsBottomModalOpen(false);
-        // setIsModalVisible(true)
         router.push({
           pathname: "/(protected)/(tabs)/wallet/(routes)/success",
         });
       },
       onError: (error) => {
+        setIsBottomModalOpen(false);
         Alert.alert(t("Warning"), error.message, [
           {
             onPress: () => setIsBottomModalOpen(false),
             text: t("Okay"),
           },
         ]);
-        FlashMessageComponent({
+        return showMessage({
           message:
             error.message ||
             error.graphQLErrors[0].message ||
@@ -139,6 +140,16 @@ export default function WalletMain() {
         {
           query: STORE_BY_ID,
           variables: { id: userId },
+          fetchPolicy: "network-only",
+        },
+        {
+          query: STORE_CURRENT_WITHDRAW_REQUEST,
+          variables: { storeId: userId },
+          fetchPolicy: "network-only",
+        },
+        {
+          query: STORE_PROFILE,
+          variables: { userId: userId },
           fetchPolicy: "network-only",
         },
         {
@@ -168,6 +179,7 @@ export default function WalletMain() {
       await createWithDrawRequest({
         variables: {
           requestAmount: withdrawAmount,
+          userId: userId,
         },
       });
     } catch (error) {
@@ -207,12 +219,12 @@ export default function WalletMain() {
   else
     return (
       <View
-        className="flex flex-col justify-between items-center  w-[100%] h-[100%]"
+        className="flex flex-col justify-between items-center -top-8  w-[100%] h-[110%] "
         style={{ backgroundColor: appTheme.themeBackground }}
       >
         {storeProfileData?.restaurant ? (
           <View
-            className="flex-1 flex flex-column gap-4 items-center"
+            className="flex-1 flex flex-column gap-2 items-center top-0"
             style={{ backgroundColor: appTheme.themeBackground }}
           >
             <Text
@@ -239,9 +251,9 @@ export default function WalletMain() {
           <NoRecordFound msg={t("Your wallet is currently empty")} />
         )}
         {storeCurrentWithdrawRequestData?.storeCurrentWithdrawRequest && (
-          <View className="w-full h-full flex-1">
+          <View className="w-full h-40 -top-8">
             <Text
-              className="font-bold text-lg p-5 mt-4"
+              className="font-bold text-lg p-5 mt-2"
               style={{
                 backgroundColor: appTheme.themeBackground,
                 color: appTheme.fontMainColor,

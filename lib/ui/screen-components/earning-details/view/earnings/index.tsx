@@ -6,31 +6,46 @@ import { IStoreEarningsDetailProps } from "@/lib/utils/interfaces/earning.interf
 import { IStoreEarnings } from "@/lib/utils/interfaces/rider-earnings.interface";
 
 // Components
-import { useApptheme } from "@/lib/context/theme.context";
 import NoRecordFound from "@/lib/ui/useable-components/no-record-found";
 import EarningStack from "../../../earnings/view/earnings-stack";
 
+// Apollo
+
+// React Native Flash Message
+
+// Hooks
+import { useApptheme } from "@/lib/context/theme.context";
+
 export default function EarningsDetailStacks({
-  storeEarningsData,
-  isStoreEarningsLoading,
   setModalVisible,
+  storeEarnings,
+  isLoading,
 }: IStoreEarningsDetailProps) {
+  // Hooks
   const { appTheme } = useApptheme();
 
-  const renderItem = ({ item: earning }: { item: IStoreEarnings }) => (
+  const renderItem = ({
+    item: earning,
+    index,
+  }: {
+    item: IStoreEarnings;
+    index: number;
+  }) => (
     <EarningStack
       totalDeliveries={earning.earningsArray.length}
-      date={earning.date}
+      date={earning._id}
       earning={earning.totalEarningsSum}
       _id={earning._id}
       earningsArray={earning.earningsArray}
       totalOrderAmount={earning.totalOrderAmount}
       setModalVisible={setModalVisible}
+      isLast={storeEarnings ? storeEarnings?.length - 1 === index : false}
     />
   );
 
+  // Empty Component
   const ListEmptyComponent = () => {
-    if (isStoreEarningsLoading) return null;
+    if (isLoading) return null;
     return <NoRecordFound />;
   };
 
@@ -43,11 +58,9 @@ export default function EarningsDetailStacks({
       }}
     >
       <FlatList
-        data={storeEarningsData?.storeEarningsGraph?.earnings ?? []}
-        renderItem={renderItem}
-        scrollEnabled={
-          (storeEarningsData?.storeEarningsGraph?.earnings?.length ?? 0) > 0
-        }
+        data={storeEarnings ?? []}
+        renderItem={({ item, index }) => renderItem({ item, index })}
+        scrollEnabled={true}
         showsVerticalScrollIndicator={false}
         className="scroll-smooth"
         keyExtractor={(item) => item._id}

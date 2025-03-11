@@ -63,13 +63,11 @@ function RootLayout() {
     return null;
   }
 
-  // Appearance.setColorScheme("light"); // Forces light mode
-
   return (
-    <AppThemeProvidor>
-      <AnimatedSplashScreen>
-        <InternetProvider>
-          <ApolloProvider client={client}>
+    <ApolloProvider client={client}>
+      <AppThemeProvidor>
+        <AnimatedSplashScreen>
+          <InternetProvider>
             <ConfigurationProvider>
               <AuthProvider client={client}>
                 <UserProvider>
@@ -78,12 +76,12 @@ function RootLayout() {
                 </UserProvider>
               </AuthProvider>
             </ConfigurationProvider>
-          </ApolloProvider>
-        </InternetProvider>
-      </AnimatedSplashScreen>
-      <StatusBar style="auto" />
-      <FlashMessage position="center" />
-    </AppThemeProvidor>
+          </InternetProvider>
+        </AnimatedSplashScreen>
+        <StatusBar style="auto" />
+        <FlashMessage position="center" />
+      </AppThemeProvidor>
+    </ApolloProvider>
   );
 }
 

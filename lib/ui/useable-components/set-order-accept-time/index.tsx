@@ -80,7 +80,10 @@ const SetTimeScreenAndAcceptOrder = ({
             >
               <Text
                 className={`text-[Inter] text-center items-center text-[14px] font-medium`}
-                style={{ color: appTheme.fontMainColor }}
+                style={{
+                  color:
+                    selectedTime === time ? appTheme.white : appTheme.black,
+                }}
               >
                 {`${time} mins`}
               </Text>
@@ -102,7 +105,7 @@ const SetTimeScreenAndAcceptOrder = ({
               className="text-center text-lg font-medium"
               style={{ color: appTheme.black }}
             >
-              Done
+              {t("Done")}
             </Text>
           )}
         </TouchableOpacity>

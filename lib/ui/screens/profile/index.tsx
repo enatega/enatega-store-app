@@ -1,5 +1,5 @@
 // Core
-import { SafeAreaView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // Components
 import { useApptheme } from "@/lib/context/theme.context";

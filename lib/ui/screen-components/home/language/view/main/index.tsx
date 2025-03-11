@@ -1,47 +1,41 @@
-// Constants
-import { useApptheme } from "@/lib/context/theme.context";
+// Components
 import {
   CustomContinueButton,
   CustomRadioButton,
 } from "@/lib/ui/useable-components";
+
+// Constants
 import { LANGUAGES } from "@/lib/utils/constants";
+
+// React Native Async Storage
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// I18n
 import { changeLanguage } from "i18next";
-import { useEffect, useState } from "react";
+
+// Hooks
+import { useApptheme } from "@/lib/context/theme.context";
+import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 // Core
+import { AuthContext } from "@/lib/context/global/auth.context";
 import { Image, Text, View } from "react-native";
 
 export default function LanguageMain() {
-  // States
-  const [isSelected, setIsSelected] = useState("");
   const [isChangingLang, setIsChangingLang] = useState(false);
 
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
+  const { isSelected, setIsSelected } = useContext(AuthContext);
 
   // Handlers
   const handleLanguageSelection = async (selectedLanguage: string) => {
     setIsSelected(selectedLanguage);
     await AsyncStorage.setItem("lang", selectedLanguage);
   };
-  const handleSetCurrentLanguage = async () => {
-    try {
-      const lng = await AsyncStorage.getItem("lang");
-      console.log("🚀 ~ handleSetCurrentLanguage ~ lng:", lng);
-      // if (lng) {
-      //   changeLanguage(isSelected);
-      // }
-      if (lng) {
-        changeLanguage(lng);
-        setIsSelected(lng);
-      }
-    } catch (error) {
-      console.error({ error });
-    }
-  };
+
   const handleSubmission = async () => {
     try {
       setIsChangingLang(true);
@@ -53,10 +47,6 @@ export default function LanguageMain() {
     }
   };
 
-  // UseEffects
-  useEffect(() => {
-    handleSetCurrentLanguage();
-  }, []);
   return (
     <View
       className="h-[85%] w-[90%] items-center justify-between mx-auto  p-4"

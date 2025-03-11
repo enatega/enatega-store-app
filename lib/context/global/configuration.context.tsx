@@ -1,7 +1,7 @@
 "use client";
 
 // Core
-import React, { useCallback, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 
 // Interfaces§
 import {
@@ -16,9 +16,7 @@ import { GET_CONFIGURATION } from "@/lib/api/graphql";
 // Hooks
 import { useLazyQueryQL } from "@/lib/hooks/useLazyQueryQL";
 
-export const ConfigurationContext = React.createContext<
-  IConfiguration | undefined
->({
+export const ConfigurationContext = createContext<IConfiguration | undefined>({
   _id: "",
   currency: "",
   currencySymbol: "",
@@ -31,8 +29,8 @@ export const ConfigurationProvider: React.FC<IConfigurationProviderProps> = ({
   const [configuration, setConfiguration] = useState<
     IConfiguration | undefined
   >();
-  // API
 
+  // API
   const { fetch, loading, error, data } = useLazyQueryQL(GET_CONFIGURATION, {
     debounceMs: 300,
   }) as ILazyQueryResult<

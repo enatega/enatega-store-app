@@ -34,9 +34,7 @@ export default function DocumentsSection() {
           </Text>
           <TouchableOpacity
             className="top-6"
-            onPress={() =>
-              router.push("/(protected)/(tabs)/home/bank-management")
-            }
+            onPress={() => router.push("/bank-management")}
           >
             <Text className="font-semibold text-[#0EA5E9]">
               {dataProfile?.bussinessDetails?.accountNumber

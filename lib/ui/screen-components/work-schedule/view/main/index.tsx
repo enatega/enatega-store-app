@@ -1,13 +1,12 @@
 import { UPDATE_WORK_SCHEDULE } from "@/lib/apollo/mutations/work-schedule";
 import { useUserContext } from "@/lib/context/global/user.context";
-import { FlashMessageComponent } from "@/lib/ui/useable-components";
-import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 
 import { WorkSchedule } from "@/lib/utils/interfaces";
 import { ApolloError, useMutation } from "@apollo/client";
 
 import { STORE_PROFILE } from "@/lib/apollo/queries";
 import { useApptheme } from "@/lib/context/theme.context";
+import { timeToMinutes } from "@/lib/utils/methods/helpers/work-schedule";
 import { TWeekDays } from "@/lib/utils/types/restaurant";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -16,13 +15,14 @@ import {
   Dimensions,
   FlatList,
   ScrollView,
-  StyleSheet,
   Text,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { Switch } from "react-native-switch";
+import { showMessage } from "react-native-flash-message";
+import UpdateTimeBtn from "../../update-time-btn";
+import UpdateScheduleBtn from "../../updates-schedule-btn";
+import WorkScheduleStack from "../work-schedule";
 
 const { width } = Dimensions.get("window");
 
@@ -60,12 +60,11 @@ export default function WorkScheduleMain() {
     slotIndex: number;
     type: "start" | "end";
   } | null>(null);
-  //   const [timeZone, setTimeZone] = useState('')
 
   // Animation refs
-  const fadeAnim = useRef(new Animated.Value(0)).current; // Opacity
-  const translateYAnim = useRef(new Animated.Value(20)).current; // Slide up
-  const parallaxAnim = useRef(new Animated.Value(0)).current; // Parallax effect
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const translateYAnim = useRef(new Animated.Value(20)).current;
+  const parallaxAnim = useRef(new Animated.Value(0)).current;
 
   // Context
   const { dataProfile } = useUserContext();
@@ -82,46 +81,45 @@ export default function WorkScheduleMain() {
       ],
     },
   );
+
   // Handler
   const onHandlerSubmit = async () => {
     try {
       // Check for overlapping slots
       const overlapping_day = hasOverlappingSlots(schedule ?? []);
       if (overlapping_day) {
-        FlashMessageComponent({
+        return showMessage({
           message: `${t(overlapping_day)} ${t("has overlapping slots")}.`,
         });
-        return;
       }
-
       // Clean the work schedule before submitting
       const cleanedWorkSchedule =
         schedule?.map(({ ...day }) => ({
           ...day,
           times: day.times
-            .filter((time) => time.startTime && time.endTime) // Ensure there are no empty slots
+            .filter((time) => time.startTime && time.endTime)
             .map(({ ...cleanSlot }) => cleanSlot),
         })) ?? [];
 
-      // Ensure there is valid data to send
       if (
         !cleanedWorkSchedule.length ||
         cleanedWorkSchedule.every((day) => !day.times.length)
       ) {
-        FlashMessageComponent({ message: t("No valid slots to submit") });
-        return;
+        return showMessage({
+          message: t("No valid slots to submit"),
+        });
       }
 
       const scheduleInput = transformSchedule(cleanedWorkSchedule);
       await updateSchedule({
         variables: scheduleInput,
         onCompleted: () => {
-          FlashMessageComponent({
+          showMessage({
             message: t("Work Schedule has been updated successfully"),
           });
         },
         onError: (error) => {
-          FlashMessageComponent({
+          return showMessage({
             message:
               error.graphQLErrors[0]?.message ?? t("Something went wrong"),
           });
@@ -129,9 +127,6 @@ export default function WorkScheduleMain() {
       });
     } catch (err) {
       const error = err as ApolloError;
-      // FlashMessageComponent({
-      //   message: error?.message || t("Something went wrong"),
-      // });
       console.log(error);
     }
   };
@@ -188,16 +183,6 @@ export default function WorkScheduleMain() {
     };
   }
 
-  // Helper function to convert time string (HH:mm) to minutes
-  const timeToMinutes = (time: string | string[]) => {
-    if (Array.isArray(time)) {
-      time = time[0]; // Take the first element of the array
-    }
-
-    const [hours, minutes] = time.split(":").map(Number);
-    return hours * 60 + minutes;
-  };
-
   const hasOverlappingSlots = (schedule: WorkSchedule[]): string => {
     for (const daySchedule of schedule) {
       if (daySchedule.times.length === 0) continue; // Skip days with no times
@@ -237,7 +222,6 @@ export default function WorkScheduleMain() {
       updatedSchedule = [...schedule];
       slot = updatedSchedule[dayIndex].times[slotIndex];
 
-      // Ensure proper splitting of the new time value
       const [hours = "00", minutes = "00"] = value.split(":");
 
       // Validate start and end times
@@ -248,20 +232,18 @@ export default function WorkScheduleMain() {
           ? `${slot.endTime[0] || "00"}:${slot.endTime[1] || "00"}`
           : slot.endTime;
         if (slot?.endTime && newTime >= timeToMinutes(endTimeStr)) {
-          FlashMessageComponent({
+          return showMessage({
             message: "Start time must be earlier than end time",
           });
-          return;
         }
       } else if (type === "endTime") {
         const startTimeStr = Array.isArray(slot.startTime)
           ? `${slot.startTime[0] || "00"}:${slot.startTime[1] || "00"}`
           : slot.startTime;
         if (slot?.startTime && newTime <= timeToMinutes(startTimeStr)) {
-          FlashMessageComponent({
+          return showMessage({
             message: "End time must be greater than start time",
           });
-          return;
         }
       }
 
@@ -290,10 +272,9 @@ export default function WorkScheduleMain() {
       );
 
       if (isOverlapping) {
-        FlashMessageComponent({
+        return showMessage({
           message: t("Time slot overlaps with another existing slot"),
         });
-        return;
       }
 
       // Update the time value as an array [HH, MM]
@@ -378,7 +359,7 @@ export default function WorkScheduleMain() {
                   endTime: [endHours, endMinutes],
                 };
               })
-            : [], // Keep empty array when no times
+            : [],
           __typename: "OpeningTimes",
         })),
       );
@@ -386,7 +367,7 @@ export default function WorkScheduleMain() {
       setSchedule(
         daysOfWeek.map((day) => ({
           day,
-          times: [], // Initialize with empty times array
+          times: [],
           __typename: "OpeningTimes",
         })),
       );
@@ -404,168 +385,26 @@ export default function WorkScheduleMain() {
             data={schedule}
             keyExtractor={(item) => item.day}
             scrollEnabled={true}
+            scrollEventThrottle={16}
             renderItem={({ item, index }) => (
-              <View
-                className=" border p-4 mb-3 rounded-lg"
-                style={{
-                  backgroundColor: appTheme.themeBackground,
-                  borderColor: appTheme.borderLineColor,
-                }}
-              >
-                {/* Day Header with Toggle */}
-                <View className="flex-row justify-between items-center">
-                  <Text
-                    className="text-lg font-bold"
-                    style={{ color: appTheme.fontMainColor }}
-                  >
-                    {t(item.day)}
-                  </Text>
-                  <Switch
-                    value={item.times.some((t) => !!t)}
-                    onValueChange={() => toggleDay(index)}
-                    activeText={""}
-                    inActiveText={""}
-                    circleSize={20}
-                    barHeight={25}
-                    backgroundActive={appTheme.primary}
-                    backgroundInactive={appTheme.gray}
-                    circleBorderWidth={0}
-                  />
-                </View>
-
-                {/* Time Slots */}
-                {item.times.some((t) => !!t) && (
-                  <View className="mt-2">
-                    {item.times.map((slot, slotIndex) => {
-                      const isStartTapped =
-                        dropdown?.dayIndex === index &&
-                        dropdown?.slotIndex === slotIndex &&
-                        dropdown?.type === "start";
-                      const isEndTapped =
-                        dropdown?.dayIndex === index &&
-                        dropdown?.slotIndex === slotIndex &&
-                        dropdown?.type === "end";
-
-                      return (
-                        <View
-                          key={slotIndex}
-                          className="flex-row items-center justify-between mt-2 gap-x-2"
-                        >
-                          {/* Start Time Button */}
-                          <TouchableOpacity
-                            onPress={() =>
-                              setDropdown({
-                                dayIndex: index,
-                                slotIndex,
-                                type: "start",
-                              })
-                            }
-                            className={`w-[40%] p-2 rounded-md`}
-                            style={[
-                              isStartTapped ? style.tappedSlot : style.slot,
-                              { backgroundColor: appTheme.themeBackground },
-                            ]}
-                          >
-                            <Text
-                              className="text-center"
-                              style={{ color: appTheme.fontMainColor }}
-                            >
-                              {slot.startTime.join(":")}
-                            </Text>
-                          </TouchableOpacity>
-
-                          <Text
-                            className="mx-"
-                            style={{ color: appTheme.fontMainColor }}
-                          >
-                            -
-                          </Text>
-
-                          {/* End Time Button */}
-                          <TouchableOpacity
-                            onPress={() =>
-                              setDropdown({
-                                dayIndex: index,
-                                slotIndex,
-                                type: "end",
-                              })
-                            }
-                            className="w-[40%] p-2 rounded-md"
-                            style={[
-                              isEndTapped ? style.tappedSlot : style.slot,
-                              { backgroundColor: appTheme.themeBackground },
-                            ]}
-                          >
-                            <Text
-                              className="text-center"
-                              style={{ color: appTheme.fontMainColor }}
-                            >
-                              {slot.endTime.join(":")}
-                            </Text>
-                          </TouchableOpacity>
-
-                          {/* Remove Slot Button */}
-                          {item.times.length > 1 && slotIndex !== 0 && (
-                            <TouchableOpacity
-                              onPress={() => removeSlot(index, slotIndex)}
-                              className="w-8 h-8 justify-center items-center border rounded-full"
-                              style={{
-                                borderColor: "#dc2626",
-                              }}
-                            >
-                              <Text
-                                style={{ color: "#dc2626" }}
-                                className="font-bold"
-                              >
-                                −
-                              </Text>
-                            </TouchableOpacity>
-                          )}
-
-                          {/* Add Slot Button */}
-                          {slotIndex === 0 && (
-                            <TouchableOpacity
-                              onPress={() => addSlot(index)}
-                              className="w-8 h-8 justify-center items-center border rounded-full"
-                              style={{
-                                backgroundColor: appTheme.themeBackground,
-                                borderColor: appTheme.primary,
-                              }}
-                            >
-                              <Text
-                                className=" font-bold text-center"
-                                style={{ color: appTheme.primary }}
-                              >
-                                +
-                              </Text>
-                            </TouchableOpacity>
-                          )}
-                        </View>
-                      );
-                    })}
-                  </View>
-                )}
-              </View>
+              <WorkScheduleStack
+                key={String(index).concat("_workschedule_stack")}
+                item={item}
+                index={index}
+                toggleDay={toggleDay}
+                removeSlot={removeSlot}
+                addSlot={addSlot}
+                dropdown={dropdown}
+                setDropdown={setDropdown}
+              />
             )}
           />
         </View>
-        <TouchableOpacity
-          className="h-12 w-full rounded-3xl py-3"
-          style={{ width: width * 0.9, backgroundColor: appTheme.primary }}
-          onPress={() => onHandlerSubmit()}
-        >
-          {isUpatingSchedule ? (
-            <SpinnerComponent />
-          ) : (
-            <Text
-              className="text-center text-lg font-medium"
-              style={{ color: appTheme.fontMainColor }}
-            >
-              {t("Update Schedule")}
-            </Text>
-          )}
-        </TouchableOpacity>
-
+        <UpdateScheduleBtn
+          isUpatingSchedule={isUpatingSchedule}
+          onHandlerSubmit={onHandlerSubmit}
+          width={width}
+        />
         {/* Animated Dropdown */}
         {dropdown && (
           <Animated.View
@@ -609,27 +448,13 @@ export default function WorkScheduleMain() {
               )}
               scrollEventThrottle={16}
             >
-              {timeOptions.map((time) => (
-                <TouchableOpacity
-                  key={time}
-                  onPress={() =>
-                    updateTime(
-                      dropdown.dayIndex,
-                      dropdown.slotIndex,
-                      dropdown.type === "start" ? "startTime" : "endTime",
-                      time,
-                    )
-                  }
-                  className="p-2 border-b "
-                  style={{ borderColor: appTheme.borderLineColor }}
-                >
-                  <Text
-                    className="font-[Inter] text-center text-lg"
-                    style={{ color: appTheme.fontMainColor }}
-                  >
-                    {time}
-                  </Text>
-                </TouchableOpacity>
+              {timeOptions.map((time, index) => (
+                <UpdateTimeBtn
+                  key={String(index).concat("_update_time_btn")}
+                  updateTime={updateTime}
+                  dropdown={dropdown}
+                  time={time}
+                />
               ))}
             </ScrollView>
           </Animated.View>
@@ -638,14 +463,3 @@ export default function WorkScheduleMain() {
     </TouchableWithoutFeedback>
   );
 }
-
-const style = StyleSheet.create({
-  slot: {
-    borderWidth: 1,
-    borderColor: "#d1d5db",
-  },
-  tappedSlot: {
-    borderWidth: 1,
-    borderColor: "#22c55e",
-  },
-});

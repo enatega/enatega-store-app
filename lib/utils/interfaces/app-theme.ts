@@ -42,4 +42,5 @@ export interface AppTheme {
   gray: string;
   screenBackground: string;
   linkColor: string;
+  error: string;
 }

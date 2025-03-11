@@ -24,7 +24,7 @@ export default function RecentTransaction({
   const date = new Date(transaction.createdAt);
   return (
     <View
-      className={`flex flex-row justify-between p-4 w-full ${isLast && "mb-24"}`}
+      className={`flex flex-row justify-between p-4 w-full ${isLast && "mb-32"}`}
       style={{
         backgroundColor: appTheme.themeBackground,
       }}

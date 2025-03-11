@@ -28,6 +28,7 @@ import { EarningScreenMainLoading } from "@/lib/ui/skeletons";
 
 // Components
 import { useApptheme } from "@/lib/context/theme.context";
+import formatNumber from "@/lib/utils/methods/num-formatter";
 import { useEffect, useState } from "react";
 import { showMessage } from "react-native-flash-message";
 import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
@@ -81,7 +82,7 @@ export default function EarningsMain() {
     }
   >(STORE_EARNINGS_GRAPH, {
     onError: (err) => {
-      console.error(err);
+      console.log(err);
       showMessage({
         message:
           err.graphQLErrors[0]?.message ||
@@ -123,17 +124,14 @@ export default function EarningsMain() {
           return (
             <Text
               style={{
-                color: "#000",
+                color: appTheme.fontMainColor,
                 fontSize: 8,
                 fontWeight: "600",
                 marginBottom: 1,
                 wordWrap: "wrap",
               }}
             >
-              $
-              {earning.totalEarningsSum.toString().startsWith("-")
-                ? Number(-earning.totalEarningsSum)
-                : earning.totalEarningsSum}
+              ${formatNumber(Number(earning.totalEarningsSum))}
             </Text>
           );
         },
@@ -155,7 +153,6 @@ export default function EarningsMain() {
 
   // If loading
   if (isStoreEarningsLoading) return <EarningScreenMainLoading />;
-  console.log(storeEarningsData?.storeEarningsGraph.earnings);
   return (
     <GestureHandlerRootView
       style={{ backgroundColor: appTheme.themeBackground }}

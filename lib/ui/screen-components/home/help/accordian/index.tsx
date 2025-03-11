@@ -6,9 +6,11 @@ import { Text, TouchableOpacity, View } from "react-native";
 export default function HelpAccordian({
   heading,
   children,
+  isLast,
 }: {
   heading: string;
   children: ReactNode;
+  isLast: boolean;
 }) {
   // Hooks
   const { appTheme } = useApptheme();
@@ -16,8 +18,12 @@ export default function HelpAccordian({
   const [open, setOpen] = useState(false);
   return (
     <View
-      className="flex w-full items-center justify-center border border-gray-300 rounded-lg p-2"
-      style={{ backgroundColor: appTheme.themeBackground }}
+      className="flex w-full items-center justify-between border  rounded-lg p-2"
+      style={{
+        backgroundColor: appTheme.themeBackground,
+        borderColor: appTheme.borderLineColor,
+        marginBottom: isLast ? 30 : 0,
+      }}
     >
       <TouchableOpacity
         className="flex flex-row items-center justify-between w-full  px-4 py-4  active:opacity-80"
@@ -26,7 +32,7 @@ export default function HelpAccordian({
         activeOpacity={0.7}
       >
         <Text
-          className="text-lg font-semibold text-gray-800 "
+          className="text-lg font-semibold text-gray-800 w-80"
           style={{ color: appTheme.fontSecondColor }}
         >
           {t(heading)}

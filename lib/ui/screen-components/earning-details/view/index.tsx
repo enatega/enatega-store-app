@@ -4,13 +4,14 @@ import { View } from "react-native";
 // Interfaces
 import {
   IEarningDetailsMainProps,
+  IStoreEarnings,
   IStoreEarningsResponse,
 } from "@/lib/utils/interfaces/rider-earnings.interface";
 
 // Hooks
 import { useUserContext } from "@/lib/context/global/user.context";
 import { QueryResult, useQuery } from "@apollo/client";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 // GraphQL
@@ -37,6 +38,9 @@ export default function EarningDetailsMain({
   // States
   const [isFiltering, setIsFiltering] = useState(false);
   const [isDateFilterVisible, setIsDateFilterVisible] = useState(false);
+  const [storeEarnings, setStoreEarnings] = useState<IStoreEarnings[]>(
+    [] as IStoreEarnings[],
+  );
 
   // Contexts
   const { setModalVisible, userId } = useUserContext();
@@ -44,8 +48,8 @@ export default function EarningDetailsMain({
   // Queries
   const {
     loading: isStoreEarningsLoading,
-    data: storeEarningsData,
     refetch: fetchStoreEarnings,
+    data: storeEarningsGraphData,
   } = useQuery(STORE_EARNINGS_GRAPH, {
     onError: (err) => {
       console.error(err);
@@ -63,7 +67,11 @@ export default function EarningDetailsMain({
     },
   }) as QueryResult<
     IStoreEarningsResponse | undefined,
-    { storeId: string; startDate?: string; endDate?: string }
+    {
+      storeId: string;
+      startDate?: string;
+      endDate?: string;
+    }
   >;
 
   // Handlers
@@ -71,18 +79,21 @@ export default function EarningDetailsMain({
     setIsFiltering(true);
     // Validation
     if (!dateFilter.startDate) {
+      setIsFiltering(false);
       return showMessage({
         message: t("Please select a start date"),
         type: "danger",
         duration: 1000,
       });
     } else if (!dateFilter.endDate) {
+      setIsFiltering(false);
       return showMessage({
         message: t("Please select an end date"),
         type: "danger",
         duration: 1000,
       });
     } else if (new Date(dateFilter.startDate) > new Date(dateFilter.endDate)) {
+      setIsFiltering(false);
       return showMessage({
         message: t("Start date cannot be after end date"),
         type: "danger",
@@ -90,6 +101,7 @@ export default function EarningDetailsMain({
       });
     }
     if (!userId) {
+      setIsFiltering(false);
       return showMessage({
         message: t("Please log in to view your earnings"),
         type: "danger",
@@ -102,11 +114,27 @@ export default function EarningDetailsMain({
       storeId: userId,
       startDate: dateFilter.startDate,
       endDate: dateFilter.endDate,
+      // page: pagination.page,
+      // limit: pagination.limit,
     });
 
     setIsFiltering(false);
     setIsDateFilterVisible(false);
   }
+  const sortedEarnings = useMemo(() => {
+    if (!storeEarningsGraphData?.storeEarningsGraph?.earnings?.length)
+      return [];
+    return [...storeEarningsGraphData.storeEarningsGraph.earnings].sort(
+      (a, b) =>
+        new Date(String(a._id)).setHours(0, 0, 0, 0) -
+        new Date(String(b._id)).setHours(23, 59, 59, 999),
+    );
+  }, [storeEarningsGraphData?.storeEarningsGraph.earnings]);
+  useEffect(() => {
+    if (sortedEarnings.length) {
+      setStoreEarnings(sortedEarnings);
+    }
+  }, [sortedEarnings.length]);
   // If loading
   if (isStoreEarningsLoading || isFiltering)
     return <EarningsSummaryMainLoading />;
@@ -123,9 +151,10 @@ export default function EarningDetailsMain({
       />
       <EarningDetailsHeader />
       <EarningsDetailStacks
-        isStoreEarningsLoading={isStoreEarningsLoading}
-        storeEarningsData={storeEarningsData}
         setModalVisible={setModalVisible}
+        userId={userId}
+        storeEarnings={storeEarnings}
+        isLoading={isStoreEarningsLoading}
       />
     </View>
   );

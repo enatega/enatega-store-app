@@ -12,9 +12,8 @@ if (!pattern.test(commitMsg)) {
   );
   process.exit(1);
 }
-const [, , , version] =
-  commitMsg ?
-    (commitMsg.match(pattern)?.slice(1) ?? ["", "", "", ""])
+const [, , , version] = commitMsg
+  ? (commitMsg.match(pattern)?.slice(1) ?? ["", "", "", ""])
   : ["", "", "", ""];
 
 // Get the last commit messageå

@@ -1,23 +1,24 @@
 import {
   ApolloClient,
-  InMemoryCache,
-  createHttpLink,
   ApolloLink,
-  split,
   concat,
+  createHttpLink,
+  InMemoryCache,
   Observable,
   Operation,
+  split,
 } from "@apollo/client";
-import { getMainDefinition } from "@apollo/client/utilities";
 import { WebSocketLink } from "@apollo/client/link/ws";
-import useEnvVars from "../../environment";
+import { getMainDefinition } from "@apollo/client/utilities";
+
+import getEnvVars from "@/environment";
+import * as SecureStore from "expo-secure-store";
 import { DefinitionNode, FragmentDefinitionNode } from "graphql";
 import { Subscription } from "zen-observable-ts";
 import { STORE_TOKEN } from "../utils/constants";
-import * as SecureStore from "expo-secure-store";
 
 const setupApollo = () => {
-  const { GRAPHQL_URL, WS_GRAPHQL_URL } = useEnvVars();
+  const { GRAPHQL_URL, WS_GRAPHQL_URL } = getEnvVars();
 
   const wsLink = new WebSocketLink({
     uri: WS_GRAPHQL_URL,

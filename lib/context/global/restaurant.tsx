@@ -1,12 +1,12 @@
 import { useQuery } from "@apollo/client";
 import React, { useContext, useEffect, useState } from "react";
 
-import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 
 // API
-import { SUBSCRIBE_PLACE_ORDER } from "@/lib/apollo/subscriptions";
 import { GET_ORDERS } from "@/lib/apollo/queries/orders";
+import { SUBSCRIBE_PLACE_ORDER } from "@/lib/apollo/subscriptions";
 import { IRestaurantProviderProps } from "@/lib/utils/interfaces";
 
 const Context = React.createContext({});
@@ -33,7 +33,7 @@ const Provider = ({ children }: IRestaurantProviderProps) => {
       fetchPolicy: "network-only",
       pollInterval: 5000,
       onError: (error) => {
-        console.error("GraphQL Query Error:", error);
+        console.log("GraphQL Query Error:", error);
       },
     });
 

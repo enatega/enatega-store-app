@@ -8,6 +8,8 @@ const CustomTab = ({
   options,
   selectedTab,
   setSelectedTab,
+  deliveryCount,
+  pickupCount,
 }: ICustomTabProps) => {
   // Hooks
   const { appTheme } = useApptheme();
@@ -32,6 +34,9 @@ const CustomTab = ({
                 selectedTab === option
                   ? appTheme.primary
                   : appTheme.themeBackground,
+              borderColor: appTheme.borderLineColor,
+              borderWidth: 1,
+              marginHorizontal: 2,
             }}
           >
             <Text
@@ -44,6 +49,56 @@ const CustomTab = ({
             >
               {t(option)}
             </Text>
+            {option === "Delivery Orders" && (
+              <View
+                style={{
+                  backgroundColor: appTheme.error,
+                  borderRadius: 100,
+                  width: 20,
+                  height: 20,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  position: "absolute",
+                  left: -3,
+                  top: -5,
+                }}
+              >
+                <Text
+                  style={{
+                    textAlign: "center",
+                    color: appTheme.white,
+                    alignSelf: "center",
+                  }}
+                >
+                  {deliveryCount}
+                </Text>
+              </View>
+            )}
+            {option === "Pick up Orders" && (
+              <View
+                style={{
+                  backgroundColor: appTheme.error,
+                  borderRadius: 100,
+                  width: 20,
+                  height: 20,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  position: "absolute",
+                  left: -3,
+                  top: -5,
+                }}
+              >
+                <Text
+                  style={{
+                    textAlign: "center",
+                    color: appTheme.white,
+                    alignSelf: "center",
+                  }}
+                >
+                  {pickupCount}
+                </Text>
+              </View>
+            )}
           </TouchableOpacity>
         ))}
       </View>

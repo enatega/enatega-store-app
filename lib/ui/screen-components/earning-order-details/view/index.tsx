@@ -24,7 +24,6 @@ export default function EarningsOrderDetailsMain() {
   const { storeOrdersEarnings } = useUserContext();
 
   // UseEffects
-  // UseEffects
   useEffect(() => {
     if (storeOrdersEarnings?.length) {
       const sortedOrderEarnings = [...storeOrdersEarnings].sort(
@@ -52,6 +51,7 @@ export default function EarningsOrderDetailsMain() {
               key={info.index}
               amount={info.item.totalOrderAmount}
               orderId={info.item.orderDetails.orderId}
+              date={info.item.date}
             />
           );
         }}
