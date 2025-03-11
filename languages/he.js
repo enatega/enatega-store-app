@@ -278,4 +278,5 @@ export const he = {
   Orders: "הזמנות",
   "Order Status": "סטטוס הזמנה",
   "Set Preparation Time": "קביעת זמן הפרידה",
+  "Tax": "מס"
 };

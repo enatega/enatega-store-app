@@ -268,4 +268,5 @@ export const ar = {
   Orders: "الطلبات",
   "Order Status": "حالة الطلب",
   "Set Preparation Time": "تحديد وقت التحضير",
+  "Tax": "ضريبة"
 };

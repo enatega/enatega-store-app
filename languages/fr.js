@@ -297,4 +297,6 @@ export const fr = {
   Orders: "Commandes",
   "Order Status": "État commande",
   "Set Preparation Time": "Définir le temps de préparation",
+  "Tax": "Taxe"
+
 };

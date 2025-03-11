@@ -275,4 +275,5 @@ export const de = {
   Orders: "Bestellungen",
   "Order Status": "Bestellstatus",
   "Set Preparation Time": "Vorbereitungszeit festlegen",
+  "Tax": "Steuer"
 };

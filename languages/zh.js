@@ -276,4 +276,6 @@ export const zh = {
   Orders: "订单",
   "Order Status": "订单状态",
   "Set Preparation Time": "设置准备时间",
+  "Your wallet is currently empty": "您的钱包目前为空",
+  "Tax": "税"
 };

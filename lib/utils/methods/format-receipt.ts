@@ -1,8 +1,8 @@
 export const formatReceipt = (order) => {
   const address =
-    order.shippingMethod === "PICKUP"
-      ? "PICKUP"
-      : `${order.deliveryAddress.label} ${order.deliveryAddress.details} ${order.deliveryAddress.deliveryAddress}`;
+    order.shippingMethod === "PICKUP" ?
+      "PICKUP"
+    : `${order.deliveryAddress.label} ${order.deliveryAddress.details} ${order.deliveryAddress.deliveryAddress}`;
   const {
     user: { email, phone },
     taxationAmount: tax,
