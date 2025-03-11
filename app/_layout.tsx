@@ -32,7 +32,7 @@ import FlashMessage from "react-native-flash-message";
 // PRoviders
 import InternetProvider from "@/lib/context/global/internet-provider";
 // UI
-import AppThemeProvidor from "@/lib/context/theme.context";
+import AppThemeProvidor, { useApptheme } from "@/lib/context/theme.context";
 import AnimatedSplashScreen from "@/lib/ui/useable-components/splash/AnimatedSplashScreen";
 import UnavailableStatus from "@/lib/ui/useable-components/unavailable-status";
 
@@ -45,6 +45,7 @@ SplashScreen.preventAutoHideAsync();
 
 function RootLayout() {
   // Hooks
+  const { currentTheme, appTheme } = useApptheme();
   const [loaded] = useFonts({
     SpaceMono: require("../lib/assets/fonts/SpaceMono-Regular.ttf"),
     Inter: require("../lib/assets/fonts/Inter.ttf"),
@@ -70,6 +71,10 @@ function RootLayout() {
           <InternetProvider>
             <ConfigurationProvider>
               <AuthProvider client={client}>
+                <StatusBar
+                  style={currentTheme ?? "dark"}
+                  backgroundColor={appTheme.themeBackground ?? ""}
+                />
                 <UserProvider>
                   <UnavailableStatus />
                   <Slot />
@@ -78,7 +83,6 @@ function RootLayout() {
             </ConfigurationProvider>
           </InternetProvider>
         </AnimatedSplashScreen>
-        <StatusBar style="auto" />
         <FlashMessage position="center" />
       </AppThemeProvidor>
     </ApolloProvider>

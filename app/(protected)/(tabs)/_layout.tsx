@@ -102,6 +102,8 @@ const RootLayout = () => {
           headerShown: true,
           headerTitle: t("Profile"),
           headerTitleAlign: "center",
+          headerStyle: { backgroundColor: appTheme.themeBackground },
+          headerTitleStyle: { color: appTheme.fontMainColor },
           title: t("Profile"),
           tabBarIcon: ({ color }) => (
             <PersonIcon
