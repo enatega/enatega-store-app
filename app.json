@@ -12,16 +12,13 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "splash": {
+      "image": "./lib/assets/images/black_bg.jpg",
+      "resizeMode": "cover",
+      "backgroundColor": "#000000"
+    },
     "plugins": [
       "expo-router",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./lib/assets/images/black_bg.jpg",
-          "resizeMode": "cover",
-          "backgroundColor": "#ffffff"
-        }
-      ],
       [
         "@sentry/react-native/expo",
         {

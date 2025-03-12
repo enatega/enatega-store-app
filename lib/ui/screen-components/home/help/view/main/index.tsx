@@ -12,65 +12,59 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { showMessage } from "react-native-flash-message";
 import HelpAccordian from "../../accordian";
 
 export default function HelpMain() {
-  const { t } = useTranslation();
+  // Hooks
   const { appTheme } = useApptheme();
+  const { t } = useTranslation();
+
+  const openWhatsAppStore = () => {
+    const appStoreUrl =
+      "https://apps.apple.com/app/whatsapp-messenger/id310633997";
+    const playStoreUrl =
+      "https://play.google.com/store/apps/details?id=com.whatsapp";
+
+    const storeUrl = Platform.OS === "ios" ? appStoreUrl : playStoreUrl;
+
+    Linking.canOpenURL(storeUrl)
+      .then((supported) => {
+        if (supported) {
+          Linking.openURL(storeUrl);
+        } else {
+          console.log("Cannot open URL:", storeUrl);
+        }
+      })
+      .catch((err) => console.log("Error opening URL:", err));
+  };
 
   const openWhatsAppChat = async () => {
-    const phoneNumber = "+14232600408";
+    try {
+      const phoneNumber = "+1(307)776%E2%80%918999";
 
-    if (Platform.OS === "android") {
-      const androidUrl = `whatsapp://send?phone=${phoneNumber}`;
+      if (Platform.OS === "android") {
+        const androidUrl = `whatsapp://send?phone=${phoneNumber}`;
+        const status = await Linking.openURL(androidUrl);
 
-      try {
-        const supported = Linking.canOpenURL(androidUrl);
-        console.log("🚀 ~ openWhatsAppChat ~ supported:", supported);
-        if (supported) {
-          await Linking.openURL(androidUrl);
-          console.log("WhatsApp opened successfully");
+        if (!status) {
+          openWhatsAppStore();
         }
-      } catch (error) {
-        console.log(error);
-        return showMessage({
-          type: "info",
-          message:
-            "WhatsApp is not installed on the device, please install it first and then try again.",
-          duration: 1000,
-          animated: true,
-          animationDuration: 500,
-        });
-      }
-    } else if (Platform.OS === "ios") {
-      const iosUrl = `https://wa.me/${phoneNumber.replace("+", "")}`;
-      console.log("Attempting to open URL:", iosUrl);
+      } else if (Platform.OS === "ios") {
+        const iosUrl = `https://wa.me/${phoneNumber.replace("+", "")}`;
 
-      try {
-        const supported = Linking.canOpenURL(iosUrl);
-        console.log("Can open URL:", supported);
-
+        const supported = await Linking.canOpenURL(iosUrl);
         if (supported) {
           await Linking.openURL(iosUrl);
         } else {
-          console.log(
-            "WhatsApp is not installed on the device, please install it first and then try again.",
-          );
+          openWhatsAppStore();
         }
-      } catch (error) {
-        console.log(error);
-        return showMessage({
-          type: "info",
-          message:
-            "WhatsApp is not installed on the device, please install it first and then try again.",
-          duration: 1000,
-          animated: true,
-          animationDuration: 500,
-        });
       }
+    } catch (error) {
+      console.log("Error opening URL", error);
+      openWhatsAppStore();
     }
   };
+
   useFocusEffect(() => {
     if (Platform.OS === "android") {
       StatusBar.setBackgroundColor("white");
@@ -79,46 +73,39 @@ export default function HelpMain() {
 
   return (
     <View
-      className="flex flex-col w-full h-[95%]"
-      style={{ backgroundColor: appTheme.themeBackground }}
+      className="flex-1 w-full dark:bg-gray-900 pb-16"
+      style={{ backgroundColor: appTheme.screenBackground }}
     >
       <StatusBar barStyle="light-content" />
 
-      <View className="flex w-full h-full items-start justify-start p-4">
+      <View className="h-[90%] p-4">
         <FlatList
           className="flex flex-col w-[99%] ml-1 overflow-x-hidden"
           data={FAQs}
           keyExtractor={(item) => "Faq-" + item.id}
-          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <View className="h-4" />}
-          renderItem={({ item, index }) => (
-            <HelpAccordian
-              heading={t(item.heading)}
-              key={index + "_accordian_help"}
-              isLast={index === FAQs.length - 1}
-            >
+          renderItem={({ item }) => (
+            <HelpAccordian heading={t(item.heading)}>
               <Text style={{ color: appTheme.fontSecondColor }}>
                 {t(item.description)}
               </Text>
             </HelpAccordian>
           )}
         />
+      </View>
 
-        <View className="bottom-6 w-full flex items-center">
-          <TouchableOpacity
-            activeOpacity={0.7}
-            className="w-[90%] h-12 rounded-full flex flex-row items-center justify-center gap-2 shadow-lg"
-            style={{ backgroundColor: appTheme.primary }}
-            onPress={openWhatsAppChat}
-          >
-            <FontAwesome name="whatsapp" size={24} color={appTheme.white} />
-            <Text
-              style={{ color: appTheme.white, fontSize: 18, fontWeight: "600" }}
-            >
-              {t("whatsAppText")}
-            </Text>
-          </TouchableOpacity>
-        </View>
+      <View className="w-full flex items-center mt-4">
+        <TouchableOpacity
+          activeOpacity={0.7}
+          className="w-[90%] h-12 rounded-full bg-green-500 flex flex-row items-center justify-center gap-2 shadow-lg"
+          onPress={openWhatsAppChat}
+        >
+          <FontAwesome name="whatsapp" size={24} color="white" />
+          <Text className="text-white font-semibold text-lg">
+            {t("whatsAppText")}
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

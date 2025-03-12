@@ -47,18 +47,18 @@ export default function AppThemeProvidor({
 
   // Methods
   async function getCurrentAppTheme() {
-    const theme = await AsyncStorage.getItem("app_theme");
-    if (theme) {
-      Appearance.setColorScheme(theme as app_theme);
-      setCurrentTheme(theme as app_theme);
-      setAppTheme(
-        theme === "light"
-          ? Colors.light
-          : theme === "dark"
-            ? Colors.dark
-            : Colors.light,
-      );
-    }
+    const systemTheme = Appearance.getColorScheme();
+    const localTheme = await AsyncStorage.getItem("app_theme");
+    const theme = localTheme || systemTheme || "dark";
+    Appearance.setColorScheme(theme as app_theme);
+    setCurrentTheme(theme as app_theme);
+    setAppTheme(
+      theme === "light"
+        ? Colors.light
+        : theme === "dark"
+          ? Colors.dark
+          : Colors.light,
+    );
   }
 
   // Handlers

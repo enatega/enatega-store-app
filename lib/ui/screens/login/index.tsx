@@ -13,7 +13,6 @@ import {
   View,
 } from "react-native";
 // Components
-import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 // Icon
 import Icon from "react-native-vector-icons/FontAwesome6";
 // Schemas
@@ -24,6 +23,7 @@ import useLogin from "@/lib/hooks/useLogin";
 import { useApptheme } from "@/lib/context/theme.context";
 import { ILoginInitialValues } from "@/lib/utils/interfaces";
 import { useTranslation } from "react-i18next";
+import { CustomContinueButton } from "../../useable-components";
 
 const initial: ILoginInitialValues = {
   username: "",
@@ -38,7 +38,7 @@ const LoginScreen = () => {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
-  const { onLogin, creds, isLogging } = useLogin();
+  const { onLogin, creds } = useLogin();
 
   // Handlers
   const onLoginHandler = async (creds: ILoginInitialValues) => {
@@ -173,7 +173,11 @@ const LoginScreen = () => {
                   )}
 
                   {/* Login Button */}
-                  <TouchableOpacity
+                  <CustomContinueButton
+                    title={t("Login")}
+                    onPress={() => handleSubmit()}
+                  />
+                  {/* <TouchableOpacity
                     className="h-12 rounded-3xl py-3 mt-10 w-full"
                     style={{ backgroundColor: appTheme.primary }}
                     onPress={() => handleSubmit()}
@@ -188,7 +192,7 @@ const LoginScreen = () => {
                         {t("Login")}
                       </Text>
                     )}
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </View>
               );
             }}
