@@ -276,4 +276,5 @@ export const en = {
   "Your wallet is currently empty": "Your wallet is currently empty",
   Orders: "Orders",
   "Set Preparation Time": "Set Preparation Time",
+  "Tax": "Tax"
 };

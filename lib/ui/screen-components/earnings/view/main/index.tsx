@@ -142,11 +142,7 @@ export default function EarningsMain() {
     if (storeEarningsData?.storeEarningsGraph?.earnings?.length) {
       const sortedTransactions = [
         ...storeEarningsData.storeEarningsGraph.earnings,
-      ].sort(
-        (a, b) =>
-          new Date(String(b?.date)).setHours(0, 0, 0, 0) -
-          new Date(String(a?.date)).setHours(23, 59, 59, 999),
-      );
+      ];
       setRecentTransaction(sortedTransactions);
     }
   }, [storeEarningsData?.storeEarningsGraph?.earnings?.length]);

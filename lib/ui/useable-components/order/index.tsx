@@ -130,7 +130,7 @@ const Order = ({
               style={{
                 color:
                   tab === "delivered"
-                    ? appTheme.primary
+                    ? "navy"
                     : tab === "processing"
                       ? "#92400E"
                       : "#166534",

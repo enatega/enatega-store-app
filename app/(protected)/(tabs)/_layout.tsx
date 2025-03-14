@@ -99,6 +99,11 @@ const RootLayout = () => {
       <Tabs.Screen
         name="profile"
         options={{
+          headerShown: true,
+          headerTitle: t("Profile"),
+          headerTitleAlign: "center",
+          headerStyle: { backgroundColor: appTheme.themeBackground },
+          headerTitleStyle: { color: appTheme.fontMainColor },
           title: t("Profile"),
           tabBarIcon: ({ color }) => (
             <PersonIcon

@@ -24,6 +24,7 @@ import Order from "@/lib/ui/useable-components/order";
 import SetTimeScreenAndAcceptOrder from "@/lib/ui/useable-components/set-order-accept-time";
 import { WalletIcon } from "@/lib/ui/useable-components/svg";
 import { ORDER_TYPE } from "@/lib/utils/types";
+import { Ionicons } from "@expo/vector-icons";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
@@ -207,6 +208,23 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
         <BottomSheetModal
           ref={bottomSheetModalRef}
           style={{ backgroundColor: appTheme.themeBackground }}
+          handleComponent={() => (
+            <View
+              style={{
+                backgroundColor: appTheme.themeBackground,
+                alignItems: "center",
+                justifyContent: "center",
+                borderTopWidth: 1,
+                borderTopColor: appTheme.fontMainColor,
+              }}
+            >
+              <Ionicons
+                color={appTheme.fontMainColor}
+                name="remove"
+                size={30}
+              />
+            </View>
+          )}
         >
           <BottomSheetView
             style={[
