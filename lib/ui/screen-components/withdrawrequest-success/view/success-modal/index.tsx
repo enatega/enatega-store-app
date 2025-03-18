@@ -15,15 +15,19 @@ import { IWalletSuccessModalProps } from "@/lib/utils/interfaces/withdraw.interf
 
 // Hooks
 import { useApptheme } from "@/lib/context/theme.context";
+import { useTranslation } from "react-i18next";
 const SuccessModal = ({ message }: IWalletSuccessModalProps) => {
   // Hooks
   const { appTheme } = useApptheme();
+  const { t } = useTranslation();
   return (
     <View
       style={{
         shadowRadius: 480,
         shadowOpacity: 1,
         shadowColor: "black",
+        borderWidth: 1,
+        borderColor: appTheme.borderLineColor,
         backgroundColor: appTheme.themeBackground,
         justifyContent: "center",
         alignItems: "center",
@@ -32,7 +36,7 @@ const SuccessModal = ({ message }: IWalletSuccessModalProps) => {
         borderRadius: 10,
         width: 350,
         padding: 12,
-        boxShadow: "25px 25px 35px gray",
+        boxShadow: `5px 5px 5px ${appTheme.secondaryTextColor}`,
       }}
     >
       <View className="absolute right-3 top-3">
@@ -59,7 +63,7 @@ const SuccessModal = ({ message }: IWalletSuccessModalProps) => {
           {message}
         </Text>
         <Text style={{ color: appTheme.fontSecondColor }}>
-          Usually it takes 1-2 business days
+          {t("Usually it takes 1-2 business days")}
         </Text>
       </View>
     </View>

@@ -2,18 +2,15 @@ import { UPDATE_AVAILABILITY } from "@/lib/apollo/mutations/rider.mutation";
 import { STORE_PROFILE } from "@/lib/apollo/queries";
 import { useUserContext } from "@/lib/context/global/user.context";
 import { useApptheme } from "@/lib/context/theme.context";
+import SpinnerComponent from "@/lib/ui/useable-components/spinner";
 import CustomSwitch from "@/lib/ui/useable-components/switch-button";
 import { IStoreProfile } from "@/lib/utils/interfaces";
 import { MutationTuple, useMutation } from "@apollo/client";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Image, Text, View } from "react-native";
 import { showMessage } from "react-native-flash-message";
 
 const CustomDrawerHeader = () => {
-  // States
-  const [isEnabled, setIsEnabled] = useState(true);
-
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
@@ -24,11 +21,6 @@ const CustomDrawerHeader = () => {
     refetchQueries: [
       { query: STORE_PROFILE, variables: { restaurantId: userId } },
     ],
-    onCompleted: () => {
-      if (dataProfile?.isAvailable) {
-        setIsEnabled(dataProfile?.isAvailable);
-      }
-    },
     onError: (error) => {
       showMessage({
         message:
@@ -115,16 +107,20 @@ const CustomDrawerHeader = () => {
         >
           {t("Availability")}
         </Text>
-        <CustomSwitch
-          value={dataProfile?.isAvailable ?? isEnabled}
-          isDisabled={loading}
-          onToggle={handleToggleAvailability}
-        />
+        {loading ? (
+          <SpinnerComponent color={appTheme.secondaryTextColor} height={10} />
+        ) : (
+          <CustomSwitch
+            value={!!dataProfile?.isAvailable}
+            isDisabled={loading}
+            onToggle={handleToggleAvailability}
+          />
+        )}
         <Text
           className="text-xs font-medium"
           style={{ color: appTheme.secondaryTextColor }}
         >
-          {isEnabled ? t("available") : t("notAvailable")}
+          {dataProfile?.isAvailable ? t("available") : t("notAvailable")}
         </Text>
       </View>
     </View>

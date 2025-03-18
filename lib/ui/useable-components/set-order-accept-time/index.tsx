@@ -14,11 +14,11 @@ import { TIMES } from "@/lib/utils/constants";
 import { ISetOrderTimeComponentProps } from "@/lib/utils/interfaces";
 
 // UI
-import SpinnerComponent from "../spinner";
 
 // Icons
 import { useApptheme } from "@/lib/context/theme.context";
 import { useTranslation } from "react-i18next";
+import CustomContinueButton from "../custom-continue-button";
 import { CircleCrossIcon } from "../svg";
 
 const SetTimeScreenAndAcceptOrder = ({
@@ -53,7 +53,7 @@ const SetTimeScreenAndAcceptOrder = ({
   };
 
   return (
-    <View className="flex-1items-center justify-center px-4 pb-8">
+    <View className="flex-1 items-center justify-center px-4 pb-20">
       <View className="mt-4 mb-4 text-center flex-row justify-between items-center">
         <Text
           className="flex-1 text-center text-[16px] font-[600]"
@@ -93,22 +93,12 @@ const SetTimeScreenAndAcceptOrder = ({
       </View>
 
       <View>
-        <TouchableOpacity
-          className="h-12 rounded-3xl py-3"
+        <CustomContinueButton
+          isLoading={loadingAcceptOrder || loadingRing}
           style={{ backgroundColor: appTheme.primary }}
           onPress={onAcceptOrderHandler}
-        >
-          {loadingAcceptOrder || loadingRing ? (
-            <SpinnerComponent color={appTheme.primary} />
-          ) : (
-            <Text
-              className="text-center text-lg font-medium"
-              style={{ color: appTheme.black }}
-            >
-              {t("Done")}
-            </Text>
-          )}
-        </TouchableOpacity>
+          title={t("Done")}
+        />
       </View>
     </View>
   );
