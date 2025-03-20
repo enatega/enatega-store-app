@@ -1,13 +1,10 @@
 import { useApptheme } from "@/lib/context/theme.context";
 import CustomDrawerContent from "@/lib/ui/screen-components/home/drawer/drawer-content";
 import {
-  AboutIcon,
   CardIcon,
   HelpIcon,
   HomeIcon,
   LanguageIcon,
-  PageIcon,
-  PrivacyIcon,
 } from "@/lib/ui/useable-components/svg";
 import ScheduleIcon from "@/lib/ui/useable-components/svg/schedule";
 import { Colors } from "@/lib/utils/constants";
@@ -90,42 +87,12 @@ export default function DrawerMain() {
         }}
       />
       <Drawer.Screen
-        name="product-page"
-        options={{
-          drawerLabel: t("Product Page"),
-          title: t("Product Page"),
-          drawerIcon: ({ color, size }) => (
-            <PageIcon color={color} height={size} width={size} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="privacy-policy"
-        options={{
-          drawerLabel: t("Privacy Policy"),
-          title: t("Privacy Policy"),
-          drawerIcon: ({ color, size }) => (
-            <PrivacyIcon color={color} height={size} width={size} />
-          ),
-        }}
-      />
-      <Drawer.Screen
         name="bank-management"
         options={{
           drawerLabel: t("Bank Management"),
           title: t("Bank Management"),
           drawerIcon: ({ color, size }) => (
             <CardIcon color={color} height={size} width={size} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="about-us"
-        options={{
-          drawerLabel: t("About Us"),
-          title: t("About US"),
-          drawerIcon: ({ color, size }) => (
-            <AboutIcon color={color} height={size} width={size} />
           ),
         }}
       />
