@@ -4,8 +4,8 @@
       "developmentClient": true,
       "channel": "development",
       "distribution": "internal",
-      "android": {
-        "buildType": "apk"
+      "ios": {
+        "simulator": true
       }
     },
     "staging": {

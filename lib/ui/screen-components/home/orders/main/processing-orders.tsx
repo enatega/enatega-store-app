@@ -101,13 +101,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
         }
       />
 
-      {error ? (
-        <View className="flex-1 justify-center items-center">
-          <Text style={{ color: appTheme.fontMainColor, fontSize: 24 }}>
-            {t("Something went wrong Please refresh")}
-          </Text>
-        </View>
-      ) : loading ? (
+      {loading ? (
         <View className="flex-1">
           <Spinner />
         </View>

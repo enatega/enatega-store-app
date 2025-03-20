@@ -9,7 +9,6 @@ import {
 } from "react-native";
 // UI
 import CustomTab from "@/lib/ui/useable-components/custom-tab";
-import Spinner from "@/lib/ui/useable-components/spinner";
 // Constants
 import { NO_ORDER_PROMPT, ORDER_DISPATCH_TYPE } from "@/lib/utils/constants";
 
@@ -107,7 +106,7 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
     <GestureHandlerRootView style={style.gestureContainer}>
       <BottomSheetModalProvider>
         <View
-          className="pt-14 flex-1 items-center pb-16"
+          className="pt-14 flex-1 items-center pb-20"
           style={[
             style.container,
             { backgroundColor: appTheme.themeBackground },
@@ -125,17 +124,7 @@ function HomeNewOrdersMain(props: IOrderTabsComponentProps) {
             setSelectedTab={setCurrentTab}
           />
 
-          {error ? (
-            <View className="flex-1 justify-center items-center">
-              <Text style={{ color: appTheme.fontMainColor, fontSize: 24 }}>
-                {t("Something went wrong Please refresh")}
-              </Text>
-            </View>
-          ) : loading ? (
-            <View className="flex-1">
-              <Spinner />
-            </View>
-          ) : orders?.length > 0 ? (
+          {orders?.length > 0 ? (
             <FlatList
               className={`w-full h-[${height}px] mb-[${marginBottom}px]`}
               keyExtractor={(item) => item._id}

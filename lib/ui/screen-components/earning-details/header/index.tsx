@@ -87,7 +87,7 @@ export default function EarningDetailsHeader() {
             className="font-semibold text-lg text-start self-start"
             style={{ color: appTheme.fontMainColor }}
           >
-            ${storeEarningsGrandTotal.earnings}
+            ${Number(storeEarningsGrandTotal.earnings).toFixed(2)}
           </Text>
         </View>
         <View

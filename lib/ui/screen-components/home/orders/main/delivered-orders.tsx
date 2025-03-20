@@ -99,13 +99,7 @@ function HomeDeliveredOrdersMain(props: IOrderTabsComponentProps) {
         pickupCount={deliveredOrders?.filter((o) => !!o.isPickedUp).length ?? 0}
       />
 
-      {error ? (
-        <View className="flex-1 justify-center items-center">
-          <Text style={{ color: appTheme.fontMainColor }}>
-            {t("Something went wrong Please refresh")}
-          </Text>
-        </View>
-      ) : loading ? (
+      {loading ? (
         <View className="flex-1">
           <Spinner />
         </View>
